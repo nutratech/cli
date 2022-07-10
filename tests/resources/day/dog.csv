@@ -1,0 +1,20 @@
+meal,id,grams,notes,desired_kcal
+breakfast,20044,19,"rice, uncooked",70
+breakfast,8120,13,"oats, raw",50
+breakfast,16042,14,"pinto beans, raw",50
+breakfast,5062,33,chicken breast,40
+breakfast,11304,16,"peas, green, raw",15
+breakfast,11507,23,"sweet potato, raw",20
+breakfast,11091,14,"broccoli, boiled, w/o salt",5
+breakfast,12155,6,walnut,40
+breakfast,12220,6,flax,30
+breakfast,1289,35,kefir,15
+breakfast,9050,18,blueberries,10
+breakfast,9040,23,banana,20
+breakfast,11297,7,"parsley, fresh",
+breakfast,2064,5,"peppermint, fresh",
+breakfast,,0.075,milk thistle extract,
+,,,,
+,,,,
+,,,,
+TOTAL,,,,365
