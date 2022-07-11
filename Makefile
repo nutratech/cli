@@ -153,3 +153,21 @@ clean:	## Clean up __pycache__ and leftover bits
 	rm -rf nutra.egg-info/
 	rm -rf .pytest_cache/ .mypy_cache/
 	find ntclient/ tests/ -name __pycache__ -o -name .coverage -o -name .pytest_cache | xargs rm -rf
+
+
+# ---------------------------------------
+# Extras
+# ---------------------------------------
+
+CLOC_ARGS ?=
+.PHONY: extras/cloc
+extras/cloc:	## Count lines of source code
+	- cloc \
+	--exclude-dir=\
+	.venv,venv,\
+	.mypy_cache,.pytest_cache,\
+	.idea,\
+	build,dist \
+	--exclude-ext=svg \
+	$(CLOC_ARGS) \
+	.
