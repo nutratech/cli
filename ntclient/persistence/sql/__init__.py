@@ -1,6 +1,7 @@
 """Main SQL persistence module, need to rethink circular imports and shared code"""
 import sqlite3
 
+
 # FIXME: maybe just use separate methods for calls with vs. without headers
 #  avoid the mypy headaches, and the liberal comments  # type: ignore
 
@@ -71,8 +72,10 @@ def _sql(
     con: sqlite3.Connection,
     query: str,
     db_name: str,
-    values: tuple | list = None,
+    values=None,
 ) -> list:
+    """@param values: list | tuple | None"""
+
     cur, result = _prep_query(con, query, db_name, values)
 
     # TODO: print "<number> SELECTED", or other info
@@ -87,8 +90,10 @@ def _sql_headers(
     con: sqlite3.Connection,
     query: str,
     db_name: str,
-    values: tuple | list = None,
+    values=None,
 ) -> tuple:
+    """@param values: list | tuple | None"""
+
     cur, result = _prep_query(con, query, db_name, values)
 
     result = sql_entries_headers(result)
