@@ -75,8 +75,12 @@ def build_argparser() -> argparse.ArgumentParser:
     return arg_parser
 
 
-def main(args: list[str] = None) -> int:
-    """Main method for CLI"""
+def main(args: list = None) -> int:
+    """
+    Main method for CLI
+
+    @param args: List[str] | None
+    """
 
     start_time = time.time()
     arg_parser = build_argparser()
