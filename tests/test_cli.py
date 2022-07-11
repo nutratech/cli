@@ -5,7 +5,6 @@ Created on Fri Jan 31 15:19:53 2020
 @author: shane
 """
 import os
-import sqlite3
 import sys
 
 import pytest
@@ -22,7 +21,6 @@ from ntclient.__main__ import build_argparser
 from ntclient.__main__ import main as nt_main
 from ntclient.core import nutprogbar
 from ntclient.ntsqlite.sql import build_ntsqlite
-from ntclient.persistence.sql.nt import funcs as nt_funcs
 from ntclient.persistence.sql.nt import nt_ver
 from ntclient.persistence.sql.usda import funcs as usda_funcs
 from ntclient.persistence.sql.usda import sql as _usda_sql
@@ -71,9 +69,7 @@ def test_200_nt_sql_funcs():
     version = nt_ver()
     assert version == __db_target_nt__
 
-    headers, rows = nt_funcs.sql_biometrics()
-    assert headers == ["id", "name", "unit", "created"]
-    assert len(rows) == 29
+    # TODO: add more tests, it used to poll biometrics
 
 
 def test_300_argparser_debug_no_paging():
@@ -190,19 +186,21 @@ def test_500_main_module():
 
 def test_600_sql_integrity_error__service_wip():
     """Provokes IntegrityError in nt.sqlite3"""
-    from ntclient.services import biometrics  # pylint: disable=import-outside-toplevel
 
-    args = arg_parser.parse_args(args=["-d", "bio", "log", "add", "12,12"])
-    biometrics.input = (
-        lambda x: "y"
-    )  # mocks input, could also pass `-y` flag or set yes=True
-
-    with pytest.raises(sqlite3.IntegrityError) as integrity_error:
-        args.func(args)
-    assert (
-        integrity_error.value.args[0]
-        == "NOT NULL constraint failed: biometric_log.profile_id"
-    )
+    # TODO: replace with non-biometric test
+    # from ntclient.services import biometrics  # pylint: disable=import-outside-toplevel
+    #
+    # args = arg_parser.parse_args(args=["-d", "bio", "log", "add", "12,12"])
+    # biometrics.input = (
+    #     lambda x: "y"
+    # )  # mocks input, could also pass `-y` flag or set yes=True
+    #
+    # with pytest.raises(sqlite3.IntegrityError) as integrity_error:
+    #     args.func(args)
+    # assert (
+    #     integrity_error.value.args[0]
+    #     == "NOT NULL constraint failed: biometric_log.profile_id"
+    # )
 
 
 def test_700_build_ntsqlite_succeeds():

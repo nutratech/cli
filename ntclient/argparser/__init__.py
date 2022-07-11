@@ -13,7 +13,6 @@ def build_subcommands(subparsers) -> None:
     build_analyze_subcommand(subparsers)
     build_day_subcommand(subparsers)
     build_recipe_subcommand(subparsers)
-    build_biometric_subcommand(subparsers)
 
 
 ################################################################################
@@ -152,25 +151,3 @@ def build_recipe_subcommand(subparsers) -> None:
     recipe_delete_parser.set_defaults(func=parser_funcs.recipe_delete)
 
     recipe_parser.set_defaults(func=parser_funcs.recipes)
-
-
-def build_biometric_subcommand(subparsers) -> None:
-    """View biometrics, and view, add, edit, delete log entries"""
-    bio_parser = subparsers.add_parser("bio", help="view, add, remove biometric logs")
-    bio_subparsers = bio_parser.add_subparsers(title="biometric subcommands")
-
-    bio_log_parser = bio_subparsers.add_parser("log", help="manage biometric logs")
-    bio_log_subparsers = bio_log_parser.add_subparsers(
-        title="biometric log subcommands"
-    )
-    bio_log_parser.set_defaults(func=parser_funcs.bio_log)
-
-    bio_log_add_parser = bio_log_subparsers.add_parser(
-        "add", help="add a biometric log"
-    )
-    bio_log_add_parser.add_argument(
-        "biometric_val", help="id,value pairs, e.g. 22,59 23,110 24,65 ", nargs="+"
-    )
-    bio_log_add_parser.set_defaults(func=parser_funcs.bio_log_add)
-
-    bio_parser.set_defaults(func=parser_funcs.bio)

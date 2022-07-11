@@ -10,7 +10,7 @@ from ntclient import (
 from ntclient.ntsqlite.sql import build_ntsqlite
 from ntclient.persistence.sql.nt import nt_ver
 from ntclient.persistence.sql.usda import usda_init
-from ntclient.services import analyze, biometrics, recipe, usda
+from ntclient.services import analyze, recipe, usda
 from ntclient.utils.exceptions import SqlInvalidVersionError
 
 

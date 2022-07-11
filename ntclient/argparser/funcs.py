@@ -54,28 +54,6 @@ def day(args):
 
 
 ################################################################################
-# Biometrics
-################################################################################
-def bio():
-    """List biometrics"""
-    return services.biometrics.biometrics()
-
-
-def bio_log():
-    """List biometric logs"""
-    return services.biometrics.biometric_logs()
-
-
-def bio_log_add(args):
-    """Add a biometric log entry"""
-    bio_vals = {
-        int(x.split(",")[0]): float(x.split(",")[1]) for x in args.biometric_val
-    }
-
-    return services.biometrics.biometric_add(bio_vals)
-
-
-################################################################################
 # Recipes
 ################################################################################
 def recipes():
