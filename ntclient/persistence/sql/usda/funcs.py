@@ -40,7 +40,7 @@ def sql_nutrients_details() -> tuple:
     """Shows nutrients 'details'"""
 
     query = "SELECT * FROM nutrients_overview;"
-    return sql(query, headers=True)  # type: ignore
+    return sql(query, headers=True)
 
 
 def sql_servings(food_ids) -> list:

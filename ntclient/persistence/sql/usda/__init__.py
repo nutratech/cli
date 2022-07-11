@@ -92,10 +92,19 @@ def usda_ver() -> str:
     return version(con)
 
 
-def sql(query, values=None, headers=False, version_check=True) -> Union[list, tuple]:
+def sql(query, values=None, version_check=True) -> list:
     """Executes a SQL command to usda.sqlite3"""
 
     con = usda_sqlite_connect(version_check=version_check)
 
     # TODO: support argument: _sql(..., params=params, ...)
-    return _sql(con, query, db_name="usda", values=values, headers=headers)
+    return _sql(con, query, db_name="usda", values=values, headers=False)
+
+
+def sql_headers(query, values=None, version_check=True) -> tuple:
+    """Executes a SQL command to usda.sqlite3 [WITH HEADERS]"""
+
+    con = usda_sqlite_connect(version_check=version_check)
+
+    # TODO: support argument: _sql(..., params=params, ...)
+    return _sql(con, query, db_name="usda", values=values, headers=True)

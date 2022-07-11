@@ -52,7 +52,8 @@ def _sql(
     if DEBUG:
         print("%s.sqlite3: %s" % (db_name, query))
         if values:
-            # TODO: better debug logging, more "control-findable", distinguish from most prints()
+            # TODO: better debug logging, more "control-findable",
+            #  distinguish from most prints()
             print(values)
 
     # TODO: separate `entry` & `entries` entity for single vs. bulk insert?
