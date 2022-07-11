@@ -3,10 +3,9 @@ import os
 import sqlite3
 import tarfile
 import urllib.request
-from typing import Union
 
 from ntclient import NUTRA_DIR, USDA_DB_NAME, __db_target_usda__
-from ntclient.persistence.sql import _sql, version
+from ntclient.persistence.sql import _sql, _sql_headers, version
 from ntclient.utils.exceptions import SqlConnectError, SqlInvalidVersionError
 
 
@@ -92,10 +91,19 @@ def usda_ver() -> str:
     return version(con)
 
 
-def sql(query, values=None, headers=False, version_check=True) -> Union[list, tuple]:
+def sql(query, values=None, version_check=True) -> list:
     """Executes a SQL command to usda.sqlite3"""
 
     con = usda_sqlite_connect(version_check=version_check)
 
     # TODO: support argument: _sql(..., params=params, ...)
-    return _sql(con, query, db_name="usda", values=values, headers=headers)
+    return _sql(con, query, db_name="usda", values=values)
+
+
+def sql_headers(query, values=None, version_check=True) -> tuple:
+    """Executes a SQL command to usda.sqlite3 [WITH HEADERS]"""
+
+    con = usda_sqlite_connect(version_check=version_check)
+
+    # TODO: support argument: _sql(..., params=params, ...)
+    return _sql_headers(con, query, db_name="usda", values=values)

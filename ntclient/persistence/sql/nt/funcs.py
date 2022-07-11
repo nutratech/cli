@@ -1,5 +1,5 @@
 """nt.sqlite3 functions module"""
-from ntclient.persistence.sql.nt import sql
+from ntclient.persistence.sql.nt import sql, sql_headers
 
 
 def sql_nt_next_index(table=None):
@@ -33,7 +33,7 @@ FROM
 GROUP BY
   id;
 """
-    return sql(query, headers=True)
+    return sql_headers(query)
 
 
 def sql_analyze_recipe(recipe_id):

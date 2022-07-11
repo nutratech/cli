@@ -27,7 +27,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import argparse
 import sys
 import time
-from typing import Sequence
 from urllib.error import HTTPError, URLError
 
 import argcomplete
@@ -76,8 +75,12 @@ def build_argparser() -> argparse.ArgumentParser:
     return arg_parser
 
 
-def main(args: Sequence[str] = None) -> int:
-    """Main method for CLI"""
+def main(args: list = None) -> int:
+    """
+    Main method for CLI
+
+    @param args: List[str] | None
+    """
 
     start_time = time.time()
     arg_parser = build_argparser()
