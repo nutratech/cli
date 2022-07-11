@@ -3,7 +3,6 @@ import os
 import sqlite3
 import tarfile
 import urllib.request
-from typing import Union
 
 from ntclient import NUTRA_DIR, USDA_DB_NAME, __db_target_usda__
 from ntclient.persistence.sql import _sql, _sql_headers, version

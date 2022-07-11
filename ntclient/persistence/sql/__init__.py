@@ -1,6 +1,5 @@
 """Main SQL persistence module, need to rethink circular imports and shared code"""
 import sqlite3
-from typing import Union
 
 # FIXME: maybe just use separate methods for calls with vs. without headers
 #  avoid the mypy headaches, and the liberal comments  # type: ignore
