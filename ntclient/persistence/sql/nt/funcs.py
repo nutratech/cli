@@ -1,6 +1,5 @@
 """nt.sqlite3 functions module"""
-from ntclient.persistence import PROFILE_ID
-from ntclient.persistence.sql.nt import nt_sqlite_connect, sql
+from ntclient.persistence.sql.nt import sql
 
 
 def sql_nt_next_index(table=None):

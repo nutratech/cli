@@ -5,7 +5,6 @@ Created on Fri Jan 31 15:19:53 2020
 @author: shane
 """
 import os
-import sqlite3
 import sys
 
 import pytest
@@ -22,7 +21,6 @@ from ntclient.__main__ import build_argparser
 from ntclient.__main__ import main as nt_main
 from ntclient.core import nutprogbar
 from ntclient.ntsqlite.sql import build_ntsqlite
-from ntclient.persistence.sql.nt import funcs as nt_funcs
 from ntclient.persistence.sql.nt import nt_ver
 from ntclient.persistence.sql.usda import funcs as usda_funcs
 from ntclient.persistence.sql.usda import sql as _usda_sql
