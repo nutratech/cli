@@ -1,7 +1,6 @@
 """Main SQL persistence module, need to rethink circular imports and shared code"""
 import sqlite3
 
-
 # FIXME: maybe just use separate methods for calls with vs. without headers
 #  avoid the mypy headaches, and the liberal comments  # type: ignore
 
@@ -43,8 +42,10 @@ def close_con_and_cur(
 
 
 def _prep_query(
-    con: sqlite3.Connection, query: str, db_name: str, values: tuple | list = None
+    con: sqlite3.Connection, query: str, db_name: str, values=None
 ) -> tuple:
+    """@param values: tuple | list | None"""
+
     from ntclient import DEBUG  # pylint: disable=import-outside-toplevel
 
     cur = con.cursor()
@@ -74,7 +75,7 @@ def _sql(
     db_name: str,
     values=None,
 ) -> list:
-    """@param values: list | tuple | None"""
+    """@param values: tuple | list | None"""
 
     cur, result = _prep_query(con, query, db_name, values)
 
@@ -92,7 +93,7 @@ def _sql_headers(
     db_name: str,
     values=None,
 ) -> tuple:
-    """@param values: list | tuple | None"""
+    """@param values: tuple | list | None"""
 
     cur, result = _prep_query(con, query, db_name, values)
 
