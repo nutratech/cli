@@ -1,5 +1,5 @@
 """usda.sqlite functions module"""
-from ntclient.persistence.sql.usda import sql
+from ntclient.persistence.sql.usda import sql, sql_headers
 from ntclient.utils import NUTR_ID_KCAL
 
 
@@ -25,7 +25,7 @@ def sql_food_details(food_ids=None) -> list:
         food_ids = ",".join(str(x) for x in set(food_ids))
         query = query % food_ids
 
-    return sql(query)  # type: ignore
+    return sql(query)
 
 
 def sql_nutrients_overview() -> dict:
@@ -40,7 +40,7 @@ def sql_nutrients_details() -> tuple:
     """Shows nutrients 'details'"""
 
     query = "SELECT * FROM nutrients_overview;"
-    return sql(query, headers=True)
+    return sql_headers(query)
 
 
 def sql_servings(food_ids) -> list:
@@ -59,7 +59,7 @@ WHERE
   serv.food_id IN (%s);
 """
     food_ids = ",".join(str(x) for x in set(food_ids))
-    return sql(query % food_ids)  # type: ignore
+    return sql(query % food_ids)
 
 
 def sql_analyze_foods(food_ids) -> list:
@@ -77,7 +77,7 @@ WHERE
 """
     # TODO: parameterized queries
     food_ids = ",".join(str(x) for x in set(food_ids))
-    return sql(query % food_ids)  # type: ignore
+    return sql(query % food_ids)
 
 
 ################################################################################
@@ -100,7 +100,7 @@ ORDER BY
   food_id;
 """
 
-    return sql(query % (NUTR_ID_KCAL, nutrient_id))  # type: ignore
+    return sql(query % (NUTR_ID_KCAL, nutrient_id))
 
 
 def sql_sort_foods(nutr_id) -> list:
@@ -126,7 +126,7 @@ ORDER BY
   nut_data.nutr_val DESC;
 """
 
-    return sql(query % nutr_id)  # type: ignore
+    return sql(query % nutr_id)
 
 
 def sql_sort_foods_by_kcal(nutr_id) -> list:
@@ -155,4 +155,4 @@ ORDER BY
   (nut_data.nutr_val / kcal.nutr_val) DESC;
 """
 
-    return sql(query % nutr_id)  # type: ignore
+    return sql(query % nutr_id)

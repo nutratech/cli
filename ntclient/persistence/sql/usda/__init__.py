@@ -6,7 +6,7 @@ import urllib.request
 from typing import Union
 
 from ntclient import NUTRA_DIR, USDA_DB_NAME, __db_target_usda__
-from ntclient.persistence.sql import _sql, version
+from ntclient.persistence.sql import _sql, _sql_headers, version
 from ntclient.utils.exceptions import SqlConnectError, SqlInvalidVersionError
 
 
@@ -98,7 +98,7 @@ def sql(query, values=None, version_check=True) -> list:
     con = usda_sqlite_connect(version_check=version_check)
 
     # TODO: support argument: _sql(..., params=params, ...)
-    return _sql(con, query, db_name="usda", values=values, headers=False)
+    return _sql(con, query, db_name="usda", values=values)
 
 
 def sql_headers(query, values=None, version_check=True) -> tuple:
@@ -107,4 +107,4 @@ def sql_headers(query, values=None, version_check=True) -> tuple:
     con = usda_sqlite_connect(version_check=version_check)
 
     # TODO: support argument: _sql(..., params=params, ...)
-    return _sql(con, query, db_name="usda", values=values, headers=True)
+    return _sql_headers(con, query, db_name="usda", values=values)
