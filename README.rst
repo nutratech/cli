@@ -168,4 +168,3 @@ Commands
         anl                 analyze food(s)
         day                 analyze a DAY.csv file, RDAs optional
         recipe              list and analyze recipes
-        bio                 view, add, remove biometric logs

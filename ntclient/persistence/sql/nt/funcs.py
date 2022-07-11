@@ -58,36 +58,3 @@ def sql_recipe_add():
     query = """
 """
     return sql(query)
-
-
-################################################################################
-# Biometric functions
-################################################################################
-def sql_biometrics():
-    """Selects biometrics"""
-    query = "SELECT * FROM biometrics;"
-    return sql(query, headers=True)
-
-
-def sql_biometric_logs(profile_id):
-    """Selects biometric logs"""
-    query = "SELECT * FROM biometric_log WHERE profile_id=?"
-    return sql(query, values=(profile_id,), headers=True)
-
-
-def sql_biometric_add(bio_vals):
-    """Insert biometric log item"""
-    con = nt_sqlite_connect()
-    cur = con.cursor()
-
-    # TODO: finish up
-    query1 = "INSERT INTO biometric_log(profile_id, tags, notes) VALUES (?, ?, ?)"
-    sql(query1, (PROFILE_ID, "", ""))
-    log_id = cur.lastrowid
-    print(log_id)
-    query2 = "INSERT INTO bio_log_entry(log_id, biometric_id, value) VALUES (?, ?, ?)"
-    records = [
-        (log_id, biometric_id, value) for biometric_id, value in bio_vals.items()
-    ]
-    cur.executemany(query2, records)
-    return log_id
