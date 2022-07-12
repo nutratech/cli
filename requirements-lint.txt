@@ -5,4 +5,4 @@ doc8~=0.11
 flake8~=4.0
 mypy~=0.960
 pylint~=2.13
-yamllint~=1.26
+yamllint~=1.27
