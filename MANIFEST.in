@@ -2,13 +2,15 @@ include requirements.txt
 include requirements-*.txt
 
 include ntclient/LICENSE
-include ntclient/CHANGELOG.md
+include ntclient/CHANGELOG.rst
 
 include ntclient/ntsqlite/LICENSE
 include ntclient/ntsqlite/README.rst
-include ntclient/ntsqlite/CHANGELOG.md
-graft ntclient/ntsqlite/sql/
+include ntclient/ntsqlite/CHANGELOG.rst
+include ntclient/ntsqlite/sql/*.sql
+include ntclient/ntsqlite/sql/data/*.csv
+include ntclient/ntsqlite/sql/upgrade_scripts/*.sql
 
-global-exclude *.sqlite3
+global-exclude nt.sqlite3
 
 global-exclude __pycache__/*

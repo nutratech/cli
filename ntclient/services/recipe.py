@@ -84,7 +84,7 @@ def recipe_import(file_path):
 
     if os.path.isfile(file_path):
         # TODO: better logic than this
-        recipe_id = extract_id_from_filename(file_path) or sql_nt_next_index("recipes")
+        recipe_id = extract_id_from_filename(file_path) or sql_nt_next_index("recipe")
         print(recipe_id)
         with open(file_path, encoding="utf-8") as file:
             reader = csv.DictReader(file)

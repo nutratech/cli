@@ -4,8 +4,8 @@ from ntclient.persistence.sql.nt import sql, sql_headers
 
 def sql_nt_next_index(table=None):
     """Used for previewing inserts"""
-    query = "SELECT MAX(id) FROM %s;" % table  # nosec: B608
-    return int(sql(query)[0]["MAX(id)"])
+    query = "SELECT MAX(id) as max_id FROM %s;" % table  # nosec: B608
+    return int(sql(query)[0]["max_id"])
 
 
 ################################################################################
@@ -26,9 +26,9 @@ SELECT
   name,
   COUNT(recipe_id) AS n_foods,
   SUM(grams) AS grams,
-  created
+  recipe.created as created
 FROM
-  recipes
+  recipe
   LEFT JOIN recipe_dat ON recipe_id = id
 GROUP BY
   id;
@@ -45,7 +45,7 @@ SELECT
   food_id,
   grams
 FROM
-  recipes
+  recipe
   INNER JOIN recipe_dat ON recipe_id = id
     AND id = ?;
 """

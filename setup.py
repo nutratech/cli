@@ -13,8 +13,9 @@ from setuptools import find_packages, setup
 
 from ntclient import PY_MIN_STR, __author__, __email__, __title__, __version__
 
-# cd to parent dir of setup.py
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
+PLATFORM_SYSTEM = platform.system()
 
 CLASSIFIERS = [
     "Environment :: Console",
@@ -41,35 +42,46 @@ CLASSIFIERS = [
     "Programming Language :: Unix Shell",
 ]
 
+# Read me
 with open("README.rst", encoding="utf-8") as file:
     README = file.read()
 
+# Requirements
 with open("requirements.txt", encoding="utf-8") as file:
     REQUIREMENTS = file.read().split()
 
-if platform.system() != "Windows":
-    # python-Levenshtein builds natively on unix, requires vcvarsall.bat or vc++10 on Windows
+if PLATFORM_SYSTEM != "Windows":
+    # python-Levenshtein builds natively on Unix; Windows needs vcvarsall.bat or vc++10
     with open("requirements-optional.txt", encoding="utf-8") as file:
         optional_reqs = file.read().split()
     REQUIREMENTS.extend(optional_reqs)
 
-setup(
-    name=__title__,
-    author=__author__,
-    author_email=__email__,
-    classifiers=CLASSIFIERS,
-    install_requires=REQUIREMENTS,
-    python_requires=">=%s" % PY_MIN_STR,
-    zip_safe=False,
-    packages=find_packages(exclude=["tests"]),
-    include_package_data=True,
-    platforms=["linux", "darwin", "win32"],
-    scripts=glob.glob("scripts/*"),
-    # entry_points={"console_scripts": ["nutra=ntclient.__main__:main"]},
-    description="Home and office nutrient tracking software",
-    long_description=README,
-    long_description_content_type="text/x-rst",
-    url="https://github.com/nutratech/cli",
-    license="GPL v3",
-    version=__version__,
-)
+# Prepare setup() inputs (OS dependent)
+kwargs = {
+    "name": __title__,
+    "author": __author__,
+    "author_email": __email__,
+    "classifiers": CLASSIFIERS,
+    "install_requires": REQUIREMENTS,
+    "python_requires": ">=%s" % PY_MIN_STR,
+    "zip_safe": False,
+    "packages": find_packages(exclude=["tests"]),
+    "include_package_data": True,
+    "platforms": ["linux", "darwin", "win32"],
+    "description": "Home and office nutrient tracking software",
+    "long_description": README,
+    "long_description_content_type": "text/x-rst",
+    "url": "https://github.com/nutratech/cli",
+    "license": "GPL v3",
+    "version": __version__,
+}
+
+if PLATFORM_SYSTEM == "Windows":
+    kwargs["entry_points"] = {
+        "console_scripts": ["nutra=ntclient.__main__:main", "n=ntclient.__main__:main"]
+    }
+else:
+    kwargs["scripts"] = glob.glob("scripts/*")
+
+# Setup method
+setup(**kwargs)

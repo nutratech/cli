@@ -5,6 +5,8 @@ from colorama import Fore
 # Colors and buffer settings
 ################################################################################
 
+# TODO: make configurable in SQLite or prefs.json
+
 THRESH_WARN = 0.7
 COLOR_WARN = Fore.YELLOW
 

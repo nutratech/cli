@@ -16,7 +16,7 @@ _help:
 init:	## Set up a Python virtual environment
 	git submodule update --init
 	if [ ! -d .venv ]; then \
-		/usr/bin/python3 -m venv .venv; \
+		$(PY_SYS_INTERPRETER) -m venv .venv; \
 	fi
 	- direnv allow
 	@echo -e "\r\nNOTE: activate venv, and run 'make deps'\r\n"
@@ -35,18 +35,23 @@ _venv:
 # Install requirements
 # ---------------------------------------
 
-PIP := python -m pip
+PY_SYS_INTERPRETER ?= /usr/bin/python3
+PY_VIRTUAL_INTERPRETER ?= python
+
+PIP ?= $(PY_VIRTUAL_INTERPRETER) -m pip
+
 REQ_OPT := requirements-optional.txt
 REQ_LINT := requirements-lint.txt
-REQ_TEST := tests/requirements.txt
-REQ_OLD := tests/requirements-win_xp-ubu1604.txt
+REQ_TEST := requirements-test.txt
+REQ_OLD := requirements-test-win_xp-ubu1604.txt
+
 .PHONY: _deps
 _deps:
 	$(PIP) install wheel
 	$(PIP) install -r requirements.txt
 	- $(PIP) install -r $(REQ_OPT)
 	- $(PIP) install -r $(REQ_LINT)
-	- $(PIP) install -r $(REQ_TEST) || (echo "\r\nTEST REQs failed... try old version" && $(PIP) install -r $(REQ_OLD))
+	- $(PIP) install -r $(REQ_TEST) || (echo "\r\nTEST REQs failed. Trying old version" && $(PIP) install -r $(REQ_OLD))
 
 .PHONY: deps
 deps: _venv _deps	## Install requirements
@@ -63,7 +68,7 @@ format:
 	black $(LINT_LOCS)
 
 
-LINT_LOCS := ntclient/ tests/ scripts/ nutra setup.py
+LINT_LOCS := ntclient/ tests/ setup.py
 YAML_LOCS := ntclient/ntsqlite/.*.yml .github/workflows/ .*.yml
 # NOTE: yamllint 	ntclient/ntsqlite/.travis.yml ? (submodule)
 # NOTE: doc8 		ntclient/ntsqlite/README.rst  ? (submodule)
@@ -107,39 +112,31 @@ test: _venv _test	## Run CLI unittests
 
 .PHONY: ntsqlite/build
 ntsqlite/build:
-	python ntclient/ntsqlite/sql/__init__.py
+	$(PY_SYS_INTERPRETER) ntclient/ntsqlite/sql/__init__.py
 
 # TODO: nt-sqlite/test
 
 
 # ---------------------------------------
-# Python build stuff
+# Python build & install
 # ---------------------------------------
 
 .PHONY: _build
 _build:
-	python setup.py --quiet sdist
+	$(PY_SYS_INTERPRETER) setup.py --quiet sdist
 
 .PHONY: build
-build: _venv _build clean	## Create sdist binary *.tar.gz
+build:	## Create sdist binary *.tar.gz
+build: _build clean
 
-.PHONY: _install
-_install:
-	python -m pip install wheel
-	python -m pip install .
-	python -m pip show nutra
-	- python -c 'import shutil; print(shutil.which("nutra"));'
-	nutra -v
 
 .PHONY: install
-install: _venv _install	## pip install nutra
-
-.PHONY: _uninstall
-_uninstall:
-	python -m pip uninstall -y nutra
-
-.PHONY: uninstall
-uninstall: _venv _uninstall	## pip uninstall nutra
+install:	## pip install nutra
+	$(PY_SYS_INTERPRETER) -m pip install wheel
+	$(PY_SYS_INTERPRETER) -m pip install .
+	$(PY_SYS_INTERPRETER) -m pip show nutra
+	- $(PY_SYS_INTERPRETER) -c 'import shutil; print(shutil.which("nutra"));'
+	nutra -v
 
 
 # ---------------------------------------

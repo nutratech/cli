@@ -24,9 +24,9 @@ Extensible command-line tools for nutrient analysis.
 
 *Requires:*
 
-- Python 3.4.0 or later (lzma, ssl & sqlite3 modules) [Win XP / Ubuntu 16.04]
-- Packages: see ``setup.py``, ``requirements.txt``, and ``config`` folder
-- Internet connection, to download food database & package dependencies
+- Python 3.4.0 or later (lzma, ssl & sqlite3 modules) [Win XP / Ubuntu 16.04].
+- Packages: see ``setup.py``, and ``requirements.txt`` files.
+- Internet connection, to download food database & package dependencies.
 
 See nt database:   https://github.com/nutratech/nt-sqlite
 

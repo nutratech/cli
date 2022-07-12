@@ -9,7 +9,7 @@ This file is part of nutra, a nutrient analysis program.
     https://pypi.org/project/nutra/
 
 nutra is an extensible nutrient analysis and composition application.
-Copyright (C) 2018-2022  Shane Jaroch <nutratracker@gmail.com>
+Copyright (C) 2018-2022  Shane Jaroch <chown_tee@proton.me>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -62,10 +62,7 @@ def build_argparser() -> argparse.ArgumentParser:
         "-d", "--debug", action="store_true", help="enable detailed error messages"
     )
     arg_parser.add_argument(
-        "--no-pager",
-        dest="no_paging",
-        action="store_true",
-        help="disable paging (print full output)",
+        "--no-pager", action="store_true", help="disable paging (print full output)"
     )
 
     # Subparsers
@@ -79,7 +76,7 @@ def main(args: list = None) -> int:
     """
     Main method for CLI
 
-    @param args: List[str] | None
+    @param args: List[str]
     """
 
     start_time = time.time()
@@ -99,7 +96,7 @@ def main(args: list = None) -> int:
             persistence_init()
 
             args_dict = dict(vars(parser))
-            for expected_arg in ["func", "debug", "no_paging"]:
+            for expected_arg in ["func", "debug", "no_pager"]:
                 args_dict.pop(expected_arg)
 
             # Run function
@@ -109,7 +106,7 @@ def main(args: list = None) -> int:
 
         # Otherwise print help
         arg_parser.print_help()
-        return 1, None
+        return 0, None
 
     # Build the parser, set flags
     _parser = parse_args()
@@ -118,7 +115,7 @@ def main(args: list = None) -> int:
 
     # TODO: bug reporting?
     # Try to run the function
-    exit_code = None
+    exit_code = 1
     try:
         exit_code, *_results = func(_parser)
         return exit_code
