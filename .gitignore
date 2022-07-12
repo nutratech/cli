@@ -9,6 +9,7 @@
 .idea/
 __sha__.py
 *.sqlite
+.nutra*
 
 ####################
 ## Python Ignores ##

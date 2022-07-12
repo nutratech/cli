@@ -4,6 +4,7 @@ Created on Fri Jan 31 15:19:53 2020
 
 @author: shane
 """
+# pylint: disable=wrong-import-position
 import os
 import sys
 
@@ -28,9 +29,11 @@ from ntclient.persistence.sql.usda import usda_ver
 from ntclient.services import init
 from ntclient.utils.exceptions import SqlInvalidVersionError
 
+TEST_HOME = os.path.dirname(os.path.abspath(__file__))
+os.environ["NUTRA_HOME"] = os.path.join(TEST_HOME, ".nutra.test")
+
 # TODO: integration tests.. create user, recipe, log.. analyze & compare
 arg_parser = build_argparser()
-TEST_HOME = os.path.dirname(os.path.abspath(__file__))
 
 
 def test_000_init():
@@ -78,7 +81,7 @@ def test_300_argparser_debug_no_paging():
     set_flags(args)
 
     assert args.debug is True
-    assert args.no_paging is True
+    assert args.no_pager is True
 
     from ntclient import DEBUG, PAGING  # pylint: disable=import-outside-toplevel
 
@@ -173,7 +176,7 @@ def test_500_main_module():
 
     sys.argv = ["./nutra"]
     code = nt_main()
-    assert code == 1
+    assert code == 0
 
     with pytest.raises(SystemExit) as system_exit:
         nt_main(args=["-h"])

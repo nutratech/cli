@@ -1,10 +1,10 @@
-"""Main SQL persistence module, need to rethink circular imports and shared code"""
+"""Main SQL persistence module, shared between USDA and NT databases"""
 import sqlite3
 
-# FIXME: maybe just use separate methods for calls with vs. without headers
-#  avoid the mypy headaches, and the liberal comments  # type: ignore
 
-
+# ------------------------------------------------
+# Entry fetching methods
+# ------------------------------------------------
 def sql_entries(sql_result: sqlite3.Cursor) -> list:
     """Formats and returns a `sql_result()` for console digestion and output"""
     # TODO: return object: metadata, command, status, errors, etc?
@@ -21,6 +21,9 @@ def sql_entries_headers(sql_result: sqlite3.Cursor) -> tuple:
     return headers, rows
 
 
+# ------------------------------------------------
+# Supporting methods
+# ------------------------------------------------
 def version(con: sqlite3.Connection) -> str:
     """Gets the latest entry from version table"""
 
@@ -41,10 +44,13 @@ def close_con_and_cur(
     con.close()
 
 
+# ------------------------------------------------
+# Main query methods
+# ------------------------------------------------
 def _prep_query(
     con: sqlite3.Connection, query: str, db_name: str, values=None
 ) -> tuple:
-    """@param values: tuple | list | None"""
+    """@param values: tuple | list"""
 
     from ntclient import DEBUG  # pylint: disable=import-outside-toplevel
 
@@ -75,7 +81,7 @@ def _sql(
     db_name: str,
     values=None,
 ) -> list:
-    """@param values: tuple | list | None"""
+    """@param values: tuple | list"""
 
     cur, result = _prep_query(con, query, db_name, values)
 
@@ -93,7 +99,7 @@ def _sql_headers(
     db_name: str,
     values=None,
 ) -> tuple:
-    """@param values: tuple | list | None"""
+    """@param values: tuple | list"""
 
     cur, result = _prep_query(con, query, db_name, values)
 

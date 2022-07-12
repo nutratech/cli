@@ -35,9 +35,9 @@ from ntclient.ntsqlite.sql import NT_DB_NAME
 
 # Package info
 __title__ = "nutra"
-__version__ = "0.2.3.dev1"
+__version__ = "0.2.3"
 __author__ = "Shane Jaroch"
-__email__ = "nutratracker@gmail.com"
+__email__ = "chown_tee@proton.me"
 __license__ = "GPL v3"
 __copyright__ = "Copyright 2018-2022 Shane Jaroch"
 __url__ = "https://github.com/nutratech/cli"
@@ -45,12 +45,13 @@ __url__ = "https://github.com/nutratech/cli"
 # Sqlite target versions
 __db_target_nt__ = "0.0.5"
 __db_target_usda__ = "0.0.8"
+USDA_XZ_SHA256 = "25dba8428ced42d646bec704981d3a95dc7943240254e884aad37d59eee9616a"
 
 # Global variables
 ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
-NUTRA_DIR = os.path.join(os.path.expanduser("~"), ".nutra")
+NUTRA_DIR = os.getenv("NUTRA_HOME", os.path.join(os.path.expanduser("~"), ".nutra"))
 USDA_DB_NAME = "usda.sqlite"
-# NT_DB_NAME = "nt.sqlite"  # defined in ntclient.ntsqlite.sql
+# NOTE: NT_DB_NAME = "nt.sqlite3" is defined in ntclient.ntsqlite.sql
 DEBUG = False
 PAGING = True
 
@@ -63,7 +64,7 @@ PY_SYS_VER = sys.version_info[0:3]
 PY_MIN_STR = ".".join(str(x) for x in PY_MIN_VER)
 PY_SYS_STR = ".".join(str(x) for x in PY_SYS_VER)
 if PY_SYS_VER < PY_MIN_VER:
-    print("ERROR: nutra requires Python %s or later to run" % PY_MIN_STR)
+    print("ERROR: %s requires Python %s or later to run" % (__title__, PY_MIN_STR))
     print("HINT:  You're running Python %s" % PY_SYS_STR)
     sys.exit(1)
 
@@ -75,6 +76,7 @@ DEFAULT_RESULT_LIMIT = BUFFER_HT - 4
 
 DEFAULT_DAY_H_BUFFER = BUFFER_WD - 4 if BUFFER_WD > 12 else 8
 
+# TODO: keep one extra row on winXP / cmd.exe, it cuts off
 DECREMENT = 1 if platform.system() == "Windows" else 0
 DEFAULT_SORT_H_BUFFER = (
     BUFFER_WD - (38 + DECREMENT) if BUFFER_WD > 50 else (12 - DECREMENT)
@@ -82,6 +84,21 @@ DEFAULT_SORT_H_BUFFER = (
 DEFAULT_SEARCH_H_BUFFER = (
     BUFFER_WD - (50 + DECREMENT) if BUFFER_WD > 70 else (20 - DECREMENT)
 )
+
+
+# NOTE: wip
+# class CLIConfig:
+#     def __init__(self):
+#         prop1 = True
+#         usda_sqlite
+#         nt_sqlitedriver
+
+
+# TODO:
+#  Nested nutrient tree, like:
+#   http://www.whfoods.com/genpage.php?tname=nutrientprofile&dbid=132
+#  Attempt to record errors in failed try/catch block (bottom of __main__.py)
+#  Make use of argcomplete.warn(msg) ?
 
 
 def set_flags(args: argparse.Namespace) -> None:
@@ -93,13 +110,7 @@ def set_flags(args: argparse.Namespace) -> None:
     """
     global DEBUG, PAGING  # pylint: disable=global-statement
     DEBUG = args.debug
-    PAGING = not args.no_paging
+    PAGING = not args.no_pager
 
     if DEBUG:
         print("Console size: %sh x %sw" % (BUFFER_HT, BUFFER_WD))
-
-
-# TODO:
-#  nested nutrient tree, like: http://www.whfoods.com/genpage.php?tname=nutrientprofile&dbid=132
-#  attempt to record errors in failed try/catch block (bottom of __main__.py)
-#  make use of argcomplete.warn(msg) ?
