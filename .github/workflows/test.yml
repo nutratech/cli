@@ -75,11 +75,10 @@ jobs:
 
       - name: Basic Tests / CLI / Integration
         run: |
-          n -h
-          nutra
+          n -v
           nutra -d init -y
-          nutra nt
-          nutra sort -c 789
-          nutra search ultraviolet mushrooms
-          nutra anl 9050
-          nutra recipe
+          nutra --no-pager nt
+          nutra --no-pager sort -c 789
+          nutra --no-pager search ultraviolet mushrooms
+          nutra --no-pager anl 9050
+          nutra --no-pager recipe
