@@ -27,16 +27,16 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Install requirements
-        run: make _deps
+        run: |
+          make _deps
 
-      # NOTE: Skip this on Windows, they are on different drives.
-      #  It errors on copying over ~/.nutra/nt.sqlite3
-      #  We can modify NUTRA_HOME for the tests,
-      #    or we can test `make install` and `nutra init` directly.
-      # - name: Run Tests
-      #   run: make _test
+      # TODO: Tests for: python-argcomplete (tab-completion)
+      - name: Test
+        run: |
+          export NUTRA_DIR=tests/.nutra.test
+          make _test
 
-      - name: Run linters
+      - name: Lint
         run: make _lint
 
       - name: Install

@@ -27,9 +27,25 @@ jobs:
           pip install testresources==2.0.1
           make _deps
 
+      # TODO: Tests for: python-argcomplete (tab-completion)
+      - name: Test
+        run: |
+          export NUTRA_DIR=tests/.nutra.test
+          make _test
+
       - name: Lint
         run: make _lint
 
-      # TODO: Tests for: python-argcomplete (tab-completion)
-      - name: Test
-        run: make _test
+      - name: Install
+        run: make install
+
+      - name: Basic Tests / CLI / Integration
+        run: |
+          n -v
+          nutra -d init -y
+          nutra --no-pager nt
+          nutra --no-pager sort -c 789
+          nutra --no-pager search ultraviolet mushrooms
+          nutra --no-pager anl 9050
+          nutra --no-pager recipe
+          nutra day tests/resources/day/human-test.csv
