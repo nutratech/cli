@@ -39,6 +39,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Configure Line Endings / git / LF
+        run: |
+          git config --global core.autocrlf input
+          git config --global core.eol lf
+
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -55,6 +60,10 @@ jobs:
       - name: Install requirements
         run: make _deps
 
+      # NOTE: Skip this on Windows, they are on different drives.
+      #  It errors on copying over ~/.nutra/nt.sqlite3
+      #  We can modify NUTRA_HOME for the tests,
+      #    or we can test `make install` and `nutra init` directly.
       # - name: Run Tests
       #   run: make _test
 
