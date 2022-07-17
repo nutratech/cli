@@ -33,7 +33,7 @@ jobs:
       # TODO: Tests for: python-argcomplete (tab-completion)
       - name: Test
         run: |
-          set NUTRA_DIR=tests/.nutra.test
+          set NUTRA_HOME=tests/.nutra.test
           make _test
 
       - name: Lint

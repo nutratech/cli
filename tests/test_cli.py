@@ -29,8 +29,9 @@ from ntclient.persistence.sql.usda import usda_ver
 from ntclient.services import init
 from ntclient.utils.exceptions import SqlInvalidVersionError
 
-TEST_HOME = os.path.dirname(os.path.abspath(__file__))
-os.environ["NUTRA_HOME"] = os.path.join(TEST_HOME, ".nutra.test")
+# NOTE: this doesn't work currently, b/c it's already read up (in imports above)
+# TEST_HOME = os.path.dirname(os.path.abspath(__file__))
+# os.environ["NUTRA_HOME"] = os.path.join(TEST_HOME, ".nutra.test")
 
 # TODO: integration tests.. create user, recipe, log.. analyze & compare
 arg_parser = build_argparser()

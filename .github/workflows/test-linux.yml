@@ -30,7 +30,7 @@ jobs:
       # TODO: Tests for: python-argcomplete (tab-completion)
       - name: Test
         run: |
-          export NUTRA_DIR=tests/.nutra.test
+          export NUTRA_HOME=tests/.nutra.test
           make _test
 
       - name: Lint
