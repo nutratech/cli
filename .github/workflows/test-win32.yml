@@ -33,7 +33,8 @@ jobs:
       # TODO: Tests for: python-argcomplete (tab-completion)
       - name: Test
         run: |
-          $Env:NUTRA_HOME='$pwd/tests/.nutra.test'
+          $curDir = (Get-Location).toString()
+          $Env:NUTRA_HOME = $curDir + '/tests/.nutra.test'
           make _test
 
       - name: Lint
