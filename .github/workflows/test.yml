@@ -77,7 +77,7 @@ jobs:
         run: |
           n -h
           nutra
-          nutra init -y
+          nutra -d init -y
           nutra nt
           nutra sort -c 789
           nutra search ultraviolet mushrooms
