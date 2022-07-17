@@ -35,7 +35,15 @@ _venv:
 # Install requirements
 # ---------------------------------------
 
-PY_SYS_INTERPRETER ?= /usr/bin/python3
+PY_SYS_INTERPRETER ?=
+ifeq ($(PY_SYS_INTERPRETER),)
+	ifeq ($(OS),Windows_NT)
+		PY_SYS_INTERPRETER += python3
+	else
+		PY_SYS_INTERPRETER += /usr/bin/python3
+	endif
+endif
+
 PY_VIRTUAL_INTERPRETER ?= python
 
 PIP ?= $(PY_VIRTUAL_INTERPRETER) -m pip
@@ -132,11 +140,12 @@ build: _build clean
 
 .PHONY: install
 install:	## pip install nutra
-	$(PY_SYS_INTERPRETER) -m pip install wheel
-	$(PY_SYS_INTERPRETER) -m pip install .
-	$(PY_SYS_INTERPRETER) -m pip show nutra
-	- $(PY_SYS_INTERPRETER) -c 'import shutil; print(shutil.which("nutra"));'
-	nutra -v
+	@echo $(PY_SYS_INTERPRETER)
+# 	$(PY_SYS_INTERPRETER) -m pip install wheel
+# 	$(PY_SYS_INTERPRETER) -m pip install .
+# 	$(PY_SYS_INTERPRETER) -m pip show nutra
+# 	- $(PY_SYS_INTERPRETER) -c 'import shutil; print(shutil.which("nutra"));'
+# 	nutra -v
 
 
 # ---------------------------------------
