@@ -2,16 +2,16 @@
  nutratracker
 **************
 
-.. image:: https://badgen.net/pypi/v/nutra
-    :target: https://pypi.org/project/nutra/
-    :alt: Latest version unknown
-
 .. image:: https://github.com/nutratech/cli/actions/workflows/test-linux.yml/badge.svg
     :target: https://github.com/nutratech/cli/actions/workflows/test-linux.yml
     :alt: Build status unknown (Linux)
 .. image:: https://github.com/nutratech/cli/actions/workflows/test-win32.yml/badge.svg
     :target: https://github.com/nutratech/cli/actions/workflows/test-win32.yml
     :alt: Build status unknown (Windows)
+
+.. image:: https://badgen.net/pypi/v/nutra
+    :target: https://pypi.org/project/nutra/
+    :alt: Latest version unknown
 
 .. image:: https://pepy.tech/badge/nutra/month
     :target: https://pepy.tech/project/nutra
