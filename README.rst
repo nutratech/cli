@@ -5,17 +5,25 @@
 .. image:: https://badgen.net/pypi/v/nutra
     :target: https://pypi.org/project/nutra/
     :alt: Latest version unknown
-.. image:: https://github.com/nutratech/cli/actions/workflows/test.yml/badge.svg
-    :target: https://github.com/nutratech/cli/actions/workflows/test.yml
-    :alt: Build status unknown
+
+.. image:: https://github.com/nutratech/cli/actions/workflows/test-linux.yml/badge.svg
+    :target: https://github.com/nutratech/cli/actions/workflows/test-linux.yml
+    :alt: Build status unknown (Linux)
+.. image:: https://github.com/nutratech/cli/actions/workflows/test-win32.yml/badge.svg
+    :target: https://github.com/nutratech/cli/actions/workflows/test-win32.yml
+    :alt: Build status unknown (Windows)
+
 .. image:: https://pepy.tech/badge/nutra/month
     :target: https://pepy.tech/project/nutra
     :alt: Monthly downloads unknown
+
 .. image:: https://img.shields.io/pypi/pyversions/nutra.svg
     :alt: Python3 (3.4 - 3.10)
+
 .. image:: https://badgen.net/badge/code%20style/black/000
     :target: https://github.com/ambv/black
     :alt: Code style: black
+
 .. image:: https://badgen.net/pypi/license/nutra
     :target: https://www.gnu.org/licenses/gpl-3.0.en.html
     :alt: License GPL-3
