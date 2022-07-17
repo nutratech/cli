@@ -140,6 +140,7 @@ I've run the command to seed the autocomplete script.
 
 .. code-block:: bash
 
+    mkdir -p $HOME/.bash_completion.d
     activate-global-python-argcomplete --dest=$HOME/.bash_completion.d
 
 And my ``~/.bashrc`` file looks like this.
@@ -149,8 +150,8 @@ And my ``~/.bashrc`` file looks like this.
     export ARGCOMPLETE_USE_TEMPFILES=1
 
     # python bash completion
-    if [ -f ~/.bash_completion.d/python-argcomplete.sh ]; then
-        source ~/.bash_completion.d/python-argcomplete.sh
+    if [ -f ~/.bash_completion.d/python-argcomplete ]; then
+        source ~/.bash_completion.d/python-argcomplete
     fi
 
 **NOTE:** This is a work in progress, we are adding more autocomplete
