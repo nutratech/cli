@@ -55,8 +55,8 @@ jobs:
       - name: Install requirements
         run: make _deps
 
-      - name: Run Tests
-        run: make _test
+      # - name: Run Tests
+      #   run: make _test
 
       - name: Run linters
         run: make _lint
@@ -66,6 +66,7 @@ jobs:
 
       - name: Basic Tests / CLI / Integration
         run: |
+          n -h
           nutra
           nutra init
           nutra nt
