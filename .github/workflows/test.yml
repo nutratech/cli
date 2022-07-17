@@ -82,3 +82,4 @@ jobs:
           nutra --no-pager search ultraviolet mushrooms
           nutra --no-pager anl 9050
           nutra --no-pager recipe
+          nutra day tests/resources/day/human-test.csv
