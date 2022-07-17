@@ -4,8 +4,9 @@ name: CI
   push: {}
 
 jobs:
-  test:
+  test-linux:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -16,7 +17,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
@@ -29,5 +30,46 @@ jobs:
       - name: Lint
         run: make _lint
 
+      # TODO: Tests for: python-argcomplete (tab-completion)
       - name: Test
         run: make _test
+
+  # Windows integration tests: Makefile, pip, and lint/test
+  test-win32:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Reload Cache / pip
+        uses: actions/cache@v3
+        with:
+          path: ~\AppData\Local\pip\Cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install requirements
+        run: make _deps
+
+      - name: Run Tests
+        run: make _test
+
+      - name: Run linters
+        run: make _lint
+
+      - name: Install
+        run: make install
+
+      - name: Basic Tests / CLI / Integration
+        run: |
+          nutra
+          nutra init
+          nutra nt
+          nutra sort -c 789
+          nutra search ultraviolet mushrooms
+          nutra anl 9050
+          nutra recipe
