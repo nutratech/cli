@@ -1,7 +1,7 @@
 """Services module, currently only home to SQL/persistence init method"""
 import os
 
-from ntclient import NUTRA_DIR
+from ntclient import NUTRA_HOME
 from ntclient.ntsqlite.sql import build_ntsqlite
 from ntclient.persistence.sql.nt import nt_init
 from ntclient.persistence.sql.usda import usda_init
@@ -18,8 +18,8 @@ def init(yes=False):
         4. prefs.json
     """
     print("Nutra directory  ", end="")
-    if not os.path.isdir(NUTRA_DIR):
-        os.makedirs(NUTRA_DIR, 0o755)
+    if not os.path.isdir(NUTRA_HOME):
+        os.makedirs(NUTRA_HOME, 0o755)
     print("..DONE!")
 
     # TODO: print off checks, return False if failed

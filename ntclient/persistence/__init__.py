@@ -8,12 +8,12 @@ Created on Sat Mar 23 13:09:07 2019
 import json
 import os
 
-from ntclient import NUTRA_DIR
+from ntclient import NUTRA_HOME
 
 # TODO: init, handle when it doesn't exist yet
 # TODO: prompt to create profile if copying default `prefs.json` with PROFILE_ID: -1
 #  (non-existent)
-PREFS_FILE = os.path.join(NUTRA_DIR, "prefs.json")
+PREFS_FILE = os.path.join(NUTRA_HOME, "prefs.json")
 PREFS = {}
 PROFILE_ID = None
 
