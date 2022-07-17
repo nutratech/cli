@@ -12,7 +12,7 @@ import pytest
 
 from ntclient import (
     NTSQLITE_BUILDPATH,
-    NUTRA_DIR,
+    NUTRA_HOME,
     USDA_DB_NAME,
     __db_target_nt__,
     __db_target_usda__,
@@ -30,7 +30,9 @@ from ntclient.services import init
 from ntclient.utils.exceptions import SqlInvalidVersionError
 
 TEST_HOME = os.path.dirname(os.path.abspath(__file__))
-os.environ["NUTRA_HOME"] = os.path.join(TEST_HOME, ".nutra.test")
+# NOTE: this doesn't work currently, b/c it's already read up (in imports above)
+#  We're just setting it on the shell, as an env var
+# os.environ["NUTRA_HOME"] = os.path.join(TEST_HOME, ".nutra.test")
 
 # TODO: integration tests.. create user, recipe, log.. analyze & compare
 arg_parser = build_argparser()
@@ -259,7 +261,7 @@ def test_802_usda_downloads_fresh_if_missing_or_deleted():
     #  remove whole `.nutra` in a special test?
     try:
         # TODO: export USDA_DB_PATH at package level, don't pepper os.path.join() throughout code?
-        usda_path = os.path.join(NUTRA_DIR, USDA_DB_NAME)
+        usda_path = os.path.join(NUTRA_HOME, USDA_DB_NAME)
         os.remove(usda_path)
     except (FileNotFoundError, PermissionError) as err:
         # TODO: resolve PermissionError on Windows

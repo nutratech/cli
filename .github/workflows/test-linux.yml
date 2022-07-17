@@ -1,0 +1,51 @@
+---
+name: test-linux
+"on":
+  push: {}
+
+jobs:
+  test-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Reload Cache / pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install requirements
+        # NOTE: container lacks OS dist for testresources/launchpadlib
+        run: |
+          pip install testresources==2.0.1
+          make _deps
+
+      # TODO: Tests for: python-argcomplete (tab-completion)
+      - name: Test
+        run: |
+          export NUTRA_HOME=$(pwd)/tests/.nutra.test
+          make _test
+
+      - name: Lint
+        run: make _lint
+
+      - name: Install
+        run: make install
+
+      - name: Basic Tests / CLI / Integration
+        run: |
+          n -v
+          nutra -d init -y
+          nutra --no-pager nt
+          nutra --no-pager sort -c 789
+          nutra --no-pager search ultraviolet mushrooms
+          nutra --no-pager anl 9050
+          nutra --no-pager recipe
+          nutra day tests/resources/day/human-test.csv

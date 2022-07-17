@@ -4,7 +4,7 @@ import sqlite3
 import tarfile
 import urllib.request
 
-from ntclient import NUTRA_DIR, USDA_DB_NAME, __db_target_usda__
+from ntclient import NUTRA_HOME, USDA_DB_NAME, __db_target_usda__
 from ntclient.persistence.sql import _sql, _sql_headers, version
 from ntclient.utils.exceptions import SqlConnectError, SqlInvalidVersionError
 
@@ -20,7 +20,7 @@ def usda_init(yes=False) -> None:
 
         if yes or input_agree().lower() == "y":
             # TODO: save with version in filename? Don't re-download tarball, just extract?
-            save_path = os.path.join(NUTRA_DIR, "%s.tar.xz" % USDA_DB_NAME)
+            save_path = os.path.join(NUTRA_HOME, "%s.tar.xz" % USDA_DB_NAME)
 
             # Download usda.sqlite3.tar.xz
             print("curl -L %s -o %s.tar.xz" % (url, USDA_DB_NAME))
@@ -29,7 +29,7 @@ def usda_init(yes=False) -> None:
             # Extract the archive
             with tarfile.open(save_path, mode="r:xz") as usda_sqlite_file:
                 print("\ntar xvf %s.tar.xz" % USDA_DB_NAME)
-                usda_sqlite_file.extractall(NUTRA_DIR)
+                usda_sqlite_file.extractall(NUTRA_HOME)
 
             print("==> done downloading %s" % USDA_DB_NAME)
 
@@ -40,7 +40,7 @@ def usda_init(yes=False) -> None:
         )
     )
 
-    if USDA_DB_NAME not in os.listdir(NUTRA_DIR):
+    if USDA_DB_NAME not in os.listdir(NUTRA_HOME):
         print("INFO: usda.sqlite3 doesn't exist, is this a fresh install?")
         download_extract_usda()
     elif usda_ver() != __db_target_usda__:
@@ -65,7 +65,7 @@ def usda_sqlite_connect(version_check=True) -> sqlite3.Connection:
     """Connects to the usda.sqlite3 file, or throws an exception"""
 
     # TODO: support as customizable env var ?
-    db_path = os.path.join(NUTRA_DIR, USDA_DB_NAME)
+    db_path = os.path.join(NUTRA_HOME, USDA_DB_NAME)
     if os.path.isfile(db_path):
         con = sqlite3.connect(db_path)
         # con.row_factory = sqlite3.Row  # see: https://chrisostrouchov.com/post/python_sqlite/

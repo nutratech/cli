@@ -35,7 +35,7 @@ from ntclient.ntsqlite.sql import NT_DB_NAME
 
 # Package info
 __title__ = "nutra"
-__version__ = "0.2.4"
+__version__ = "0.2.5.dev0"
 __author__ = "Shane Jaroch"
 __email__ = "chown_tee@proton.me"
 __license__ = "GPL v3"
@@ -49,14 +49,16 @@ USDA_XZ_SHA256 = "25dba8428ced42d646bec704981d3a95dc7943240254e884aad37d59eee961
 
 # Global variables
 ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
-NUTRA_DIR = os.getenv("NUTRA_HOME", os.path.join(os.path.expanduser("~"), ".nutra"))
+NUTRA_HOME = os.getenv("NUTRA_HOME", os.path.join(os.path.expanduser("~"), ".nutra"))
 USDA_DB_NAME = "usda.sqlite"
 # NOTE: NT_DB_NAME = "nt.sqlite3" is defined in ntclient.ntsqlite.sql
 DEBUG = False
 PAGING = True
 
 NTSQLITE_BUILDPATH = os.path.join(ROOT_DIR, "ntsqlite", "sql", NT_DB_NAME)
-NTSQLITE_DESTINATION = os.path.join(NUTRA_DIR, NT_DB_NAME)
+NTSQLITE_DESTINATION = os.path.join(NUTRA_HOME, NT_DB_NAME)
+print(NTSQLITE_BUILDPATH)
+print(NTSQLITE_DESTINATION)
 
 # Check Python version
 PY_MIN_VER = (3, 4, 0)

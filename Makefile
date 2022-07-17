@@ -35,7 +35,15 @@ _venv:
 # Install requirements
 # ---------------------------------------
 
-PY_SYS_INTERPRETER ?= /usr/bin/python3
+PY_SYS_INTERPRETER ?=
+ifeq ($(PY_SYS_INTERPRETER),)
+	ifeq ($(OS),Windows_NT)
+		PY_SYS_INTERPRETER += python3
+	else
+		PY_SYS_INTERPRETER += /usr/bin/python3
+	endif
+endif
+
 PY_VIRTUAL_INTERPRETER ?= python
 
 PIP ?= $(PY_VIRTUAL_INTERPRETER) -m pip

@@ -3,6 +3,5 @@ include requirements-*.txt
 
 include ntclient/ntsqlite/sql/*.sql
 include ntclient/ntsqlite/sql/data/*.csv
-include ntclient/ntsqlite/sql/upgrade_scripts/*.sql
 
 global-exclude nt.sqlite3

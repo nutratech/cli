@@ -16,6 +16,7 @@ Added
 ~~~~~
 
 - Basic functionality of ``import`` and ``export`` sub-commands
+- Automated CI/CD integration tests for ``Windows`` platform
 
 
 

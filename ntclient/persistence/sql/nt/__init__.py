@@ -6,7 +6,7 @@ from ntclient import (
     NT_DB_NAME,
     NTSQLITE_BUILDPATH,
     NTSQLITE_DESTINATION,
-    NUTRA_DIR,
+    NUTRA_HOME,
     __db_target_nt__,
 )
 from ntclient.persistence.sql import _sql, _sql_headers, version
@@ -58,7 +58,7 @@ def nt_init() -> None:
 
 def nt_sqlite_connect(version_check=True) -> sqlite3.Connection:
     """Connects to the nt.sqlite3 file, or throws an exception"""
-    db_path = os.path.join(NUTRA_DIR, NT_DB_NAME)
+    db_path = os.path.join(NUTRA_HOME, NT_DB_NAME)
     if os.path.isfile(db_path):
         con = sqlite3.connect(db_path)
         con.row_factory = sqlite3.Row

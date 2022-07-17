@@ -1,1 +1,0 @@
-set PY_SYS_INTERPRETER=python3
