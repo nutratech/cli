@@ -13,6 +13,12 @@ cache: pip
 git:
   submodules: true
 
+before_install:
+  - >
+    if [[ "$(python --version)" =~ "3.4." ]]; then
+      grep -v skip_empty setup.cfg > setup.cfg2 && mv setup.cfg2 setup.cfg;
+    fi
+
 install:
   - python -m pip install coveralls
   - python -m pip install colorama==0.4.1
