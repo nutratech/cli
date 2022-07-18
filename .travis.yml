@@ -1,5 +1,5 @@
 ---
-dist: bionic
+dist: xenial
 os: ["linux"]
 language: python
 python:
@@ -10,11 +10,14 @@ python:
   - 3.8
   - 3.9
   - pypy3
+cache: pip
 git:
   submodules: true
+
 install:
   - python -m pip install coveralls
   - make _deps
+
 script:
   - make _test
   - coveralls
