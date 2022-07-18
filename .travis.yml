@@ -7,9 +7,9 @@ python:
 git:
   submodules: true
 before_install:
-  - make deps
-  - make test
-  - make lint
+  - make _deps
+  - make _test
+  - make _lint
 install:
   - make install
 script:
