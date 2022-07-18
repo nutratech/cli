@@ -41,11 +41,13 @@ jobs:
         run: make _lint
 
       - name: Install
-        run: make install
+        run: |
+          Add-ToUserPath "$env:APPDATA/Python/Python39/Scripts"
+          make install
 
       - name: Basic Tests / CLI / Integration
         run: |
-          nutra -v
+          n -v
           nutra -d init -y
           nutra --no-pager nt
           nutra --no-pager sort -c 789
