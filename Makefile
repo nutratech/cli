@@ -138,10 +138,12 @@ build:	## Create sdist binary *.tar.gz
 build: _build clean
 
 
+PIP_INSTALL_OPT_ARGS ?=
+
 .PHONY: install
 install:	## pip install nutra
 	$(PY_SYS_INTERPRETER) -m pip install wheel
-	$(PY_SYS_INTERPRETER) -m pip install --user .
+	$(PY_SYS_INTERPRETER) -m pip install . || $(PY_SYS_INTERPRETER) -m pip install --user .
 	$(PY_SYS_INTERPRETER) -m pip show nutra
 	- $(PY_SYS_INTERPRETER) -c 'import shutil; print(shutil.which("nutra"));'
 	nutra -v
