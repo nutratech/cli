@@ -9,6 +9,10 @@
     :target: https://github.com/nutratech/cli/actions/workflows/test-win32.yml
     :alt: Build status unknown (Windows)
 
+.. image:: https://coveralls.io/repos/github/nutratech/cli/badge.svg?branch=master
+    :target: https://coveralls.io/github/nutratech/cli?branch=master
+    :alt: Coverage unknown
+
 .. image:: https://badgen.net/pypi/v/nutra
     :target: https://pypi.org/project/nutra/
     :alt: Latest version unknown
@@ -113,12 +117,16 @@ Install the dependencies (``make deps``) and then:
     # source .venv/bin/activate  # uncomment if NOT using direnv
     make format lint test
 
-Argcomplete (tab completion on Linux/macOS)
+ArgComplete (tab completion / autocomplete)
 ===========================================
 
-After installing nutra, argcomplete package should also be installed,
+After installing nutra, argcomplete package should also be installed.
 
-Simply run the following out of a ``bash`` shell:
+Linux, macOS, and Linux Subsystem for Windows
+#############################################
+
+Simply run the following out of a ``bash`` shell. Check their page for more
+specifics on using other shells, e.g. ``zsh``, ``fish``, or ``tsh``.
 
 .. code-block:: bash
 
@@ -126,6 +134,29 @@ Simply run the following out of a ``bash`` shell:
 
 Then you can press tab to fill in or complete subcommands
 and to list argument flags.
+
+Windows (Git Bash)
+##################
+
+This can work with git bash too. I followed the instructions on their README.
+
+I've run the command to seed the autocomplete script.
+
+.. code-block:: bash
+
+    mkdir -p $HOME/.bash_completion.d
+    activate-global-python-argcomplete --dest=$HOME/.bash_completion.d
+
+And my ``~/.bashrc`` file looks like this.
+
+.. code-block:: bash
+
+    export ARGCOMPLETE_USE_TEMPFILES=1
+
+    # python bash completion
+    if [ -f ~/.bash_completion.d/python-argcomplete ]; then
+        source ~/.bash_completion.d/python-argcomplete
+    fi
 
 **NOTE:** This is a work in progress, we are adding more autocomplete
 functions.
