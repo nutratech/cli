@@ -1,0 +1,17 @@
+---
+dist: xenial
+os: ["linux"]
+language: python
+python:
+  - "3.6"
+git:
+  submodules: true
+before_install:
+  - make deps
+  - make test
+  - make lint
+install:
+  - make install
+script:
+  - n -v
+  - n -d nt
