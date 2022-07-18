@@ -138,8 +138,6 @@ build:	## Create sdist binary *.tar.gz
 build: _build clean
 
 
-PIP_INSTALL_OPT_ARGS ?=
-
 .PHONY: install
 install:	## pip install nutra
 	$(PY_SYS_INTERPRETER) -m pip install wheel
