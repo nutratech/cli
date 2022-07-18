@@ -6,12 +6,7 @@ python:
   - "3.6"
 git:
   submodules: true
-before_install:
-  - make _deps
-  - make _test
-  - make _lint
 install:
-  - make install
+  - make _deps
 script:
-  - n -v
-  - n -d nt
+  - make _test
