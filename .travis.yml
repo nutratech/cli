@@ -7,6 +7,8 @@ python:
 git:
   submodules: true
 install:
+  - python -m pip install coveralls
   - make _deps
 script:
   - make _test
+  - coveralls
