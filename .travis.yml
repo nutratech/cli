@@ -20,4 +20,4 @@ install:
 
 script:
   - make _test
-  - coveralls
+  - if [[ "$(python --version)" =~ "3.6." ]]; then coveralls; fi
