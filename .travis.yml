@@ -14,8 +14,9 @@ git:
   submodules: true
 
 install:
-  - python -m pip install coveralls
-  - python -m pip install colorama==0.4.1
+  - python -m pip install coveralls==3.3.1
+  - python -m pip install colorama>=0.4.1
+  - python -m pip install coverage>=4.54
   - make _deps
 
 script:
