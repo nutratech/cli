@@ -57,8 +57,6 @@ PAGING = True
 
 NTSQLITE_BUILDPATH = os.path.join(ROOT_DIR, "ntsqlite", "sql", NT_DB_NAME)
 NTSQLITE_DESTINATION = os.path.join(NUTRA_HOME, NT_DB_NAME)
-print(NTSQLITE_BUILDPATH)
-print(NTSQLITE_DESTINATION)
 
 # Check Python version
 PY_MIN_VER = (3, 4, 0)
