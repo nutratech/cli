@@ -45,7 +45,7 @@ jobs:
 
       - name: Basic Tests / CLI / Integration
         run: |
-          n -v
+          nutra -v
           nutra -d init -y
           nutra --no-pager nt
           nutra --no-pager sort -c 789
