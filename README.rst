@@ -9,6 +9,10 @@
     :target: https://github.com/nutratech/cli/actions/workflows/test-win32.yml
     :alt: Build status unknown (Windows)
 
+.. image:: https://coveralls.io/repos/github/nutratech/cli/badge.svg?branch=master
+    :target: https://coveralls.io/github/nutratech/cli?branch=master
+    :alt: Coverage unknown
+
 .. image:: https://badgen.net/pypi/v/nutra
     :target: https://pypi.org/project/nutra/
     :alt: Latest version unknown
