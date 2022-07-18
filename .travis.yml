@@ -21,5 +21,6 @@ install:
   - python -m pip install -r requirements-test-win_xp-ubu1604.txt
 
 script:
-  - make _test
+  - coverage run -m pytest -v -s -p no:cacheprovider tests/
+  - coverage report
   - if [[ "$(python --version)" =~ "3.6." && "$(which pypy)" == "" ]]; then coveralls; fi
