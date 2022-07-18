@@ -20,7 +20,7 @@ jobs:
 
       - name: Install
         run: |
-          Add-ToUserPath "$env:APPDATA/Python/Python39/Scripts"
+          [Environment]::SetEnvironmentVariable("PATH", $Env:PATH + ";$env:APPDATA/Python/Python39/Scripts", [EnvironmentVariableTarget]::Machine)
           make install
 
       - name: Reload Cache / pip
