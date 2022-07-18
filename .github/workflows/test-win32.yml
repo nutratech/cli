@@ -18,6 +18,11 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Install
+        run: |
+          Add-ToUserPath "$env:APPDATA/Python/Python39/Scripts"
+          make install
+
       - name: Reload Cache / pip
         uses: actions/cache@v3
         with:
@@ -39,11 +44,6 @@ jobs:
 
       - name: Lint
         run: make _lint
-
-      - name: Install
-        run: |
-          Add-ToUserPath "$env:APPDATA/Python/Python39/Scripts"
-          make install
 
       - name: Basic Tests / CLI / Integration
         run: |
