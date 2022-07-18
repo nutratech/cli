@@ -20,7 +20,7 @@ jobs:
 
       - name: Install
         run: |
-          [Environment]::SetEnvironmentVariable("PATH", $Env:PATH + ";" + $env:localappdata + "/Python/Python39/Scripts", [EnvironmentVariableTarget]::Machine)
+          [Environment]::SetEnvironmentVariable("PATH", $Env:PATH + ";" + $env:appdata + "/Python/Python39/Scripts", [EnvironmentVariableTarget]::Machine)
           make install
           n -v
 
