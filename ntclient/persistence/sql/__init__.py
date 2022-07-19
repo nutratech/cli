@@ -47,13 +47,18 @@ def close_con_and_cur(
 # ------------------------------------------------
 # Main query methods
 # ------------------------------------------------
-def _prep_query(
-    con: sqlite3.Connection,
-    query: str,
-    db_name: str,
-    values: list | tuple | None = None,
-) -> tuple:
-    """@param values: tuple | list"""
+def _prep_query(  # type: ignore
+    con: sqlite3.Connection, query: str, db_name: str, values=None
+) -> sqlite3.Cursor:
+    """
+    Run a query and return a cursor object ready for row extraction.
+    @param con: sqlite3.Connection object
+    @param query: query string, e.g. SELECT * FROM version;
+    @param db_name: (nt | usda) database name [TODO: enum]
+    @param values: (tuple | list | None)
+        empty for bare queries, tuple for single, and list for many
+    @return: A sqlite3.Cursor object with populated return values.
+    """
 
     from ntclient import DEBUG  # pylint: disable=import-outside-toplevel
 
@@ -69,13 +74,13 @@ def _prep_query(
     # TODO: separate `entry` & `entries` entity for single vs. bulk insert?
     if values:
         if isinstance(values, list):
-            result = cur.executemany(query, values)
+            cur.executemany(query, values)
         else:  # tuple
-            result = cur.execute(query, values)
+            cur.execute(query, values)
     else:
-        result = cur.execute(query)
+        cur.execute(query)
 
-    return cur, result
+    return cur
 
 
 def _sql(
@@ -84,7 +89,7 @@ def _sql(
     db_name: str,
     values=None,
 ) -> list:
-    """@param values: tuple | list"""
+    """@param values: tuple | list | None"""
 
     cur, result = _prep_query(con, query, db_name, values)
 
