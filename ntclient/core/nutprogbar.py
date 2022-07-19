@@ -1,10 +1,10 @@
 """Temporary [wip] module for more visual (& colorful) RDA output"""
 
 
-def nutprogbar(food_amts, food_analyses, nutrients):
+def nutprogbar(food_amts: dict, food_analyses: list, nutrients: dict) -> dict:
     """Returns progress bars, colorized, for foods analyses"""
 
-    def tally():
+    def tally() -> None:
         for nut in nut_percs:
             # TODO: get RDA values from nt DB, tree node nested organization
             print(nut)

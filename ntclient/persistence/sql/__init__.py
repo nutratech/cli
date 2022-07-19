@@ -48,7 +48,10 @@ def close_con_and_cur(
 # Main query methods
 # ------------------------------------------------
 def _prep_query(
-    con: sqlite3.Connection, query: str, db_name: str, values=None
+    con: sqlite3.Connection,
+    query: str,
+    db_name: str,
+    values: list | tuple | None = None,
 ) -> tuple:
     """@param values: tuple | list"""
 
