@@ -3,13 +3,14 @@ import os
 import sqlite3
 import tarfile
 import urllib.request
+from collections.abc import Iterable
 
 from ntclient import NUTRA_HOME, USDA_DB_NAME, __db_target_usda__
 from ntclient.persistence.sql import _sql, _sql_headers, version
 from ntclient.utils.exceptions import SqlConnectError, SqlInvalidVersionError
 
 
-def usda_init(yes=False) -> None:
+def usda_init(yes: bool = False) -> None:
     """On-boarding function. Downloads tarball and unpacks usda.sqlite3 file"""
 
     def input_agree() -> str:
@@ -19,7 +20,8 @@ def usda_init(yes=False) -> None:
         """Download USDA tarball from BitBucket and extract to storage folder"""
 
         if yes or input_agree().lower() == "y":
-            # TODO: save with version in filename? Don't re-download tarball, just extract?
+            # TODO: save with version in filename?
+            #  Don't re-download tarball, just extract?
             save_path = os.path.join(NUTRA_HOME, "%s.tar.xz" % USDA_DB_NAME)
 
             # Download usda.sqlite3.tar.xz
@@ -33,7 +35,8 @@ def usda_init(yes=False) -> None:
 
             print("==> done downloading %s" % USDA_DB_NAME)
 
-    # TODO: handle resource moved on Bitbucket or version mismatch due to manual overwrite?
+    # TODO: handle resource moved on Bitbucket
+    #  or version mismatch due to manual overwrite?
     url = (
         "https://bitbucket.org/dasheenster/nutra-utils/downloads/{0}-{1}.tar.xz".format(
             USDA_DB_NAME, __db_target_usda__
@@ -61,7 +64,7 @@ def usda_init(yes=False) -> None:
         )
 
 
-def usda_sqlite_connect(version_check=True) -> sqlite3.Connection:
+def usda_sqlite_connect(version_check: bool = True) -> sqlite3.Connection:
     """Connects to the usda.sqlite3 file, or throws an exception"""
 
     # TODO: support as customizable env var ?
@@ -91,8 +94,17 @@ def usda_ver() -> str:
     return version(con)
 
 
-def sql(query, values=None, version_check=True) -> list:
-    """Executes a SQL command to usda.sqlite3"""
+def sql(query: str, values: Iterable = (), version_check: bool = True) -> list:
+    """
+    Executes a SQL command to usda.sqlite3
+
+    @param query: Input SQL query
+    @param values: Union[tuple, list] Leave as empty tuple for no values,
+        e.g. bare query. Populate a tuple for a single insert. And use a list for
+        cur.executemany()
+    @param version_check: Ignore mismatch version, useful for "meta" commands
+    @return: List of selected SQL items
+    """
 
     con = usda_sqlite_connect(version_check=version_check)
 
