@@ -13,12 +13,12 @@ def init(args: argparse.Namespace) -> tuple:
 ################################################################################
 # Nutrients, search and sort
 ################################################################################
-def nutrients():
+def nutrients():  # type: ignore
     """List nutrients"""
     return services.usda.list_nutrients()
 
 
-def search(args: argparse.Namespace):
+def search(args: argparse.Namespace):  # type: ignore
     """Searches all dbs, foods, recipes, recents and favorites."""
     if args.top:
         return services.usda.search(

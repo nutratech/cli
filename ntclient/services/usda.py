@@ -24,7 +24,7 @@ from ntclient.persistence.sql.usda.funcs import (
 from ntclient.utils import NUTR_ID_KCAL, NUTR_IDS_AMINOS, NUTR_IDS_FLAVONES
 
 
-def list_nutrients() -> tuple[int, list[list]]:
+def list_nutrients():  # type: ignore
     """Lists out nutrients with basic details"""
     from ntclient import PAGING  # pylint: disable=import-outside-toplevel
 
@@ -122,10 +122,12 @@ def sort_foods(nutrient_id, by_kcal, limit=DEFAULT_RESULT_LIMIT):
 ################################################################################
 # Search
 ################################################################################
-def search(words, fdgrp_id=None, limit=DEFAULT_RESULT_LIMIT):
+def search(  # type: ignore
+    words: list, fdgrp_id: int = 0, limit: int = DEFAULT_RESULT_LIMIT
+):
     """Searches foods for input"""
 
-    def tabulate_search(_results):
+    def tabulate_search(_results: list):  # type: ignore
         """Makes search results more readable"""
         # Current terminal size
         # TODO: display "nonzero/total" report nutrients, aminos, and flavones..
@@ -191,7 +193,7 @@ def search(words, fdgrp_id=None, limit=DEFAULT_RESULT_LIMIT):
     from fuzzywuzzy import fuzz  # pylint: disable=import-outside-toplevel
 
     food_des = sql_food_details()
-    if fdgrp_id is not None:
+    if fdgrp_id:
         food_des = list(filter(lambda x: x[1] == fdgrp_id, food_des))
 
     query = " ".join(words)
