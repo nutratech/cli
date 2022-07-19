@@ -24,7 +24,7 @@ from ntclient.persistence.sql.usda.funcs import (
 )
 
 
-def recipes_overview():
+def recipes_overview() -> tuple:
     """Shows overview for all recipes"""
     recipes = sql_recipes()[1]
 
@@ -44,7 +44,7 @@ def recipes_overview():
     return 0, results
 
 
-def recipe_overview(recipe_id):
+def recipe_overview(recipe_id: int) -> tuple:
     """Shows single recipe overview"""
     recipe = sql_analyze_recipe(recipe_id)
     name = recipe[0][1]
@@ -68,10 +68,10 @@ def recipe_overview(recipe_id):
     return 0, recipe
 
 
-def recipe_import(file_path):
+def recipe_import(file_path: str) -> tuple:
     """Import a recipe to SQL database"""
 
-    def extract_id_from_filename(path):
+    def extract_id_from_filename(path: str) -> int:
         filename = str(os.path.basename(path))
         if (
             "[" in filename
@@ -80,7 +80,7 @@ def recipe_import(file_path):
         ):
             # TODO: try, raise: print/warn
             return int(filename.split("[")[1].split("]")[0])
-        return None
+        return 0  # zero is falsy
 
     if os.path.isfile(file_path):
         # TODO: better logic than this
@@ -96,7 +96,7 @@ def recipe_import(file_path):
     return 1, False
 
 
-def recipe_add(name, food_amts):
+def recipe_add(name: str, food_amts: dict) -> tuple:
     """Add a recipe to SQL database"""
     print()
     print("New recipe: " + name + "\n")
@@ -117,7 +117,7 @@ def recipe_add(name, food_amts):
     return 1, False
 
 
-def recipe_delete(recipe_id):
+def recipe_delete(recipe_id: int) -> tuple:
     """Deletes recipe by ID, along with any FK constraints"""
     recipe = sql_recipe(recipe_id)[0]
 

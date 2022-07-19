@@ -24,7 +24,7 @@ from ntclient.persistence.sql.usda.funcs import (
 from ntclient.utils import NUTR_ID_KCAL, NUTR_IDS_AMINOS, NUTR_IDS_FLAVONES
 
 
-def list_nutrients():
+def list_nutrients() -> tuple[int, list[list]]:
     """Lists out nutrients with basic details"""
     from ntclient import PAGING  # pylint: disable=import-outside-toplevel
 

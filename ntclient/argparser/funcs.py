@@ -1,10 +1,11 @@
 """Current home to subparsers and service-level logic"""
+import argparse
 import os
 
 from ntclient import services
 
 
-def init(args):
+def init(args: argparse.Namespace) -> tuple:
     """Wrapper init method for persistence stuff"""
     return services.init(yes=args.yes)
 
@@ -17,7 +18,7 @@ def nutrients():
     return services.usda.list_nutrients()
 
 
-def search(args):
+def search(args: argparse.Namespace):
     """Searches all dbs, foods, recipes, recents and favorites."""
     if args.top:
         return services.usda.search(
@@ -26,7 +27,7 @@ def search(args):
     return services.usda.search(words=args.terms, fdgrp_id=args.fdgrp_id)
 
 
-def sort(args):
+def sort(args: argparse.Namespace):
     """Sorts based on nutrient id"""
     if args.top:
         return services.usda.sort_foods(args.nutr_id, by_kcal=args.kcal, limit=args.top)
@@ -36,7 +37,7 @@ def sort(args):
 ################################################################################
 # Analysis and Day scoring
 ################################################################################
-def analyze(args):
+def analyze(args: argparse.Namespace):
     """Analyze a food"""
     food_ids = args.food_id
     grams = args.grams
@@ -44,7 +45,7 @@ def analyze(args):
     return services.analyze.foods_analyze(food_ids, grams)
 
 
-def day(args):
+def day(args: argparse.Namespace):
     """Analyze a day's worth of meals"""
     day_csv_paths = args.food_log
     day_csv_paths = [os.path.expanduser(x) for x in day_csv_paths]
@@ -61,17 +62,17 @@ def recipes():
     return services.recipe.recipes_overview()
 
 
-def recipe(args):
+def recipe(args: argparse.Namespace):
     """Return recipe view (analysis)"""
     return services.recipe.recipe_overview(args.recipe_id)
 
 
-def recipe_import(args):
+def recipe_import(args: argparse.Namespace):
     """Add a recipe"""
     # TODO: custom serving sizes, not always in grams?
     return services.recipe.recipe_import(args.path)
 
 
-def recipe_delete(args):
+def recipe_delete(args: argparse.Namespace):
     """Delete a recipe"""
     return services.recipe.recipe_delete(args.recipe_id)
