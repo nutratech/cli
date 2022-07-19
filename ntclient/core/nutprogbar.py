@@ -9,7 +9,7 @@ def nutprogbar(food_amts: dict, food_analyses: list, nutrients: dict) -> dict:
             # TODO: get RDA values from nt DB, tree node nested organization
             print(nut)
 
-    food_analyses = {
+    food_analyses_dict = {
         x[0]: {y[1]: y[2] for y in food_analyses if y[0] == x[0]} for x in food_analyses
     }
 
@@ -20,7 +20,7 @@ def nutprogbar(food_amts: dict, food_analyses: list, nutrients: dict) -> dict:
 
     for food_id, grams in food_amts.items():
         # r = grams / 100.0
-        analysis = food_analyses[food_id]
+        analysis = food_analyses_dict[food_id]
         for nutrient_id, amt in analysis.items():
             if nutrient_id not in nut_amts:
                 nut_amts[nutrient_id] = amt

@@ -30,11 +30,11 @@ def version(con: sqlite3.Connection) -> str:
     cur = con.cursor()
     result = cur.execute("SELECT * FROM version;").fetchall()
     close_con_and_cur(con, cur, commit=False)
-    return result[-1][1]
+    return str(result[-1][1])
 
 
 def close_con_and_cur(
-    con: sqlite3.Connection, cur: sqlite3.Cursor, commit=True
+    con: sqlite3.Connection, cur: sqlite3.Cursor, commit: bool = True
 ) -> None:
     """Cleans up, commits, and closes after an SQL command is run"""
 
@@ -83,7 +83,7 @@ def _prep_query(  # type: ignore
     return cur
 
 
-def _sql(
+def _sql(  # type: ignore
     con: sqlite3.Connection,
     query: str,
     db_name: str,
@@ -91,7 +91,7 @@ def _sql(
 ) -> list:
     """@param values: tuple | list | None"""
 
-    cur, result = _prep_query(con, query, db_name, values)
+    cur = _prep_query(con, query, db_name, values)
 
     # TODO: print "<number> SELECTED", or other info
     #  BASED ON command SELECT/INSERT/DELETE/UPDATE
@@ -101,7 +101,7 @@ def _sql(
     return result
 
 
-def _sql_headers(
+def _sql_headers(  # type: ignore
     con: sqlite3.Connection,
     query: str,
     db_name: str,
@@ -109,9 +109,9 @@ def _sql_headers(
 ) -> tuple:
     """@param values: tuple | list"""
 
-    cur, result = _prep_query(con, query, db_name, values)
+    cur = _prep_query(con, query, db_name, values)
 
-    result = sql_entries_headers(result)
+    result = sql_entries_headers(cur)
 
     close_con_and_cur(con, cur)
     return result
