@@ -58,7 +58,7 @@ PIP_OPT_ARGS ?=
 .PHONY: _deps
 _deps:
 	$(PIP) install wheel
-	$(PIP) installl $(PIP_OPT_ARGS) -r requirements.txt
+	$(PIP) install $(PIP_OPT_ARGS) -r requirements.txt
 	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_OPT)
 	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_LINT)
 	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_TEST) || \
