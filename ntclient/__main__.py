@@ -101,8 +101,9 @@ def main(args: list = None) -> int:
 
             # Run function
             if args_dict:
-                return parser.func(args=parser)
-            return parser.func()
+                # Make sure the parser.func() always returns: Tuple[Int, Any]
+                return parser.func(args=parser)  # type: ignore
+            return parser.func()  # type: ignore
 
         # Otherwise print help
         arg_parser.print_help()
@@ -138,7 +139,7 @@ def main(args: list = None) -> int:
             raise
     finally:
         if DEBUG:
-            exc_time = time.time() - start_time
+            exc_time = time.time() - start_time  # type: ignore
             print("\nExecuted in: %s ms" % round(exc_time * 1000, 1))
             print("Exit code: %s" % exit_code)
 
