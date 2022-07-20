@@ -199,16 +199,13 @@ def search(words: list, fdgrp_id: int = 0, limit: int = DEFAULT_RESULT_LIMIT) ->
         food_des = list(filter(lambda x: x[1] == fdgrp_id, food_des))
 
     query = " ".join(words)
-    _scores: Mapping[int, int] = {
+    _scores = {
         f[0]: fuzz.token_set_ratio(query, f[2]) for f in food_des
     }
-    # noinspection PyTypeChecker
-    # FIXME: working here
-    scores: Sequence[Mapping[int, int]]
     scores = sorted(_scores.items(), key=lambda x: x[1], reverse=True)
     scores = scores[:limit]
 
-    food_ids: Set[int] = {x[0] for x in scores}
+    food_ids = {x[0] for x in scores}
     nut_data = sql_analyze_foods(food_ids)
 
     # Tally foods
