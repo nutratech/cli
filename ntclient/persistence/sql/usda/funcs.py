@@ -11,8 +11,8 @@ from ntclient.utils import NUTR_ID_KCAL
 def sql_fdgrp() -> Mapping[int, tuple]:
     """Shows food groups"""
 
-    query: str = "SELECT * FROM fdgrp;"
-    result: Sequence[tuple] = sql(query)
+    query = "SELECT * FROM fdgrp;"
+    result = sql(query)
     return {x[0]: x for x in result}
 
 
