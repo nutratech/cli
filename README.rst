@@ -34,7 +34,7 @@
         :target: https://pepy.tech/project/nutra
         :alt: Monthly downloads unknown
   * - Supports Python
-    - .. image:: https://img.shields.io/pypi/pyversions/nutra.svg                            |
+    - .. image:: https://img.shields.io/pypi/pyversions/nutra.svg
         :alt: Python3 (3.4 - 3.10)
     -
   * - Code Style
