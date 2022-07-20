@@ -1,4 +1,6 @@
 """usda.sqlite functions module"""
+from collections.abc import Mapping, Sequence, Set
+
 from ntclient.persistence.sql.usda import sql, sql_headers
 from ntclient.utils import NUTR_ID_KCAL
 
@@ -6,29 +8,29 @@ from ntclient.utils import NUTR_ID_KCAL
 ################################################################################
 # Basic functions
 ################################################################################
-def sql_fdgrp():
+def sql_fdgrp() -> Mapping[int, tuple]:
     """Shows food groups"""
 
-    query = "SELECT * FROM fdgrp;"
-    result = sql(query)
+    query: str = "SELECT * FROM fdgrp;"
+    result: Sequence[tuple] = sql(query)
     return {x[0]: x for x in result}
 
 
-def sql_food_details(food_ids=None) -> list:
+def sql_food_details(_food_ids: Sequence[int] = ()) -> Sequence[tuple]:
     """Readable human details for foods"""
 
-    if food_ids is None:
+    if not _food_ids:
         query = "SELECT * FROM food_des;"
     else:
         # TODO: does sqlite3 driver support this? cursor.executemany() ?
         query = "SELECT * FROM food_des WHERE id IN (%s);"
-        food_ids = ",".join(str(x) for x in set(food_ids))
+        food_ids = ",".join(str(x) for x in set(_food_ids))
         query = query % food_ids
 
     return sql(query)
 
 
-def sql_nutrients_overview() -> dict:
+def sql_nutrients_overview() -> Mapping[int, tuple]:
     """Shows nutrients overview"""
 
     query = "SELECT * FROM nutrients_overview;"
@@ -43,7 +45,7 @@ def sql_nutrients_details() -> tuple:
     return sql_headers(query)
 
 
-def sql_servings(food_ids) -> list:
+def sql_servings(_food_ids: Sequence[int]) -> Sequence[tuple]:
     """Food servings"""
     # TODO: apply connective logic from `sort_foods()` IS ('None') ?
     query = """
@@ -58,11 +60,12 @@ FROM
 WHERE
   serv.food_id IN (%s);
 """
-    food_ids = ",".join(str(x) for x in set(food_ids))
+    # FIXME: support this kind of thing by library code & parameterized queries
+    food_ids = ",".join(str(x) for x in set(_food_ids))
     return sql(query % food_ids)
 
 
-def sql_analyze_foods(food_ids) -> list:
+def sql_analyze_foods(_food_ids: Set[int]) -> Sequence[tuple]:
     """Nutrient analysis for foods"""
     query = """
 SELECT
@@ -76,14 +79,14 @@ WHERE
   food_des.id IN (%s);
 """
     # TODO: parameterized queries
-    food_ids = ",".join(str(x) for x in set(food_ids))
+    food_ids = ",".join(str(x) for x in set(_food_ids))
     return sql(query % food_ids)
 
 
 ################################################################################
 # Sort
 ################################################################################
-def sql_sort_helper1(nutrient_id) -> list:
+def sql_sort_helper1(nutrient_id: int) -> Sequence[tuple]:
     """Selects relevant bits from nut_data for sorting"""
 
     query = """
@@ -103,7 +106,7 @@ ORDER BY
     return sql(query % (NUTR_ID_KCAL, nutrient_id))
 
 
-def sql_sort_foods(nutr_id) -> list:
+def sql_sort_foods(nutr_id: int) -> Sequence[tuple]:
     """Sort foods by nutr_id per 100 g"""
 
     query = """
@@ -129,7 +132,7 @@ ORDER BY
     return sql(query % nutr_id)
 
 
-def sql_sort_foods_by_kcal(nutr_id) -> list:
+def sql_sort_foods_by_kcal(nutr_id: int) -> Sequence[tuple]:
     """Sort foods by nutr_id per 200 kcal"""
 
     # TODO: use parameterized queries

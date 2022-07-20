@@ -3,7 +3,7 @@ import os
 import sqlite3
 import tarfile
 import urllib.request
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 
 from ntclient import NUTRA_HOME, USDA_DB_NAME, __db_target_usda__
 from ntclient.persistence.sql import _sql, _sql_headers, version
@@ -51,7 +51,8 @@ def usda_init(yes: bool = False) -> None:
             "INFO: usda.sqlite3 target [{0}] doesn't match actual [{1}], ".format(
                 __db_target_usda__, usda_ver()
             )
-            + "static resource (no user data lost).. downloading and extracting correct version"
+            + "static resource (no user data lost).. "
+            "downloading and extracting correct version"
         )
         download_extract_usda()
 
@@ -71,7 +72,8 @@ def usda_sqlite_connect(version_check: bool = True) -> sqlite3.Connection:
     db_path = os.path.join(NUTRA_HOME, USDA_DB_NAME)
     if os.path.isfile(db_path):
         con = sqlite3.connect(db_path)
-        # con.row_factory = sqlite3.Row  # see: https://chrisostrouchov.com/post/python_sqlite/
+        # con.row_factory = sqlite3.Row  # see:
+        # https://chrisostrouchov.com/post/python_sqlite/
 
         # Verify version
         if version_check and usda_ver() != __db_target_usda__:
@@ -94,7 +96,9 @@ def usda_ver() -> str:
     return version(con)
 
 
-def sql(query: str, values: Iterable = (), version_check: bool = True) -> list:
+def sql(
+    query: str, values: Iterable = (), version_check: bool = True
+) -> Sequence[tuple]:
     """
     Executes a SQL command to usda.sqlite3
 
@@ -112,8 +116,17 @@ def sql(query: str, values: Iterable = (), version_check: bool = True) -> list:
     return _sql(con, query, db_name="usda", values=values)
 
 
-def sql_headers(query, values=None, version_check=True) -> tuple:
-    """Executes a SQL command to usda.sqlite3 [WITH HEADERS]"""
+def sql_headers(query: str, values: Iterable = (), version_check: bool = True) -> tuple:
+    """
+    Executes a SQL command to usda.sqlite3 [WITH HEADERS]
+
+    @param query: Input SQL query
+    @param values: Union[tuple, list] Leave as empty tuple for no values,
+        e.g. bare query. Populate a tuple for a single insert. And use a list for
+        cur.executemany()
+    @param version_check: Ignore mismatch version, useful for "meta" commands
+    @return: List of selected SQL items
+    """
 
     con = usda_sqlite_connect(version_check=version_check)
 

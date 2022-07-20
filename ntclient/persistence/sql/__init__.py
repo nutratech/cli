@@ -1,22 +1,23 @@
 """Main SQL persistence module, shared between USDA and NT databases"""
 import sqlite3
+from collections.abc import Iterable, Sequence
 
 
 # ------------------------------------------------
 # Entry fetching methods
 # ------------------------------------------------
-def sql_entries(sql_result: sqlite3.Cursor) -> list:
+def sql_entries(sql_result: sqlite3.Cursor) -> Sequence[tuple]:
     """Formats and returns a `sql_result()` for console digestion and output"""
     # TODO: return object: metadata, command, status, errors, etc?
-    rows = sql_result.fetchall()
+    rows: Sequence[tuple] = sql_result.fetchall()
 
     return rows
 
 
 def sql_entries_headers(sql_result: sqlite3.Cursor) -> tuple:
     """Formats and returns a `sql_result()` for console digestion and output"""
-    rows = sql_result.fetchall()
-    headers = [x[0] for x in sql_result.description]
+    rows: Sequence[tuple] = sql_result.fetchall()
+    headers: list = [x[0] for x in sql_result.description]
 
     return headers, rows
 
@@ -83,13 +84,13 @@ def _prep_query(  # type: ignore
     return cur
 
 
-def _sql(  # type: ignore
+def _sql(
     con: sqlite3.Connection,
     query: str,
     db_name: str,
-    values=None,
-) -> list:
-    """@param values: tuple | list | None"""
+    values: Iterable = (),
+) -> Sequence[tuple]:
+    """@param values: tuple | list"""
 
     cur = _prep_query(con, query, db_name, values)
 
@@ -101,11 +102,11 @@ def _sql(  # type: ignore
     return result
 
 
-def _sql_headers(  # type: ignore
+def _sql_headers(
     con: sqlite3.Connection,
     query: str,
     db_name: str,
-    values=None,
+    values: Iterable = (),
 ) -> tuple:
     """@param values: tuple | list"""
 
