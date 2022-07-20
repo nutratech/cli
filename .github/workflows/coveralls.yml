@@ -24,9 +24,13 @@ jobs:
 
       - name: Install requirements
         run: |
+          sudo apt install cloc=1.90-1
           pip install coveralls==3.3.1
           pip install -r requirements.txt
           pip install -r requirements-test.txt
+
+      - name: Count lines of source code
+        run: make extras/cloc
 
       # TODO: Tests for: python-argcomplete (tab-completion)
       - name: Test
