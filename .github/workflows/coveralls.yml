@@ -40,9 +40,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: coveralls --service=github
-
-      - name: Install requirements (Lint)
-        run: pip install -r requirements-lint.txt
-
-      - name: Lint
-        run: make _lint
