@@ -1,4 +1,4 @@
-argcomplete>=0.3.8,<=1.12.3
+argcomplete>=0.5.5,<=1.12.3
 colorama>=0.1.16,<=0.4.1,
 fuzzywuzzy>=0.3.0,<=0.18.0
 tabulate>=0.4.3,<=0.8.9
