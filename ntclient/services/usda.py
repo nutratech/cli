@@ -6,7 +6,6 @@ Created on Sat Oct 27 20:28:06 2018
 """
 
 import pydoc
-from collections.abc import Sequence
 
 from tabulate import tabulate
 
@@ -106,11 +105,12 @@ def sort_foods(
                 foods,
             )
         )
-    foods.sort(key=lambda x: x[1], reverse=True)
+    # Sort by nutr_val
+    foods.sort(key=lambda x: int(x[1]), reverse=True)
     foods = foods[:limit]
-    food_ids = {x[0] for x in foods}
 
     # Gets fdgrp and long_desc
+    food_ids = {x[0] for x in foods}
     food_des = {x[0]: x for x in sql_food_details(food_ids)}
     for food in foods:
         food_id = food[0]
@@ -200,7 +200,8 @@ def search(words: list, fdgrp_id: int = 0, limit: int = DEFAULT_RESULT_LIMIT) ->
 
     query = " ".join(words)
     _scores = {f[0]: fuzz.token_set_ratio(query, f[2]) for f in food_des}
-    scores = sorted(_scores.items(), key=lambda x: x[1], reverse=True)
+    # NOTE: fuzzywuzzy reports score as an int, not float
+    scores = sorted(_scores.items(), key=lambda x: int(x[1]), reverse=True)
     scores = scores[:limit]
 
     food_ids = {x[0] for x in scores}
