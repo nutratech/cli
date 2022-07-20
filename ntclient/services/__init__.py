@@ -8,15 +8,20 @@ from ntclient.persistence.sql.usda import usda_init
 from ntclient.services import analyze, recipe, usda
 
 
-def init(yes=False):
+def init(yes: bool = False) -> tuple:
     """
+    Main init method for downloading USDA and creating NT databases.
     TODO:   Check for:
         1. .nutra folder
         2. usda
         3a. nt
         3b. default profile?
         4. prefs.json
+
+    @param yes: bool (Skip prompting for [Y/n] in stdin)
+    @return: tuple[int, bool]
     """
+
     print("Nutra directory  ", end="")
     if not os.path.isdir(NUTRA_HOME):
         os.makedirs(NUTRA_HOME, 0o755)

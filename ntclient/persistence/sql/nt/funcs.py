@@ -2,8 +2,9 @@
 from ntclient.persistence.sql.nt import sql, sql_headers
 
 
-def sql_nt_next_index(table=None):
+def sql_nt_next_index(table: str) -> int:
     """Used for previewing inserts"""
+    # noinspection SqlResolve
     query = "SELECT MAX(id) as max_id FROM %s;" % table  # nosec: B608
     return int(sql(query)[0]["max_id"])
 
@@ -11,13 +12,13 @@ def sql_nt_next_index(table=None):
 ################################################################################
 # Recipe functions
 ################################################################################
-def sql_recipe(recipe_id):
+def sql_recipe(recipe_id: int) -> list:
     """Selects columns for recipe_id"""
-    query = "SELECT * FROM recipes WHERE id=?;"
+    query = "SELECT * FROM recipe WHERE id=?;"
     return sql(query, values=(recipe_id,))
 
 
-def sql_recipes():
+def sql_recipes() -> tuple:
     """Show recipes with selected details"""
     query = """
 SELECT
@@ -36,7 +37,7 @@ GROUP BY
     return sql_headers(query)
 
 
-def sql_analyze_recipe(recipe_id):
+def sql_analyze_recipe(recipe_id: int) -> list:
     """Output (nutrient) analysis columns for a given recipe_id"""
     query = """
 SELECT
@@ -52,7 +53,7 @@ FROM
     return sql(query, values=(recipe_id,))
 
 
-def sql_recipe_add():
+def sql_recipe_add() -> list:
     """TODO: method for adding recipe"""
     query = """
 """

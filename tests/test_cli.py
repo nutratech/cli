@@ -23,6 +23,7 @@ from ntclient.__main__ import main as nt_main
 from ntclient.core import nutprogbar
 from ntclient.ntsqlite.sql import build_ntsqlite
 from ntclient.persistence.sql.nt import nt_ver
+from ntclient.persistence.sql.nt.funcs import sql_nt_next_index
 from ntclient.persistence.sql.usda import funcs as usda_funcs
 from ntclient.persistence.sql.usda import sql as _usda_sql
 from ntclient.persistence.sql.usda import usda_ver
@@ -73,6 +74,9 @@ def test_200_nt_sql_funcs():
     """Performs cursory inspection (sanity check) of nt.sqlite3 image"""
     version = nt_ver()
     assert version == __db_target_nt__
+
+    next_index = sql_nt_next_index("bf_eq")
+    assert next_index
 
     # TODO: add more tests, it used to poll biometrics
 

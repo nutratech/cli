@@ -43,7 +43,7 @@ __copyright__ = "Copyright 2018-2022 Shane Jaroch"
 __url__ = "https://github.com/nutratech/cli"
 
 # Sqlite target versions
-__db_target_nt__ = "0.0.5"
+__db_target_nt__ = "0.0.6"
 __db_target_usda__ = "0.0.8"
 USDA_XZ_SHA256 = "25dba8428ced42d646bec704981d3a95dc7943240254e884aad37d59eee9616a"
 
@@ -57,8 +57,6 @@ PAGING = True
 
 NTSQLITE_BUILDPATH = os.path.join(ROOT_DIR, "ntsqlite", "sql", NT_DB_NAME)
 NTSQLITE_DESTINATION = os.path.join(NUTRA_HOME, NT_DB_NAME)
-print(NTSQLITE_BUILDPATH)
-print(NTSQLITE_DESTINATION)
 
 # Check Python version
 PY_MIN_VER = (3, 4, 0)

@@ -53,13 +53,16 @@ REQ_LINT := requirements-lint.txt
 REQ_TEST := requirements-test.txt
 REQ_OLD := requirements-test-win_xp-ubu1604.txt
 
+PIP_OPT_ARGS ?=
+
 .PHONY: _deps
 _deps:
 	$(PIP) install wheel
-	$(PIP) install -r requirements.txt
-	- $(PIP) install -r $(REQ_OPT)
-	- $(PIP) install -r $(REQ_LINT)
-	- $(PIP) install -r $(REQ_TEST) || (echo "\r\nTEST REQs failed. Trying old version" && $(PIP) install -r $(REQ_OLD))
+	$(PIP) install $(PIP_OPT_ARGS) -r requirements.txt
+	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_OPT)
+	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_LINT)
+	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_TEST) || \
+	echo "TEST REQs failed. Try with '--user' flag, or old version: $(PIP) install -r $(REQ_OLD)"
 
 .PHONY: deps
 deps: _venv _deps	## Install requirements
@@ -141,7 +144,7 @@ build: _build clean
 .PHONY: install
 install:	## pip install nutra
 	$(PY_SYS_INTERPRETER) -m pip install wheel
-	$(PY_SYS_INTERPRETER) -m pip install .
+	$(PY_SYS_INTERPRETER) -m pip install . || $(PY_SYS_INTERPRETER) -m pip install --user .
 	$(PY_SYS_INTERPRETER) -m pip show nutra
 	- $(PY_SYS_INTERPRETER) -c 'import shutil; print(shutil.which("nutra"));'
 	nutra -v

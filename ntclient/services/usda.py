@@ -24,8 +24,9 @@ from ntclient.persistence.sql.usda.funcs import (
 from ntclient.utils import NUTR_ID_KCAL, NUTR_IDS_AMINOS, NUTR_IDS_FLAVONES
 
 
-def list_nutrients():
+def list_nutrients() -> tuple:
     """Lists out nutrients with basic details"""
+
     from ntclient import PAGING  # pylint: disable=import-outside-toplevel
 
     headers, nutrients = sql_nutrients_details()
@@ -52,12 +53,14 @@ def list_nutrients():
 ################################################################################
 # Sort
 ################################################################################
-def sort_foods(nutrient_id, by_kcal, limit=DEFAULT_RESULT_LIMIT):
+def sort_foods(
+    nutrient_id: int, by_kcal: bool, limit: int = DEFAULT_RESULT_LIMIT
+) -> tuple:
     """Sort, by nutrient, either (amount / 100 g) or (amount / 200 kcal)"""
 
     # TODO: sub shrt_desc for long if available, and support config.FOOD_NAME_TRUNC
 
-    def print_results(_results, _nutrient_id):
+    def print_results(_results: list, _nutrient_id: int) -> list:
         """Prints truncated list for sort"""
         nutrients = sql_nutrients_overview()
         nutrient = nutrients[_nutrient_id]
@@ -102,11 +105,12 @@ def sort_foods(nutrient_id, by_kcal, limit=DEFAULT_RESULT_LIMIT):
                 foods,
             )
         )
-    foods.sort(key=lambda x: x[1], reverse=True)
+    # Sort by nutr_val
+    foods.sort(key=lambda x: int(x[1]), reverse=True)
     foods = foods[:limit]
-    food_ids = {x[0] for x in foods}
 
     # Gets fdgrp and long_desc
+    food_ids = {x[0] for x in foods}
     food_des = {x[0]: x for x in sql_food_details(food_ids)}
     for food in foods:
         food_id = food[0]
@@ -122,10 +126,10 @@ def sort_foods(nutrient_id, by_kcal, limit=DEFAULT_RESULT_LIMIT):
 ################################################################################
 # Search
 ################################################################################
-def search(words, fdgrp_id=None, limit=DEFAULT_RESULT_LIMIT):
+def search(words: list, fdgrp_id: int = 0, limit: int = DEFAULT_RESULT_LIMIT) -> tuple:
     """Searches foods for input"""
 
-    def tabulate_search(_results):
+    def tabulate_search(_results: list) -> list:
         """Makes search results more readable"""
         # Current terminal size
         # TODO: display "nonzero/total" report nutrients, aminos, and flavones..
@@ -191,12 +195,14 @@ def search(words, fdgrp_id=None, limit=DEFAULT_RESULT_LIMIT):
     from fuzzywuzzy import fuzz  # pylint: disable=import-outside-toplevel
 
     food_des = sql_food_details()
-    if fdgrp_id is not None:
+    if fdgrp_id:
         food_des = list(filter(lambda x: x[1] == fdgrp_id, food_des))
 
     query = " ".join(words)
-    scores = {f[0]: fuzz.token_set_ratio(query, f[2]) for f in food_des}
-    scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)[:limit]
+    _scores = {f[0]: fuzz.token_set_ratio(query, f[2]) for f in food_des}
+    # NOTE: fuzzywuzzy reports score as an int, not float
+    scores = sorted(_scores.items(), key=lambda x: int(x[1]), reverse=True)
+    scores = scores[:limit]
 
     food_ids = {x[0] for x in scores}
     nut_data = sql_analyze_foods(food_ids)
@@ -209,14 +215,19 @@ def search(words, fdgrp_id=None, limit=DEFAULT_RESULT_LIMIT):
         else:
             foods_nutrients[food_id][nutr_id] = nutr_val
 
-    def search_results(_scores):
-        """Generates search results, consumable by tabulate"""
+    def search_results(_scores: list) -> list:
+        """
+        Generates search results, consumable by tabulate
+
+        @param _scores: List[tuple]
+        @return: List[dict]
+        """
         _results = []
         for score in _scores:
             _food_id = score[0]
             score = score[1]
 
-            food = food_des[_food_id]
+            food = food_des_dict[_food_id]
             _fdgrp_id = food[1]
             long_desc = food[2]
             shrt_desc = food[3]
@@ -225,8 +236,8 @@ def search(words, fdgrp_id=None, limit=DEFAULT_RESULT_LIMIT):
             result = {
                 "food_id": _food_id,
                 "fdgrp_id": _fdgrp_id,
-                # TODO: get more details from another function, maybe enhance food_details() ?
-                #  is that useful tho?
+                # TODO: get more details from another function,
+                #  maybe enhance food_details() ? Is that useful tho?
                 # "fdgrp_desc": cache.fdgrp[fdgrp_id]["fdgrp_desc"],
                 # "data_src": cache.data_src[data_src_id]["name"],
                 "long_desc": shrt_desc if shrt_desc else long_desc,
@@ -237,7 +248,8 @@ def search(words, fdgrp_id=None, limit=DEFAULT_RESULT_LIMIT):
         return _results
 
     # TODO: include C/F/P macro ratios as column?
-    food_des = {f[0]: f for f in food_des}
+    # TODO: is this defined in the best place? It's accessed once in a helper function.
+    food_des_dict = {f[0]: f for f in food_des}
     results = search_results(scores)
 
     tabulate_search(results)
