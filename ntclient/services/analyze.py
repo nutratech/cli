@@ -71,8 +71,8 @@ def foods_analyze(food_ids: set, grams: int = 0) -> tuple:
     ################################################################################
     servings_rows = []
     nutrients_rows = []
-    for food_id in analyses:
-        food_name = food_des[food_id][2]
+    for food_id, food_des_tuple in analyses.items():
+        food_name = food_des_tuple[2]
         print(
             "\n======================================\n"
             + "==> {0} ({1})\n".format(food_name, food_id)
@@ -105,7 +105,7 @@ def foods_analyze(food_ids: set, grams: int = 0) -> tuple:
         ################################################################################
         headers = ["id", "nutrient", "rda", "amount", "units"]
         nutrient_rows = []
-        for nutrient_id, amount in analyses[food_id]:
+        for nutrient_id, amount in food_des_tuple:
             # Skip zero values
             if not amount:
                 continue
