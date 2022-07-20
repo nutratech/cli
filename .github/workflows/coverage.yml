@@ -24,8 +24,10 @@ jobs:
       - name: Install requirements
         # NOTE: container lacks OS dist for testresources/launchpadlib
         run: |
+          pip install coveralls==3.3.1
           pip install testresources==2.0.1
-          make _deps
+          pip install requirements.txt
+          pip install requirements-test.txt
 
       # TODO: Tests for: python-argcomplete (tab-completion)
       - name: Test
@@ -33,19 +35,7 @@ jobs:
           export NUTRA_HOME=$(pwd)/tests/.nutra.test
           make _test
 
-      - name: Lint
-        run: make _lint
-
-      - name: Install
-        run: make install
-
-      - name: Basic Tests / CLI / Integration
-        run: |
-          n -v
-          nutra -d init -y
-          nutra --no-pager nt
-          nutra --no-pager sort -c 789
-          nutra --no-pager search ultraviolet mushrooms
-          nutra --no-pager anl 9050
-          nutra --no-pager recipe
-          nutra day tests/resources/day/human-test.csv
+      - name: Submit coverage report / coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: coveralls --service=github
