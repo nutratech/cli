@@ -33,6 +33,7 @@ jobs:
       - name: Install requirements
         # NOTE: container lacks OS dist for testresources/launchpadlib
         run: |
+          sudo python -m pip uninstall setuptools
           sudo python -m pip install --upgrade pip setuptools wheel
           # NOTE: use the old install file for Python 3.4
           #  these are the latest versions on GitHub for Python 3.4
