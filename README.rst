@@ -6,7 +6,7 @@
   :widths: 15 25 20
   :header-rows: 1
 
-  * - Property
+  * -
     -
     -
   * - Test / Linux
@@ -52,7 +52,7 @@ Command line tools for interacting with government food databases.
 
 *Requires:*
 
-- Python 3.4.0 or later (lzma, ssl & sqlite3 modules) [Win XP / Ubuntu 16.04].
+- Python 3.4.0 or later (lzma, ssl & sqlite3 modules) [Win XP / Ubuntu 14.04].
 - Packages: see ``setup.py``, and ``requirements.txt`` files.
 - Internet connection, to download food database & package dependencies.
 
@@ -80,8 +80,8 @@ Windows users may not be able to install ``python-Levenshtein``.
 
 Mac and Linux developers will do well to install ``direnv``.
 
-Main program works 100%, but test and lint may not on older operating
-systems (Ubuntu 16.04, Windows XP).
+Main program works 100%, but ``test`` and ``lint`` may break on older operating
+systems (Ubuntu 14.04, Windows XP).
 
 Install PyPi release (from pip)
 ===============================
