@@ -9,15 +9,15 @@ from collections.abc import Iterable, Sequence
 def sql_entries(sql_result: sqlite3.Cursor) -> Sequence[tuple]:
     """Formats and returns a `sql_result()` for console digestion and output"""
     # TODO: return object: metadata, command, status, errors, etc?
-    rows: Sequence[tuple] = sql_result.fetchall()
 
+    rows = sql_result.fetchall()
     return rows
 
 
 def sql_entries_headers(sql_result: sqlite3.Cursor) -> tuple:
     """Formats and returns a `sql_result()` for console digestion and output"""
-    rows: Sequence[tuple] = sql_result.fetchall()
-    headers: list = [x[0] for x in sql_result.description]
+    rows = sql_result.fetchall()
+    headers = [x[0] for x in sql_result.description]
 
     return headers, rows
 
@@ -30,6 +30,7 @@ def version(con: sqlite3.Connection) -> str:
 
     cur = con.cursor()
     result = cur.execute("SELECT * FROM version;").fetchall()
+
     close_con_and_cur(con, cur, commit=False)
     return str(result[-1][1])
 
