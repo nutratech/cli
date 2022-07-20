@@ -50,7 +50,7 @@ with open("README.rst", encoding="utf-8") as file:
 with open("requirements.txt", encoding="utf-8") as file:
     REQUIREMENTS = file.read().split()
 
-if PLATFORM_SYSTEM != "Windows":
+if PLATFORM_SYSTEM != "Windows" or int(os.getenv("NUTRA_OS_FORCE_OPT_REQS", str(0))):
     # python-Levenshtein builds natively on Unix; Windows needs vcvarsall.bat or vc++10
     with open("requirements-optional.txt", encoding="utf-8") as file:
         optional_reqs = file.read().split()

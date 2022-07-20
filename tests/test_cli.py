@@ -53,10 +53,10 @@ def test_100_usda_sql_funcs():
     result = usda_funcs.sql_nutrients_details()
     assert len(result[1]) == 186
 
-    result = usda_funcs.sql_servings([9050, 9052])
+    result = usda_funcs.sql_servings({9050, 9052})
     assert len(result) == 3
 
-    result = usda_funcs.sql_analyze_foods([23567, 23293])
+    result = usda_funcs.sql_analyze_foods({23567, 23293})
     assert len(result) == 188
 
     result = usda_funcs.sql_sort_foods(789)
@@ -76,9 +76,9 @@ def test_200_nt_sql_funcs():
     assert version == __db_target_nt__
 
     next_index = sql_nt_next_index("bf_eq")
-    assert next_index
+    assert next_index > 0
 
-    # TODO: add more tests, it used to poll biometrics
+    # TODO: add more tests; we used to comb over biometrics here
 
 
 def test_300_argparser_debug_no_paging():
@@ -197,7 +197,7 @@ def test_600_sql_integrity_error__service_wip():
     """Provokes IntegrityError in nt.sqlite3"""
 
     # TODO: replace with non-biometric test
-    # from ntclient.services import biometrics  # pylint: disable=import-outside-toplevel
+    # from ntclient.services import biometrics # pylint: disable=import-outside-toplevel
     #
     # args = arg_parser.parse_args(args=["-d", "bio", "log", "add", "12,12"])
     # biometrics.input = (
@@ -261,10 +261,12 @@ def test_802_usda_downloads_fresh_if_missing_or_deleted():
     """Ensure download of usda.sqlite3.tar.xz, if usda.sqlite3 is missing"""
     from ntclient.persistence.sql import usda  # pylint: disable=import-outside-toplevel
 
-    # TODO: similar for nt.sqlite3? Define development standards.. rebuilding, deleting, preserving
+    # TODO: similar for nt.sqlite3?
+    #  Define development standards.. rebuilding, deleting, preserving
     #  remove whole `.nutra` in a special test?
     try:
-        # TODO: export USDA_DB_PATH at package level, don't pepper os.path.join() throughout code?
+        # TODO: export USDA_DB_PATH at package level,
+        #  don't pepper os.path.join() throughout code?
         usda_path = os.path.join(NUTRA_HOME, USDA_DB_NAME)
         os.remove(usda_path)
     except (FileNotFoundError, PermissionError) as err:
@@ -285,7 +287,7 @@ def test_802_usda_downloads_fresh_if_missing_or_deleted():
 
 def test_900_nut_rda_bar():
     """Verifies colored/visual output is correctly generated"""
-    analysis = usda_funcs.sql_analyze_foods(food_ids=[1001])
+    analysis = usda_funcs.sql_analyze_foods(food_ids={1001})
     nutrients = usda_funcs.sql_nutrients_overview()
     output = nutprogbar.nutprogbar(
         food_amts={1001: 100}, food_analyses=analysis, nutrients=nutrients

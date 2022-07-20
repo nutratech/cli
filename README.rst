@@ -212,7 +212,7 @@ Commands
 ::
 
   usage: nutra [-h] [-v] [-d] [--no-pager]
-               {init,nt,search,sort,anl,day,recipe,bio} ...
+               {init,nt,search,sort,anl,day,recipe} ...
 
   optional arguments:
     -h, --help            show this help message and exit
@@ -221,7 +221,7 @@ Commands
     --no-pager            disable paging (print full output)
 
   nutra subcommands:
-    {init,nt,search,sort,anl,day,recipe,bio}
+    {init,nt,search,sort,anl,day,recipe}
       init                setup profiles, USDA and NT database
       nt                  list out nutrients and their info
       search              search foods by name, list overview info

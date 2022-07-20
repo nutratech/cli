@@ -1,10 +1,10 @@
 ***********
- Changelog
+ ChangeLog
 ***********
 
 All notable changes to this project will be documented in this file.
 
-The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.1.0/>`_,
+The format is based on `Keep a Change Log <https://keepachangelog.com/en/1.1.0/>`_,
 and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
 
@@ -15,8 +15,25 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 Added
 ~~~~~
 
-- Basic functionality of ``import`` and ``export`` sub-commands
-- Automated CI/CD integration tests for ``Windows`` platform
+- Basic functionality of ``import`` and ``export`` sub-commands.
+
+
+
+[0.2.4] - 2022-07-20
+########################################################################
+
+Added
+~~~~~
+
+- Automated CI/CD integration tests for ``Windows`` platform and multiple
+  Python versions.
+- Enhanced linting, type checking, and true Python 3.4 compliance.
+
+Changed
+~~~~~~~
+
+- Specify version **range** for package dependencies, test old Linux / Python.
+- Clean up SQL drivers and Python functions. Use non-plural tables.
 
 
 
@@ -26,15 +43,15 @@ Added
 Added
 ~~~~~
 
-- ``[WIP]`` Download cache & checksum verification
+- ``[WIP]`` Download cache & checksum verification.
 - ``[DEVELOPMENT]`` Added ``Makefile`` with easy commands for ``init``,
-  ``lint``, ``test``, etc
-- ``n`` as a shorthand script for ``nutra``
+  ``lint``, ``test``, etc.
+- ``n`` as a shorthand script for ``nutra``.
 
 Changed
 ~~~~~~~
 
-- Rename to ``CHANGELOG.rst``
+- Rename to ``CHANGELOG.rst`` (from markdown ``*.md``).
 
 Fixed
 ~~~~~
@@ -56,23 +73,23 @@ Added
 ~~~~~
 
 - Limit search & sort results to top ``n`` results (e.g. top 10 or top 100)
-- Enhanced terminal sizing (buffer termination)
-- ``Pydoc`` ``PAGING`` flag via ``--no-pager`` command line arg
-  (with ``set_flags()`` method)
-- Check for appropriate ``ntsqlite`` database version
+- Enhanced terminal sizing (buffer termination).
+- ``Pydoc`` ``PAGING`` flag via ``--no-pager`` command line argument
+  (with ``set_flags()`` method).
+- Check for appropriate ``ntsqlite`` database version.
 - ``[DEVELOPMENT]`` Special ``file_or_dir_path`` and ``file_path``
-  custom type validators for ``argparse``
+  custom type validators for ``argparse``.
 - ``[DEVELOPMENT]`` Added special requirements files for
   (``test``, ``lint``, ``optional: Levenshtein``,
-  and ``win_xp-test`` [Python 3.4])
-- ``[DEVELOPMENT]`` Added ``CHANGELOG.md`` file
+  and ``win_xp-test`` [Python 3.4]).
+- ``[DEVELOPMENT]`` Added ``CHANGELOG.md`` file.
 
 Changed
 ~~~~~~~
 
-- Print ``exit_code`` in DEBUG mode (`--debug` flag/arg)
-- Moved ``subparsers`` module in ``ntclient.argparser`` to ``__init__``
-- Moved tests out of ``ntclient/`` and into ``tests/`` folder
+- Print ``exit_code`` in DEBUG mode (`--debug` flag/argument).
+- Moved ``subparsers`` module in ``ntclient.argparser`` to ``__init__``.
+- Moved tests out of ``ntclient/`` and into ``tests/`` folder.
 
 
 
@@ -82,20 +99,20 @@ Changed
 Added
 ~~~~~
 
-- Python 3.4 support (Windows XP and Ubuntu 16.04)
-- Debug flag (``--debug | -d``) for all commands
+- Python 3.4 support (Windows XP and Ubuntu 16.04).
+- Debug flag (``--debug | -d``) for all commands.
 
 Changed
 ~~~~~~~
 
-- Overall structure with main file and argparse methods
-- Use soft pip requirements ``~=`` instead of ``==``
-- ``DEFAULT`` and ``OVER`` colors
+- Overall structure with main file and ``argparse`` methods.
+- Use soft pip requirements ``~=`` instead of ``==``.
+- ``DEFAULT`` and ``OVER`` colors.
 
 Removed
 ~~~~~~~
 
-- ``guid`` columns from ``ntsqlite`` submodule
+- ``guid`` columns from ``ntsqlite`` submodule.
 
 
 
@@ -106,11 +123,11 @@ Added
 ~~~~~
 
 - SQLite support for ``usda`` and ``nt`` schemas
-  (removed API calls to remote server)
-- Preliminary support for ``recipe`` and ``bio`` subcommands
-- On-boarding process with ``init`` subcommand
-- Support for ``argcomplete`` on ``bash`` (Linux/macOS)
-- Tests
+  (removed API calls to remote server).
+- Preliminary support for ``recipe`` and ``bio`` sub-commands.
+- On-boarding process with ``init`` sub-command.
+- Support for ``argcomplete`` on ``bash`` (Linux/macOS).
+- Tests in the form of a sole ``test_cli.py`` file.
 
 
 
@@ -120,4 +137,4 @@ Added
 Added
 ~~~~~
 
-- Support for analysis of day CSV files
+- Support for analysis of "day" ``CSV`` files.

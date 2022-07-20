@@ -11,12 +11,12 @@ THRESH_WARN = 0.7
 COLOR_WARN = Fore.YELLOW
 
 THRESH_CRIT = 0.4
-COLOR_CRIT = Fore.RED
+COLOR_CRIT = Style.DIM + Fore.RED
 
 THRESH_OVER = 1.9
 COLOR_OVER = Style.DIM + Fore.MAGENTA
 
-COLOR_DEFAULT = Style.BRIGHT + Fore.CYAN
+COLOR_DEFAULT = Fore.CYAN
 
 ################################################################################
 # Nutrient IDs
