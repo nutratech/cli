@@ -31,17 +31,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Install requirements
-        # NOTE: container lacks OS dist for testresources/launchpadlib
+      # NOTE: These are the last supported versions on Python 3.4
+      - name: Install requirements (Python 3.4)
+        if: matrix.python-version =~ '3.4.*'
         run: |
-          # NOTE: This is the latest version on GitHub for Python 3.4
-          if [[ "$(python --version)" =~ "3.4." ]]; then
-            pip install colorama==0.4.1;
-          fi
+          pip install colorama==0.4.1
 
-          pip install -r requirements.txt
-
-      - name: Install
+      - name: Install CLI
         env:
           PY_SYS_INTERPRETER: python3
         run: make install
