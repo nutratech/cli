@@ -34,25 +34,10 @@ jobs:
         # NOTE: container lacks OS dist for testresources/launchpadlib
         run: |
           python -m pip install --upgrade pip
-          pip install testresources==2.0.1
           # NOTE: use the old install file for Python 3.4
-          # NOTE: these are the latest versions on GitHub for Python 3.4
-          if [[ "$(python --version)" =~ "3.4." ]]; then
-            python -m pip install -r requirements-test-win_xp-ubu1604.txt;
-            grep -v skip_empty setup.cfg > setup.cfg2 && mv setup.cfg2 setup.cfg;
-          fi
+          #  these are the latest versions on GitHub for Python 3.4
           pip install colorama==0.4.1
-          pip install coverage==4.5.4
-          make _deps
-
-      # TODO: Tests for: python-argcomplete (tab-completion)
-      - name: Test
-        run: |
-          export NUTRA_HOME=$(pwd)/tests/.nutra.test
-          make _test
-
-      - name: Lint
-        run: make _lint
+          pip install -r requirements.txt
 
       - name: Install
         run: make install
