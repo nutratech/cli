@@ -1,9 +1,13 @@
 """nt.sqlite3 functions module"""
+import sqlite3
+from collections.abc import Sequence
+
 from ntclient.persistence.sql.nt import sql, sql_headers
 
 
 def sql_nt_next_index(table: str) -> int:
     """Used for previewing inserts"""
+    # noinspection SqlResolve
     query = "SELECT MAX(id) as max_id FROM %s;" % table  # nosec: B608
     return int(sql(query)[0]["max_id"])
 
@@ -11,9 +15,9 @@ def sql_nt_next_index(table: str) -> int:
 ################################################################################
 # Recipe functions
 ################################################################################
-def sql_recipe(recipe_id: int) -> list:
+def sql_recipe(recipe_id: int) -> Sequence[sqlite3.Row]:
     """Selects columns for recipe_id"""
-    query = "SELECT * FROM recipes WHERE id=?;"
+    query = "SELECT * FROM recipe WHERE id=?;"
     return sql(query, values=(recipe_id,))
 
 
@@ -36,7 +40,7 @@ GROUP BY
     return sql_headers(query)
 
 
-def sql_analyze_recipe(recipe_id: int) -> list:
+def sql_analyze_recipe(recipe_id: int) -> Sequence[sqlite3.Row]:
     """Output (nutrient) analysis columns for a given recipe_id"""
     query = """
 SELECT
@@ -52,7 +56,7 @@ FROM
     return sql(query, values=(recipe_id,))
 
 
-def sql_recipe_add() -> list:
+def sql_recipe_add() -> Sequence[sqlite3.Row]:
     """TODO: method for adding recipe"""
     query = """
 """

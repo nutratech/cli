@@ -6,7 +6,7 @@ from collections.abc import Iterable, Sequence
 # ------------------------------------------------
 # Entry fetching methods
 # ------------------------------------------------
-def sql_entries(sql_result: sqlite3.Cursor) -> Sequence[tuple]:
+def sql_entries(sql_result: sqlite3.Cursor) -> Sequence[sqlite3.Row]:
     """Formats and returns a `sql_result()` for console digestion and output"""
     # TODO: return object: metadata, command, status, errors, etc?
 
@@ -90,7 +90,7 @@ def _sql(
     query: str,
     db_name: str,
     values: Iterable = (),
-) -> Sequence[tuple]:
+) -> Sequence[sqlite3.Row]:
     """@param values: tuple | list"""
 
     cur = _prep_query(con, query, db_name, values)

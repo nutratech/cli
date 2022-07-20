@@ -199,9 +199,7 @@ def search(words: list, fdgrp_id: int = 0, limit: int = DEFAULT_RESULT_LIMIT) ->
         food_des = list(filter(lambda x: x[1] == fdgrp_id, food_des))
 
     query = " ".join(words)
-    _scores = {
-        f[0]: fuzz.token_set_ratio(query, f[2]) for f in food_des
-    }
+    _scores = {f[0]: fuzz.token_set_ratio(query, f[2]) for f in food_des}
     scores = sorted(_scores.items(), key=lambda x: x[1], reverse=True)
     scores = scores[:limit]
 

@@ -98,7 +98,7 @@ def usda_ver() -> str:
 
 def sql(
     query: str, values: Iterable = (), version_check: bool = True
-) -> Sequence[tuple]:
+) -> Sequence[sqlite3.Row]:
     """
     Executes a SQL command to usda.sqlite3
 

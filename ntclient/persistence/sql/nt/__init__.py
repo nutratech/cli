@@ -1,7 +1,7 @@
 """Nutratracker DB specific sqlite module"""
 import os
 import sqlite3
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 
 from ntclient import (
     NT_DB_NAME,
@@ -79,7 +79,7 @@ def nt_sqlite_connect(version_check: bool = True) -> sqlite3.Connection:
     raise SqlConnectError("ERROR: nt database doesn't exist, please run `nutra init`")
 
 
-def sql(query: str, values: Iterable = ()) -> list:
+def sql(query: str, values: Iterable = ()) -> Sequence[sqlite3.Row]:
     """Executes a SQL command to nt.sqlite3"""
 
     con = nt_sqlite_connect()
