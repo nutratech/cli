@@ -71,7 +71,7 @@ def foods_analyze(food_ids: set, grams: int = 0) -> tuple:
     ################################################################################
     servings_rows = []
     nutrients_rows = []
-    for food_id in analyses:
+    for food_id in analyses.keys():
         food_name = food_des[food_id][2]
         print(
             "\n======================================\n"

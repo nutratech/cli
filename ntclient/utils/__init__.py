@@ -14,9 +14,9 @@ THRESH_CRIT = 0.4
 COLOR_CRIT = Fore.RED
 
 THRESH_OVER = 1.9
-COLOR_OVER = Style.DIM + Fore.MAGENTA  # Fore.LIGHTMAGENTA_EX, Fore.LIGHTBLACK_EX
+COLOR_OVER = Style.DIM + Fore.MAGENTA
 
-COLOR_DEFAULT = Style.BRIGHT + Fore.CYAN  # Fore.BLUE, Fore.LIGHTBLUE_EX
+COLOR_DEFAULT = Style.BRIGHT + Fore.CYAN
 
 ################################################################################
 # Nutrient IDs
