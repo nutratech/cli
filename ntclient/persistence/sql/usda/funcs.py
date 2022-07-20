@@ -16,7 +16,7 @@ def sql_fdgrp() -> Mapping[int, tuple]:
     return {x[0]: x for x in result}
 
 
-def sql_food_details(_food_ids: Sequence[int] = ()) -> Sequence[tuple]:
+def sql_food_details(_food_ids: Set[int] = None) -> Sequence[tuple]:
     """Readable human details for foods"""
 
     if not _food_ids:
@@ -65,7 +65,7 @@ WHERE
     return sql(query % food_ids)
 
 
-def sql_analyze_foods(_food_ids: Set[int]) -> Sequence[tuple]:
+def sql_analyze_foods(food_ids: Set[int]) -> Sequence[tuple]:
     """Nutrient analysis for foods"""
     query = """
 SELECT
@@ -79,8 +79,8 @@ WHERE
   food_des.id IN (%s);
 """
     # TODO: parameterized queries
-    food_ids = ",".join(str(x) for x in set(_food_ids))
-    return sql(query % food_ids)
+    food_ids_concat = ",".join(str(x) for x in set(food_ids))
+    return sql(query % food_ids_concat)
 
 
 ################################################################################

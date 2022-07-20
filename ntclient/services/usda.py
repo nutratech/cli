@@ -6,7 +6,7 @@ Created on Sat Oct 27 20:28:06 2018
 """
 
 import pydoc
-from collections.abc import Collection, Mapping, Sequence, Set
+from collections.abc import Mapping, Sequence, Set
 
 from tabulate import tabulate
 
@@ -25,8 +25,9 @@ from ntclient.persistence.sql.usda.funcs import (
 from ntclient.utils import NUTR_ID_KCAL, NUTR_IDS_AMINOS, NUTR_IDS_FLAVONES
 
 
-def list_nutrients():  # type: ignore
+def list_nutrients() -> tuple:
     """Lists out nutrients with basic details"""
+
     from ntclient import PAGING  # pylint: disable=import-outside-toplevel
 
     headers, nutrients = sql_nutrients_details()
@@ -202,9 +203,10 @@ def search(words: list, fdgrp_id: int = 0, limit: int = DEFAULT_RESULT_LIMIT) ->
         f[0]: fuzz.token_set_ratio(query, f[2]) for f in food_des
     }
     # noinspection PyTypeChecker
-    scores: Sequence[tuple] = sorted(_scores.items(), key=lambda x: x[1], reverse=True)[
-        :limit
-    ]
+    # FIXME: working here
+    scores: Sequence[Mapping[int, int]]
+    scores = sorted(_scores.items(), key=lambda x: x[1], reverse=True)
+    scores = scores[:limit]
 
     food_ids: Set[int] = {x[0] for x in scores}
     nut_data = sql_analyze_foods(food_ids)
@@ -224,7 +226,7 @@ def search(words: list, fdgrp_id: int = 0, limit: int = DEFAULT_RESULT_LIMIT) ->
             _food_id = score[0]
             score = score[1]
 
-            food = food_des[_food_id]
+            food = food_des_dict[_food_id]
             _fdgrp_id = food[1]
             long_desc = food[2]
             shrt_desc = food[3]
@@ -245,7 +247,8 @@ def search(words: list, fdgrp_id: int = 0, limit: int = DEFAULT_RESULT_LIMIT) ->
         return _results
 
     # TODO: include C/F/P macro ratios as column?
-    # food_des = {f[0]: f for f in food_des}
+    # TODO: is this defined in the best place? It's accessed once in a helper function.
+    food_des_dict = {f[0]: f for f in food_des}
     results = search_results(scores)
 
     tabulate_search(results)
