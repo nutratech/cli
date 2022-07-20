@@ -41,8 +41,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: coveralls --service=github
 
-      - Install requirements (Lint)
-          run: pip install -r requirements-lint.txt
+      - name: Install requirements (Lint)
+        run: pip install -r requirements-lint.txt
 
       - name: Lint
         run: make _lint
