@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         # python-version: ["3.4.10", "3.6", "3.8", "3.10"]
-        python-version: ["3.10"]
+        python-version: ["3.4.10"]
 
     steps:
       - name: Checkout
@@ -34,17 +34,10 @@ jobs:
       - name: Install requirements
         # NOTE: container lacks OS dist for testresources/launchpadlib
         run: |
-          which pip3
-          pip3 --version
-          which pip
-          pip --version
-          # pip3 uninstall -y setuptools
-          # pip3 install --upgrade pip setuptools wheel
-          # pip3 install setuptools --upgrade
           # NOTE: use the old install file for Python 3.4
           #  these are the latest versions on GitHub for Python 3.4
-          pip3 install colorama==0.4.1
-          pip3 install -r requirements.txt
+          pip install colorama==0.4.1
+          pip install -r requirements.txt
 
       - name: Install
         env:
