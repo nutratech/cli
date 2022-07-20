@@ -4,7 +4,7 @@ name: test-win32
   push: {}
 
 jobs:
-  test-win32:
+  windows-latest:
     runs-on: windows-latest
 
     steps:
@@ -25,20 +25,6 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-
-      - name: Install requirements
-        run: |
-          make _deps
-
-      # TODO: Tests for: python-argcomplete (tab-completion)
-      - name: Test
-        run: |
-          $curDir = (Get-Location).toString()
-          $Env:NUTRA_HOME = $curDir + '/tests/.nutra.test'
-          make _test
-
-      - name: Lint
-        run: make _lint
 
       - name: Install
         run: make install
