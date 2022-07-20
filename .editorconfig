@@ -30,6 +30,7 @@ trim_trailing_whitespace = false
 
 
 [*.rst]
+indent_size = 2
 max_line_length = 79
 
 
