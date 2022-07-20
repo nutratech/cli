@@ -4,10 +4,14 @@
 
 .. image:: https://github.com/nutratech/cli/actions/workflows/test-linux.yml/badge.svg
     :target: https://github.com/nutratech/cli/actions/workflows/test-linux.yml
-    :alt: Build status unknown (Linux)
+    :alt: Test status unknown (Linux)
 .. image:: https://github.com/nutratech/cli/actions/workflows/test-win32.yml/badge.svg
     :target: https://github.com/nutratech/cli/actions/workflows/test-win32.yml
-    :alt: Build status unknown (Windows)
+    :alt: Test status unknown (Windows)
+
+.. image:: https://github.com/nutratech/cli/actions/workflows/lint.yml/badge.svg
+    :target: https://github.com/nutratech/cli/actions/workflows/lint.yml
+    :alt: Lint status unknown
 
 .. image:: https://coveralls.io/repos/github/nutratech/cli/badge.svg?branch=master
     :target: https://coveralls.io/github/nutratech/cli?branch=master
