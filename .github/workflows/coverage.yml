@@ -1,10 +1,10 @@
 ---
-name: test-linux
+name: cov-submit
 "on":
   push: {}
 
 jobs:
-  test-linux:
+  cov-submit:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,8 +26,8 @@ jobs:
         run: |
           pip install coveralls==3.3.1
           pip install testresources==2.0.1
-          pip install requirements.txt
-          pip install requirements-test.txt
+          pip install -r requirements.txt
+          pip install -r requirements-test.txt
 
       # TODO: Tests for: python-argcomplete (tab-completion)
       - name: Test
