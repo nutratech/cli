@@ -96,9 +96,7 @@ def usda_ver() -> str:
     return version(con)
 
 
-def sql(
-    query: str, values: Sequence = (), version_check: bool = True
-) -> list:
+def sql(query: str, values: Sequence = (), version_check: bool = True) -> list:
     """
     Executes a SQL command to usda.sqlite3
 

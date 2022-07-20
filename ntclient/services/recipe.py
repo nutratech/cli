@@ -50,19 +50,20 @@ def recipe_overview(recipe_id: int) -> tuple:
     name = recipe[0][1]
     print(name)
 
-    food_ids = {x[2]: x[3] for x in recipe}
-    food_names = {x[0]: x[3] for x in sql_food_details(food_ids.keys())}
-    food_analyses = sql_analyze_foods(food_ids.keys())
+    food_ids_dict = {x[2]: x[3] for x in recipe}
+    food_ids = set(food_ids_dict.keys())
+    food_names = {x[0]: x[3] for x in sql_food_details(food_ids)}
+    food_analyses = sql_analyze_foods(food_ids)
 
     table = tabulate(
-        [[food_names[food_id], grams] for food_id, grams in food_ids.items()],
+        [[food_names[food_id], grams] for food_id, grams in food_ids_dict.items()],
         headers=["food", "g"],
     )
     print(table)
     # tabulate nutrient RDA %s
     nutrients = sql_nutrients_overview()
     # rdas = {x[0]: x[1] for x in nutrients.values()}
-    progbars = nutprogbar(food_ids, food_analyses, nutrients)
+    progbars = nutprogbar(food_ids_dict, food_analyses, nutrients)
     print(progbars)
 
     return 0, recipe
@@ -101,7 +102,8 @@ def recipe_add(name: str, food_amts: dict) -> tuple:
     print()
     print("New recipe: " + name + "\n")
 
-    food_names = {x[0]: x[2] for x in sql_food_details(food_amts.keys())}
+    food_ids = set(food_amts.keys())
+    food_names = {x[0]: x[2] for x in sql_food_details(food_ids)}
 
     results = []
     for food_id, grams in food_amts.items():

@@ -45,7 +45,7 @@ def analyze(args: argparse.Namespace) -> tuple:
     return services.analyze.foods_analyze(food_ids, grams)
 
 
-def day(args: argparse.Namespace):
+def day(args: argparse.Namespace) -> tuple:
     """Analyze a day's worth of meals"""
     day_csv_paths = args.food_log
     day_csv_paths = [os.path.expanduser(x) for x in day_csv_paths]
@@ -57,22 +57,22 @@ def day(args: argparse.Namespace):
 ################################################################################
 # Recipes
 ################################################################################
-def recipes():
+def recipes() -> tuple:
     """Return recipes"""
     return services.recipe.recipes_overview()
 
 
-def recipe(args: argparse.Namespace):
+def recipe(args: argparse.Namespace) -> tuple:
     """Return recipe view (analysis)"""
     return services.recipe.recipe_overview(args.recipe_id)
 
 
-def recipe_import(args: argparse.Namespace):
+def recipe_import(args: argparse.Namespace) -> tuple:
     """Add a recipe"""
     # TODO: custom serving sizes, not always in grams?
     return services.recipe.recipe_import(args.path)
 
 
-def recipe_delete(args: argparse.Namespace):
+def recipe_delete(args: argparse.Namespace) -> tuple:
     """Delete a recipe"""
     return services.recipe.recipe_delete(args.recipe_id)
