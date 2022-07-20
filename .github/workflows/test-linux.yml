@@ -33,9 +33,9 @@ jobs:
       - name: Install requirements
         # NOTE: container lacks OS dist for testresources/launchpadlib
         run: |
-          sudo python -m pip uninstall setuptools
-          sudo python -m pip install --upgrade pip setuptools wheel
-          sudo python3 -m pip install setuptools --upgrade
+          pip uninstall setuptools
+          pip install --upgrade pip setuptools wheel
+          pip install setuptools --upgrade
           # NOTE: use the old install file for Python 3.4
           #  these are the latest versions on GitHub for Python 3.4
           pip install colorama==0.4.1
