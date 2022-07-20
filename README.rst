@@ -167,7 +167,7 @@ I've run the command to seed the autocomplete script.
 .. code-block:: bash
 
   mkdir -p $HOME/.bash_completion.d
-  activate-global-python-argcomplete --dest=$HOME/.bash_completion.d
+  activate-global-python-argcomplete --user
 
 And my ``~/.bashrc`` file looks like this.
 
