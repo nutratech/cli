@@ -24,6 +24,7 @@ jobs:
 
       - name: Install requirements
         run: |
+          apt-cache madison cloc
           sudo apt install cloc=1.90-1
           pip install coveralls==3.3.1
           pip install -r requirements.txt
