@@ -3,7 +3,7 @@
 **************
 
 .. list-table::
-  :widths: 25 25 25
+  :widths: 15 25 20
   :header-rows: 1
 
   * - Property
@@ -33,7 +33,7 @@
     - .. image:: https://pepy.tech/badge/nutra/month
         :target: https://pepy.tech/project/nutra
         :alt: Monthly downloads unknown
-  * - Supports Python
+  * - Supported Runtime
     - .. image:: https://img.shields.io/pypi/pyversions/nutra.svg
         :alt: Python3 (3.4 - 3.10)
     -
