@@ -27,5 +27,8 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-lint.txt
 
+          # NOTE: pytest is needed to lint the folder: "tests/"
+          pip install -r requirements-lint.txt
+
       - name: Lint
         run: make _lint
