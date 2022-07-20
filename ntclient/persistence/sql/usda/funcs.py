@@ -1,4 +1,5 @@
 """usda.sqlite functions module"""
+import sqlite3
 from collections.abc import Mapping, Sequence, Set
 
 from ntclient.persistence.sql.usda import sql, sql_headers
@@ -8,7 +9,7 @@ from ntclient.utils import NUTR_ID_KCAL
 ################################################################################
 # Basic functions
 ################################################################################
-def sql_fdgrp() -> Mapping[int, tuple]:
+def sql_fdgrp() -> Mapping[int, sqlite3.Row]:
     """Shows food groups"""
 
     query = "SELECT * FROM fdgrp;"
@@ -16,7 +17,7 @@ def sql_fdgrp() -> Mapping[int, tuple]:
     return {x[0]: x for x in result}
 
 
-def sql_food_details(_food_ids: Set[int] = None) -> Sequence[tuple]:
+def sql_food_details(_food_ids: Set[int] = None) -> Sequence[sqlite3.Row]:
     """Readable human details for foods"""
 
     if not _food_ids:
@@ -30,7 +31,7 @@ def sql_food_details(_food_ids: Set[int] = None) -> Sequence[tuple]:
     return sql(query)
 
 
-def sql_nutrients_overview() -> Mapping[int, tuple]:
+def sql_nutrients_overview() -> Mapping[int, sqlite3.Row]:
     """Shows nutrients overview"""
 
     query = "SELECT * FROM nutrients_overview;"
@@ -45,7 +46,7 @@ def sql_nutrients_details() -> tuple:
     return sql_headers(query)
 
 
-def sql_servings(_food_ids: Sequence[int]) -> Sequence[tuple]:
+def sql_servings(_food_ids: Set[int]) -> Sequence[sqlite3.Row]:
     """Food servings"""
     # TODO: apply connective logic from `sort_foods()` IS ('None') ?
     query = """
@@ -65,7 +66,7 @@ WHERE
     return sql(query % food_ids)
 
 
-def sql_analyze_foods(food_ids: Set[int]) -> Sequence[tuple]:
+def sql_analyze_foods(food_ids: Set[int]) -> Sequence[sqlite3.Row]:
     """Nutrient analysis for foods"""
     query = """
 SELECT
@@ -86,7 +87,7 @@ WHERE
 ################################################################################
 # Sort
 ################################################################################
-def sql_sort_helper1(nutrient_id: int) -> Sequence[tuple]:
+def sql_sort_helper1(nutrient_id: int) -> Sequence[sqlite3.Row]:
     """Selects relevant bits from nut_data for sorting"""
 
     query = """
@@ -106,7 +107,7 @@ ORDER BY
     return sql(query % (NUTR_ID_KCAL, nutrient_id))
 
 
-def sql_sort_foods(nutr_id: int) -> Sequence[tuple]:
+def sql_sort_foods(nutr_id: int) -> Sequence[sqlite3.Row]:
     """Sort foods by nutr_id per 100 g"""
 
     query = """
@@ -132,7 +133,7 @@ ORDER BY
     return sql(query % nutr_id)
 
 
-def sql_sort_foods_by_kcal(nutr_id: int) -> Sequence[tuple]:
+def sql_sort_foods_by_kcal(nutr_id: int) -> Sequence[sqlite3.Row]:
     """Sort foods by nutr_id per 200 kcal"""
 
     # TODO: use parameterized queries

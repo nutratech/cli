@@ -1,10 +1,11 @@
 """Main module for things related to argparse"""
+import argparse
 
 from ntclient.argparser import funcs as parser_funcs
 from ntclient.argparser import types
 
 
-def build_subcommands(subparsers) -> None:
+def build_subcommands(subparsers: argparse._SubParsersAction) -> None:
     """Attaches subcommands to main parser"""
     build_init_subcommand(subparsers)
     build_nt_subcommand(subparsers)
@@ -18,7 +19,7 @@ def build_subcommands(subparsers) -> None:
 ################################################################################
 # Methods to build subparsers, and attach back to main arg_parser
 ################################################################################
-def build_init_subcommand(subparsers) -> None:
+def build_init_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Self running init command"""
     init_parser = subparsers.add_parser(
         "init", help="setup profiles, USDA and NT database"
@@ -32,7 +33,7 @@ def build_init_subcommand(subparsers) -> None:
     init_parser.set_defaults(func=parser_funcs.init)
 
 
-def build_nt_subcommand(subparsers) -> None:
+def build_nt_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Lists out nutrients details with computed totals and averages"""
     nutrient_parser = subparsers.add_parser(
         "nt", help="list out nutrients and their info"
@@ -40,7 +41,7 @@ def build_nt_subcommand(subparsers) -> None:
     nutrient_parser.set_defaults(func=parser_funcs.nutrients)
 
 
-def build_search_subcommand(subparsers) -> None:
+def build_search_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Search: terms [terms ... ]"""
     search_parser = subparsers.add_parser(
         "search", help="search foods by name, list overview info"
@@ -66,7 +67,7 @@ def build_search_subcommand(subparsers) -> None:
     search_parser.set_defaults(func=parser_funcs.search)
 
 
-def build_sort_subcommand(subparsers) -> None:
+def build_sort_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Sort foods ranked by nutr_id, per 100g or 200kcal"""
     sort_parser = subparsers.add_parser("sort", help="sort foods by nutrient ID")
     sort_parser.add_argument(
@@ -86,7 +87,7 @@ def build_sort_subcommand(subparsers) -> None:
     sort_parser.set_defaults(func=parser_funcs.sort)
 
 
-def build_analyze_subcommand(subparsers) -> None:
+def build_analyze_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Analyzes (foods only for now)"""
     analyze_parser = subparsers.add_parser("anl", help="analyze food(s)")
     analyze_parser.add_argument(
@@ -99,7 +100,7 @@ def build_analyze_subcommand(subparsers) -> None:
     analyze_parser.set_defaults(func=parser_funcs.analyze)
 
 
-def build_day_subcommand(subparsers) -> None:
+def build_day_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Analyzes a DAY.csv, uses new colored progress bar spec"""
     day_parser = subparsers.add_parser(
         "day", help="analyze a DAY.csv file, RDAs optional"
@@ -121,7 +122,7 @@ def build_day_subcommand(subparsers) -> None:
     day_parser.set_defaults(func=parser_funcs.day)
 
 
-def build_recipe_subcommand(subparsers) -> None:
+def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """View, add, edit, delete recipes"""
     recipe_parser = subparsers.add_parser("recipe", help="list and analyze recipes")
     recipe_subparsers = recipe_parser.add_subparsers(title="recipe subcommands")

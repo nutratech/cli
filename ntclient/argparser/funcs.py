@@ -18,8 +18,8 @@ def nutrients():  # type: ignore
     return services.usda.list_nutrients()
 
 
-def search(args: argparse.Namespace):  # type: ignore
-    """Searches all dbs, foods, recipes, recents and favorites."""
+def search(args: argparse.Namespace) -> tuple:
+    """Searches all dbs, foods, recipes, recent items and favorites."""
     if args.top:
         return services.usda.search(
             words=args.terms, fdgrp_id=args.fdgrp_id, limit=args.top
@@ -27,7 +27,7 @@ def search(args: argparse.Namespace):  # type: ignore
     return services.usda.search(words=args.terms, fdgrp_id=args.fdgrp_id)
 
 
-def sort(args: argparse.Namespace):
+def sort(args: argparse.Namespace) -> tuple:
     """Sorts based on nutrient id"""
     if args.top:
         return services.usda.sort_foods(args.nutr_id, by_kcal=args.kcal, limit=args.top)
@@ -37,7 +37,7 @@ def sort(args: argparse.Namespace):
 ################################################################################
 # Analysis and Day scoring
 ################################################################################
-def analyze(args: argparse.Namespace):
+def analyze(args: argparse.Namespace) -> tuple:
     """Analyze a food"""
     food_ids = args.food_id
     grams = args.grams

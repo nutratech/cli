@@ -7,6 +7,7 @@ Created on Sun Nov 11 23:57:03 2018
 
 import csv
 from collections import OrderedDict
+from collections.abc import Set
 
 from colorama import Fore, Style
 from tabulate import tabulate
@@ -37,7 +38,7 @@ from ntclient.utils import (
 ################################################################################
 # Foods
 ################################################################################
-def foods_analyze(food_ids, grams=None):
+def foods_analyze(food_ids: Set[int], grams: int = 0) -> tuple:
     """
     Analyze a list of food_ids against stock RDA values
     TODO: from ntclient.utils.nutprogbar import nutprogbar
@@ -51,7 +52,7 @@ def foods_analyze(food_ids, grams=None):
     analyses = {}
     for analysis in raw_analyses:
         food_id = analysis[0]
-        if grams is not None:
+        if grams:
             anl = (analysis[1], round(analysis[2] * grams / 100, 2))
         else:
             anl = (analysis[1], analysis[2])
@@ -61,8 +62,8 @@ def foods_analyze(food_ids, grams=None):
             analyses[food_id].append(anl)
 
     serving = sql_servings(food_ids)
-    food_des = sql_food_details(food_ids)
-    food_des = {x[0]: x for x in food_des}
+    food_des_rows = sql_food_details(food_ids)
+    food_des = {x[0]: x for x in food_des_rows}
     nutrients = sql_nutrients_overview()
     rdas = {x[0]: x[1] for x in nutrients.values()}
 
@@ -135,14 +136,14 @@ def foods_analyze(food_ids, grams=None):
 ################################################################################
 # Day
 ################################################################################
-def day_analyze(day_csv_paths, rda_csv_path=None):
+def day_analyze(day_csv_paths: str, rda_csv_path: str = str()):
     """Analyze a day optionally with custom RDAs,
     e.g.  nutra day ~/.nutra/rocky.csv -r ~/.nutra/dog-rdas-18lbs.csv
     TODO: Should be a subset of foods_analyze
     """
     from ntclient import DEBUG  # pylint: disable=import-outside-toplevel
 
-    if rda_csv_path is not None:
+    if rda_csv_path:
         with open(rda_csv_path, encoding="utf-8") as file_path:
             rda_csv_input = csv.DictReader(
                 row for row in file_path if not row.startswith("#")
@@ -164,17 +165,17 @@ def day_analyze(day_csv_paths, rda_csv_path=None):
         logs.append(log)
 
     # Inject user RDAs
-    nutrients = [list(x) for x in sql_nutrients_overview().values()]
+    nutrients_lists = [list(x) for x in sql_nutrients_overview().values()]
     for rda in rdas:
         nutrient_id = int(rda["id"])
         _rda = float(rda["rda"])
-        for nutrient in nutrients:
+        for nutrient in nutrients_lists:
             if nutrient[0] == nutrient_id:
                 nutrient[1] = _rda
                 if DEBUG:
                     substr = "{0} {1}".format(_rda, nutrient[2]).ljust(12)
                     print("INJECT RDA: {0} -->  {1}".format(substr, nutrient[4]))
-    nutrients = {x[0]: x for x in nutrients}
+    nutrients = {x[0]: x for x in nutrients_lists}
 
     # Analyze foods
     foods_analysis = {}
