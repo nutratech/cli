@@ -33,7 +33,7 @@ jobs:
 
       # NOTE: These are the last supported versions on Python 3.4
       - name: Install requirements (Python 3.4)
-        if: matrix.python-version =~ '3.4.*'
+        if: matrix.python-version == '3.4.10'
         run: |
           pip install colorama==0.4.1
 
