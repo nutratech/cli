@@ -37,9 +37,9 @@ jobs:
           pip3 --version
           which pip
           pip --version
-          pip3 uninstall -y setuptools
-          pip3 install --upgrade pip setuptools wheel
-          pip3 install setuptools --upgrade
+          # pip3 uninstall -y setuptools
+          # pip3 install --upgrade pip setuptools wheel
+          # pip3 install setuptools --upgrade
           # NOTE: use the old install file for Python 3.4
           #  these are the latest versions on GitHub for Python 3.4
           pip3 install colorama==0.4.1
