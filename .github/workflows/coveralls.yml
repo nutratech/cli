@@ -1,5 +1,5 @@
 ---
-name: cov-submit
+name: coveralls
 "on":
   push: {}
 
