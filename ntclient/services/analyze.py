@@ -7,7 +7,7 @@ Created on Sun Nov 11 23:57:03 2018
 
 import csv
 from collections import OrderedDict
-from collections.abc import Set
+from collections.abc import Mapping, Set
 
 from colorama import Fore, Style
 from tabulate import tabulate
@@ -136,7 +136,7 @@ def foods_analyze(food_ids: Set[int], grams: int = 0) -> tuple:
 ################################################################################
 # Day
 ################################################################################
-def day_analyze(day_csv_paths: str, rda_csv_path: str = str()):
+def day_analyze(day_csv_paths: str, rda_csv_path: str = str()) -> tuple:
     """Analyze a day optionally with custom RDAs,
     e.g.  nutra day ~/.nutra/rocky.csv -r ~/.nutra/dog-rdas-18lbs.csv
     TODO: Should be a subset of foods_analyze
@@ -169,12 +169,12 @@ def day_analyze(day_csv_paths: str, rda_csv_path: str = str()):
     for rda in rdas:
         nutrient_id = int(rda["id"])
         _rda = float(rda["rda"])
-        for nutrient in nutrients_lists:
-            if nutrient[0] == nutrient_id:
-                nutrient[1] = _rda
+        for _nutrient in nutrients_lists:
+            if _nutrient[0] == nutrient_id:
+                _nutrient[1] = _rda
                 if DEBUG:
-                    substr = "{0} {1}".format(_rda, nutrient[2]).ljust(12)
-                    print("INJECT RDA: {0} -->  {1}".format(substr, nutrient[4]))
+                    substr = "{0} {1}".format(_rda, _nutrient[2]).ljust(12)
+                    print("INJECT RDA: {0} -->  {1}".format(substr, _nutrient[4]))
     nutrients = {x[0]: x for x in nutrients_lists}
 
     # Analyze foods
@@ -195,9 +195,9 @@ def day_analyze(day_csv_paths: str, rda_csv_path: str = str()):
             if entry["id"]:
                 food_id = int(entry["id"])
                 grams = float(entry["grams"])
-                for nutrient in foods_analysis[food_id]:
-                    nutr_id = nutrient[0]
-                    nutr_per_100g = nutrient[1]
+                for _nutrient2 in foods_analysis[food_id]:
+                    nutr_id = _nutrient2[0]
+                    nutr_per_100g = _nutrient2[1]
                     nutr_val = grams / 100 * nutr_per_100g
                     if nutr_id not in nutrient_totals:
                         nutrient_totals[nutr_id] = nutr_val
@@ -213,17 +213,22 @@ def day_analyze(day_csv_paths: str, rda_csv_path: str = str()):
     return 0, nutrients_totals
 
 
-def day_format(analysis, nutrients, buffer=None):
+# TODO: why not this...? nutrients: Mapping[int, tuple]
+def day_format(
+    analysis: Mapping[int, float], nutrients: Mapping[int, list], buffer: int = 0
+) -> None:
     """Formats day analysis for printing to console"""
 
-    def print_header(header):
+    def print_header(header: str) -> None:
         print(Fore.CYAN, end="")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print("--> %s" % header)
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print(Style.RESET_ALL)
 
-    def print_macro_bar(_fat, _net_carb, _pro, _kcals_max, _buffer=None):
+    def print_macro_bar(
+        _fat: float, _net_carb: float, _pro: float, _kcals_max: float, _buffer: int = 0
+    ) -> None:
         _kcals = fat * 9 + net_carb * 4 + _pro * 4
 
         p_fat = (_fat * 9) / _kcals
@@ -276,7 +281,9 @@ def day_format(analysis, nutrients, buffer=None):
             + Style.RESET_ALL
         )
 
-    def print_nute_bar(_n_id, amount, _nutrients):
+    def print_nute_bar(
+        _n_id: int, amount: float, _nutrients: Mapping[int, list]
+    ) -> tuple:
         nutrient = _nutrients[_n_id]
         rda = nutrient[1]
         tag = nutrient[3]
