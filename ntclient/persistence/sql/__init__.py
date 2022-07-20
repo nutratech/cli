@@ -1,12 +1,12 @@
 """Main SQL persistence module, shared between USDA and NT databases"""
 import sqlite3
-from collections.abc import Iterable, Sequence
+from collections.abc import Sequence
 
 
 # ------------------------------------------------
 # Entry fetching methods
 # ------------------------------------------------
-def sql_entries(sql_result: sqlite3.Cursor) -> Sequence[sqlite3.Row]:
+def sql_entries(sql_result: sqlite3.Cursor) -> list:
     """Formats and returns a `sql_result()` for console digestion and output"""
     # TODO: return object: metadata, command, status, errors, etc?
 
@@ -49,15 +49,15 @@ def close_con_and_cur(
 # ------------------------------------------------
 # Main query methods
 # ------------------------------------------------
-def _prep_query(  # type: ignore
-    con: sqlite3.Connection, query: str, db_name: str, values=None
+def _prep_query(
+    con: sqlite3.Connection, query: str, db_name: str, values: Sequence = ()
 ) -> sqlite3.Cursor:
     """
     Run a query and return a cursor object ready for row extraction.
     @param con: sqlite3.Connection object
     @param query: query string, e.g. SELECT * FROM version;
     @param db_name: (nt | usda) database name [TODO: enum]
-    @param values: (tuple | list | None)
+    @param values: (tuple | list)
         empty for bare queries, tuple for single, and list for many
     @return: A sqlite3.Cursor object with populated return values.
     """
@@ -89,8 +89,8 @@ def _sql(
     con: sqlite3.Connection,
     query: str,
     db_name: str,
-    values: Iterable = (),
-) -> Sequence[sqlite3.Row]:
+    values: Sequence = (),
+) -> list:
     """@param values: tuple | list"""
 
     cur = _prep_query(con, query, db_name, values)
@@ -107,7 +107,7 @@ def _sql_headers(
     con: sqlite3.Connection,
     query: str,
     db_name: str,
-    values: Iterable = (),
+    values: Sequence = (),
 ) -> tuple:
     """@param values: tuple | list"""
 

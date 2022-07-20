@@ -7,7 +7,6 @@ Created on Sun Nov 11 23:57:03 2018
 
 import csv
 from collections import OrderedDict
-from collections.abc import Mapping, Set
 
 from colorama import Fore, Style
 from tabulate import tabulate
@@ -38,7 +37,7 @@ from ntclient.utils import (
 ################################################################################
 # Foods
 ################################################################################
-def foods_analyze(food_ids: Set[int], grams: int = 0) -> tuple:
+def foods_analyze(food_ids: set, grams: int = 0) -> tuple:
     """
     Analyze a list of food_ids against stock RDA values
     TODO: from ntclient.utils.nutprogbar import nutprogbar
@@ -214,9 +213,7 @@ def day_analyze(day_csv_paths: str, rda_csv_path: str = str()) -> tuple:
 
 
 # TODO: why not this...? nutrients: Mapping[int, tuple]
-def day_format(
-    analysis: Mapping[int, float], nutrients: Mapping[int, list], buffer: int = 0
-) -> None:
+def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
     """Formats day analysis for printing to console"""
 
     def print_header(header: str) -> None:
@@ -281,9 +278,7 @@ def day_format(
             + Style.RESET_ALL
         )
 
-    def print_nute_bar(
-        _n_id: int, amount: float, _nutrients: Mapping[int, list]
-    ) -> tuple:
+    def print_nute_bar(_n_id: int, amount: float, _nutrients: dict) -> tuple:
         nutrient = _nutrients[_n_id]
         rda = nutrient[1]
         tag = nutrient[3]
@@ -358,5 +353,6 @@ def day_format(
         print_nute_bar(n_id, analysis[n_id], nutrients)
     # TODO: below
     print(
-        "work in progress...some minor fields with negligible data, they are not shown here"
+        "work in progress... "
+        "some minor fields with negligible data, they are not shown here"
     )

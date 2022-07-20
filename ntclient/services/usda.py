@@ -6,7 +6,7 @@ Created on Sat Oct 27 20:28:06 2018
 """
 
 import pydoc
-from collections.abc import Mapping, Sequence, Set
+from collections.abc import Sequence
 
 from tabulate import tabulate
 
@@ -61,7 +61,7 @@ def sort_foods(
 
     # TODO: sub shrt_desc for long if available, and support config.FOOD_NAME_TRUNC
 
-    def print_results(_results, _nutrient_id):
+    def print_results(_results: list, _nutrient_id: int) -> list:
         """Prints truncated list for sort"""
         nutrients = sql_nutrients_overview()
         nutrient = nutrients[_nutrient_id]
@@ -129,7 +129,7 @@ def sort_foods(
 def search(words: list, fdgrp_id: int = 0, limit: int = DEFAULT_RESULT_LIMIT) -> tuple:
     """Searches foods for input"""
 
-    def tabulate_search(_results: Sequence[dict]):  # type: ignore
+    def tabulate_search(_results: list) -> list:
         """Makes search results more readable"""
         # Current terminal size
         # TODO: display "nonzero/total" report nutrients, aminos, and flavones..
@@ -214,8 +214,13 @@ def search(words: list, fdgrp_id: int = 0, limit: int = DEFAULT_RESULT_LIMIT) ->
         else:
             foods_nutrients[food_id][nutr_id] = nutr_val
 
-    def search_results(_scores: Sequence[tuple]) -> Sequence[dict]:
-        """Generates search results, consumable by tabulate"""
+    def search_results(_scores: list) -> list:
+        """
+        Generates search results, consumable by tabulate
+
+        @param _scores: List[tuple]
+        @return: List[dict]
+        """
         _results = []
         for score in _scores:
             _food_id = score[0]

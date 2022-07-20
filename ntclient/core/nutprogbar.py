@@ -1,11 +1,7 @@
 """Temporary [wip] module for more visual (& colorful) RDA output"""
-import sqlite3
-from collections.abc import Mapping
 
 
-def nutprogbar(
-    food_amts: dict, food_analyses: list, nutrients: Mapping[int, sqlite3.Row]
-) -> dict:
+def nutprogbar(food_amts: dict, food_analyses: list, nutrients: dict) -> dict:
     """Returns progress bars, colorized, for foods analyses"""
 
     def tally() -> None:

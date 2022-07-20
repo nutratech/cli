@@ -3,7 +3,7 @@ import os
 import sqlite3
 import tarfile
 import urllib.request
-from collections.abc import Iterable, Sequence
+from collections.abc import Sequence
 
 from ntclient import NUTRA_HOME, USDA_DB_NAME, __db_target_usda__
 from ntclient.persistence.sql import _sql, _sql_headers, version
@@ -97,8 +97,8 @@ def usda_ver() -> str:
 
 
 def sql(
-    query: str, values: Iterable = (), version_check: bool = True
-) -> Sequence[sqlite3.Row]:
+    query: str, values: Sequence = (), version_check: bool = True
+) -> list:
     """
     Executes a SQL command to usda.sqlite3
 
@@ -116,7 +116,7 @@ def sql(
     return _sql(con, query, db_name="usda", values=values)
 
 
-def sql_headers(query: str, values: Iterable = (), version_check: bool = True) -> tuple:
+def sql_headers(query: str, values: Sequence = (), version_check: bool = True) -> tuple:
     """
     Executes a SQL command to usda.sqlite3 [WITH HEADERS]
 
