@@ -1,5 +1,6 @@
 ---
 name: test-win32
+
 "on":
   push: {}
 
