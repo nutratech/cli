@@ -2,11 +2,30 @@
  nutratracker
 **************
 
+Command line tools for interacting with government food database,
+and analyzing your health trends. The ``SR28`` database includes data
+for over 8500 foods and 180 nutrients.
+
+*Requires:*
+
+- Python 3.4.0 or later (``lzma``, ``ssl`` & ``sqlite3`` modules)
+  [Win XP / Ubuntu 14.04].
+- Packages: see ``setup.py``, and ``requirements.txt`` files.
+- Internet connection, to download food database & package dependencies.
+
+See ``nt`` database:   https://github.com/nutratech/nt-sqlite
+
+See ``usda`` database: https://github.com/nutratech/usda-sqlite
+
+
+Details
+=======
+
 .. list-table::
   :widths: 15 25 20
   :header-rows: 1
 
-  * -
+  * - Category
     -
     -
   * - Test / Linux
@@ -48,23 +67,13 @@
         :alt: License GPL-3
     -
 
-Command line tools for interacting with government food databases.
-
-*Requires:*
-
-- Python 3.4.0 or later (lzma, ssl & sqlite3 modules) [Win XP / Ubuntu 14.04].
-- Packages: see ``setup.py``, and ``requirements.txt`` files.
-- Internet connection, to download food database & package dependencies.
-
-See nt database:   https://github.com/nutratech/nt-sqlite
-
-See usda database: https://github.com/nutratech/usda-sqlite
 
 Plugin Development
 ==================
 
-We're looking to start developing plugins or data modifications sets that
-can be imported and built on the base installation, which remains pure.
+We're beginning to develop plugins (or data modifications sets) that
+can be imported and built on the base installation.
+
 
 Notes
 =====
@@ -83,14 +92,16 @@ Mac and Linux developers will do well to install ``direnv``.
 Main program works 100%, but ``test`` and ``lint`` may break on older operating
 systems (Ubuntu 14.04, Windows XP).
 
+
 Install PyPi release (from pip)
 ===============================
 
 .. code-block:: bash
 
-  pip install nutra
+  pip install -U nutra
 
 (**Specify:** flag ``-U`` to upgrade, or ``--pre`` for development releases)
+
 
 Using the source code directly
 ==============================
@@ -115,7 +126,7 @@ Initialize the DBs (nt and usda).
 
   # Or install and run as package script
   make install
-  nutra init
+  n init
 
 If installed (or inside ``cli``) folder, the program can also run
 with ``python -m ntclient``
@@ -129,6 +140,7 @@ Building the PyPi release
   make build  # python3 setup.py --quiet sdist
   twine upload dist/nutra-X.X.X.tar.gz
 
+
 Linting & Tests
 ===============
 
@@ -139,10 +151,11 @@ Install the dependencies (``make deps``) and then:
   # source .venv/bin/activate  # uncomment if NOT using direnv
   make format lint test
 
+
 ArgComplete (tab completion / autocomplete)
 ===========================================
 
-After installing nutra, argcomplete package should also be installed.
+The ``argcomplete`` package will be installed alongside.
 
 Linux, macOS, and Linux Subsystem for Windows
 #############################################
@@ -152,9 +165,9 @@ specifics on using other shells, e.g. ``zsh``, ``fish``, or ``tsh``.
 
 .. code-block:: bash
 
-  activate-global-python-argcomplete
+  activate-global-python-argcomplete --user
 
-Then you can press tab to fill in or complete subcommands
+Then you can press tab to fill in or complete sub-commands
 and to list argument flags.
 
 Windows (Git Bash)
@@ -183,6 +196,7 @@ And my ``~/.bashrc`` file looks like this.
 **NOTE:** This is a work in progress, we are adding more autocomplete
 functions.
 
+
 Currently Supported Data
 ========================
 
@@ -195,37 +209,11 @@ Currently Supported Data
 
 - Flavonoid, Isoflavonoids, and Proanthocyanidins  `[1352 foods]`
 
+
 Usage
 =====
 
 Requires internet connection to download initial datasets.
 Run ``nutra init`` for this step.
 
-Run the ``nutra`` script to output usage.
-
-Usage: ``nutra [options] <command>``
-
-
-Commands
-########
-
-::
-
-  usage: nutra [-h] [-v] [-d] [--no-pager]
-               {init,nt,search,sort,anl,day,recipe} ...
-
-  optional arguments:
-    -h, --help            show this help message and exit
-    -v, --version         show program's version number and exit
-    -d, --debug           enable detailed error messages
-    --no-pager            disable paging (print full output)
-
-  nutra subcommands:
-    {init,nt,search,sort,anl,day,recipe}
-      init                setup profiles, USDA and NT database
-      nt                  list out nutrients and their info
-      search              search foods by name, list overview info
-      sort                sort foods by nutrient ID
-      anl                 analyze food(s)
-      day                 analyze a DAY.csv file, RDAs optional
-      recipe              list and analyze recipes
+Run the ``n`` script to output usage.
