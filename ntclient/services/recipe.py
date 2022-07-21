@@ -60,7 +60,9 @@ def recipes_overview(_recipes: tuple = ()) -> tuple:
     if not _recipes:
         _, _recipes = sql_recipes()
     if not _recipes:
-        print(f"WARN: no recipes. Add to '{NUTRA_HOME}/recipes', or run: n recipe init")
+        print(
+            "WARN: no recipes. Add to '%s/recipes', or run: n recipe init" % NUTRA_HOME
+        )
         return 1, []
 
     results = []
