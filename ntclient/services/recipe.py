@@ -6,11 +6,13 @@ Created on Wed Aug 12 15:14:00 2020
 @author: shane
 """
 import csv
+import glob
 import os
+import shutil
 
 from tabulate import tabulate
 
-from ntclient import NUTRA_HOME
+from ntclient import NUTRA_HOME, ROOT_DIR
 from ntclient.core.nutprogbar import nutprogbar
 from ntclient.persistence.sql.nt.funcs import (
     sql_analyze_recipe,
@@ -25,16 +27,25 @@ from ntclient.persistence.sql.usda.funcs import (
 )
 
 
-def recipes_init() -> tuple:
+def recipes_init(_copy: bool = True) -> tuple:
     """
     A filesystem function which copies the stock data into f"{NUTRA_HOME}/recipes".
     TODO: put filesystem functions into separate module and ignore in coverage report.
 
     @return: exit_code: int, copy_count: int
     """
-    recipes_target = os.path.join(NUTRA_HOME, )
+    recipes_source = os.path.join(ROOT_DIR, "resources", "recipe")
+    recipes_destination = os.path.join(NUTRA_HOME, "recipe")
+    os.makedirs(recipes_destination, 0o775, True)
 
-    return 0, 0
+    csv_files = glob.glob(f"{recipes_source}/*.csv")
+
+    if not _copy:
+        return 1, len(csv_files)
+
+    for csv_file in csv_files:
+        shutil.copyfile(csv_file, recipes_destination)
+    return 0, len(csv_files)
 
 
 def recipes_overview(_recipes: tuple = ()) -> tuple:

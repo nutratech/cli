@@ -10,6 +10,13 @@ import pytest
 import ntclient.services.recipe as r
 
 
+def test_recipes_init():
+    """Checks the init function, which copies over default data (if not already)"""
+    exit_code, copy_count = r.recipes_init(_copy=False)
+    assert exit_code == 1
+    assert copy_count == 3
+
+
 def test_recipes_overview():
     """Test type coercion and one-to-one input/output relationship"""
     exit_code, _recipes = r.recipes_overview()
