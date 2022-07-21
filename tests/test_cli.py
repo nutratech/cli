@@ -226,6 +226,7 @@ def test_700_build_ntsqlite_succeeds():
     os.remove(NTSQLITE_BUILDPATH)
 
 
+@pytest.mark.skip(reason="Long-running, want to replace with more 'unit' style")
 def test_800_usda_upgrades_or_downgrades():
     """Ensures the static usda.sqlite3 file can be upgraded/downgraded as needed"""
     version = usda_ver()
@@ -243,6 +244,7 @@ def test_800_usda_upgrades_or_downgrades():
     assert successful is True
 
 
+@pytest.mark.skip(reason="Long-running, want to replace with more 'unit' style")
 def test_801_sql_invalid_version_error_if_version_old():
     """Throws base custom SqlException...
     TODO: why lines still missing in `coverage` for __main__ ?"""
@@ -257,6 +259,7 @@ def test_801_sql_invalid_version_error_if_version_old():
     assert sql_invalid_version_error is not None
 
 
+@pytest.mark.skip(reason="Long-running, want to replace with more 'unit' style")
 def test_802_usda_downloads_fresh_if_missing_or_deleted():
     """Ensure download of usda.sqlite3.tar.xz, if usda.sqlite3 is missing"""
     from ntclient.persistence.sql import usda  # pylint: disable=import-outside-toplevel
