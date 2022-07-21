@@ -24,12 +24,19 @@ from ntclient.persistence.sql.usda.funcs import (
 )
 
 
-def recipes_overview() -> tuple:
-    """Shows overview for all recipes"""
-    recipes = sql_recipes()[1]
+def recipes_overview(_recipes: tuple = ()) -> tuple:
+    """
+    Shows overview for all recipes.
+    Accepts recipes input Tuple[tuple], else reads from disk to look for some.
+    @param _recipes: List[dict] {id, name, tagname, n_foods: int, weight: float}
+    @return: exit_code, results: dict
+    """
+
+    if not _recipes:
+        _, _recipes = sql_recipes()
 
     results = []
-    for recipe in recipes:
+    for recipe in _recipes:
         result = {
             "id": recipe[0],
             "name": recipe[2],
@@ -44,7 +51,7 @@ def recipes_overview() -> tuple:
     return 0, results
 
 
-def recipe_overview(recipe_id: int) -> tuple:
+def recipe_overview(recipe_id: int, _recipes: tuple = ()) -> tuple:
     """Shows single recipe overview"""
     recipe = sql_analyze_recipe(recipe_id)
     name = recipe[0][1]
