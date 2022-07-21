@@ -44,7 +44,7 @@ def recipes_init(_copy: bool = True) -> tuple:
         return 1, len(csv_files)
 
     for csv_file in csv_files:
-        shutil.copyfile(csv_file, recipes_destination)
+        shutil.copy(csv_file, recipes_destination)
     return 0, len(csv_files)
 
 
