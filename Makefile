@@ -51,7 +51,7 @@ PIP ?= $(PY_VIRTUAL_INTERPRETER) -m pip
 REQ_OPT := requirements-optional.txt
 REQ_LINT := requirements-lint.txt
 REQ_TEST := requirements-test.txt
-REQ_TEST_OLD := requirements-test-win_xp-ubu1604.txt
+REQ_TEST_OLD := requirements-test-old.txt
 
 PIP_OPT_ARGS ?=
 

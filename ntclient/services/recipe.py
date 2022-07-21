@@ -38,7 +38,7 @@ def recipes_init(_copy: bool = True) -> tuple:
     recipes_destination = os.path.join(NUTRA_HOME, "recipe")
     os.makedirs(recipes_destination, 0o775, True)
 
-    csv_files = glob.glob(f"{recipes_source}/*.csv")
+    csv_files = glob.glob(recipes_source + "/*.csv")
 
     if not _copy:
         return 1, len(csv_files)

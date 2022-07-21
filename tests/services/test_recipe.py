@@ -16,6 +16,10 @@ def test_recipes_init():
     assert exit_code == 1
     assert copy_count == 3
 
+    exit_code, copy_count = r.recipes_init()
+    assert exit_code == 0
+    assert copy_count == 3
+
 
 def test_recipes_overview():
     """Test type coercion and one-to-one input/output relationship"""
