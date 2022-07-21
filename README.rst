@@ -4,10 +4,10 @@
 
 Command line tools for interacting with government food database,
 and analyzing your health trends. The ``SR28`` database includes data
-for over 8500 foods and 180 nutrients. You can customize it with extensions
-and data mapping rules, built on top.
+for ~8500 foods and ~180 nutrients. Customizable with extensions
+and mapping rules built on top.
 
-*Requires:*
+**Requires**
 
 - Python 3.4.0 or later (``lzma``, ``ssl`` & ``sqlite3`` modules)
   [Win XP / Ubuntu 14.04].
@@ -20,7 +20,7 @@ See ``usda`` database: https://github.com/nutratech/usda-sqlite
 
 
 Details
-=======
+#######################################################
 
 .. list-table::
   :widths: 15 25 20
@@ -70,14 +70,35 @@ Details
 
 
 Plugin Development
-==================
+#######################################################
 
 We're beginning to develop plugins (or data modifications sets) that
 can be imported and built on the base installation.
 
 
+Supporting Old Versions of Python
+#######################################################
+
+The old requirements can still be tested on modern interpreters.
+Simply install them with this (inside your ``venv`` environment).
+
+::
+
+  pip install -r requirements-old.txt
+
+This won't guarantee compatibility for every version, but it will help.
+We provide a wide range. The oldest version of colorama is twice as old
+as what ships with Ubuntu-14.04.
+
+To use an old interpreter (Python 3.4 does not have the ``typing`` module!
+Only ``collections.abc``.) you may need to use
+a virtual machine or install old SSL libraries or enter a similar messy state.
+My preference is for VirtualBox images, where
+I manually test Windows XP & Ubuntu 14.04.
+
+
 Notes
-=====
+#######################################################
 
 On Windows you should check the box during the Python installer
 to include ``Scripts`` directory in your ``$PATH``.  This can be done
@@ -95,7 +116,7 @@ systems (Ubuntu 14.04, Windows XP).
 
 
 Install PyPi release (from pip)
-===============================
+#######################################################
 
 .. code-block:: bash
 
@@ -105,7 +126,7 @@ Install PyPi release (from pip)
 
 
 Using the source code directly
-==============================
+#######################################################
 Clone down, initialize ``nt-sqlite`` submodule, and install requirements:
 
 .. code-block:: bash
@@ -118,7 +139,7 @@ Clone down, initialize ``nt-sqlite`` submodule, and install requirements:
 
   ./nutra -h
 
-Initialize the DBs (nt and usda).
+Initialize the DBs (``nt`` and ``usda``).
 
 .. code-block:: bash
 
@@ -133,7 +154,7 @@ If installed (or inside ``cli``) folder, the program can also run
 with ``python -m ntclient``
 
 Building the PyPi release
-#########################
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
@@ -143,7 +164,7 @@ Building the PyPi release
 
 
 Linting & Tests
-===============
+#######################################################
 
 Install the dependencies (``make deps``) and then:
 
@@ -154,12 +175,13 @@ Install the dependencies (``make deps``) and then:
 
 
 ArgComplete (tab completion / autocomplete)
-===========================================
+#######################################################
 
 The ``argcomplete`` package will be installed alongside.
 
+
 Linux, macOS, and Linux Subsystem for Windows
-#############################################
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simply run the following out of a ``bash`` shell. Check their page for more
 specifics on using other shells, e.g. ``zsh``, ``fish``, or ``tsh``.
@@ -171,8 +193,9 @@ specifics on using other shells, e.g. ``zsh``, ``fish``, or ``tsh``.
 Then you can press tab to fill in or complete sub-commands
 and to list argument flags.
 
+
 Windows (Git Bash)
-##################
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This can work with git bash too. I followed the instructions on their README.
 
@@ -199,12 +222,11 @@ functions.
 
 
 Currently Supported Data
-========================
+#######################################################
 
 **USDA Stock database**
 
 - Standard reference database (SR28)  `[7794 foods]`
-
 
 **Relative USDA Extensions**
 
@@ -212,7 +234,7 @@ Currently Supported Data
 
 
 Usage
-=====
+#######################################################
 
 Requires internet connection to download initial datasets.
 Run ``nutra init`` for this step.
