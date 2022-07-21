@@ -19,8 +19,8 @@ jobs:
 
       - name: Install requirements
         run: |
-          pip install -r requirements.txt
-          pip install -r requirements-test.txt
+          /usr/bin/python3 -m pip install -r requirements.txt
+          /usr/bin/python3 -m pip install -r requirements-test.txt
 
       - name: Test
         run: make _test
