@@ -108,7 +108,7 @@ TEST_HOME := tests/
 MIN_COV := 80
 .PHONY: _test
 _test:
-	coverage run -m pytest -v -s -p no:cacheprovider -o log_cli=true $(TEST_HOME)
+	coverage run -m pytest $(TEST_HOME)
 	coverage report
 
 .PHONY: test
