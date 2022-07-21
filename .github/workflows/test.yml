@@ -1,11 +1,11 @@
 ---
-name: install-linux
+name: test
 
 "on":
   push: {}
 
 jobs:
-  python:
+  test:
     runs-on: [self-hosted, dev-east]
 
     steps:
@@ -21,3 +21,8 @@ jobs:
 
       - name: Test
         run: make _test
+
+      - name: Submit coverage report / coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: coveralls --service=github
