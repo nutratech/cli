@@ -11,9 +11,10 @@ import ntclient.services.recipe as r
 
 
 def test_recipes_overview():
+    """Test type coercion and one-to-one input/output relationship"""
     exit_code, _recipes = r.recipes_overview()
 
-    assert exit_code == 0
+    assert exit_code == 1
     assert isinstance(_recipes, list)
 
     exit_code, _recipes = r.recipes_overview(
@@ -29,6 +30,7 @@ def test_recipes_overview():
 
 
 def test_recipe_overview_throws_exc_for_negative_id():
+    """Raises index error if recipe int id is invalid"""
     # TODO: should we be using guid / uuid instead of integer id?
     with pytest.raises(IndexError):
         r.recipe_overview(-12345)

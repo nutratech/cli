@@ -10,6 +10,7 @@ import os
 
 from tabulate import tabulate
 
+from ntclient import NUTRA_HOME
 from ntclient.core.nutprogbar import nutprogbar
 from ntclient.persistence.sql.nt.funcs import (
     sql_analyze_recipe,
@@ -24,6 +25,16 @@ from ntclient.persistence.sql.usda.funcs import (
 )
 
 
+def recipes_init() -> tuple:
+    """
+    A filesystem function which copies the stock data into f"{NUTRA_HOME}/recipes".
+    TODO: put filesystem functions into separate module and ignore in coverage report.
+    @return: exit_code: int, copy_count: int
+    """
+
+    return 0, 0
+
+
 def recipes_overview(_recipes: tuple = ()) -> tuple:
     """
     Shows overview for all recipes.
@@ -34,6 +45,9 @@ def recipes_overview(_recipes: tuple = ()) -> tuple:
 
     if not _recipes:
         _, _recipes = sql_recipes()
+    if not _recipes:
+        print(f"WARN: no recipes. Add to '{NUTRA_HOME}/recipes', or run: n recipe init")
+        return 1, []
 
     results = []
     for recipe in _recipes:

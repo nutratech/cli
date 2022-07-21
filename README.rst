@@ -4,7 +4,8 @@
 
 Command line tools for interacting with government food database,
 and analyzing your health trends. The ``SR28`` database includes data
-for over 8500 foods and 180 nutrients.
+for over 8500 foods and 180 nutrients. You can customize it with extensions
+and data mapping rules, built on top.
 
 *Requires:*
 
