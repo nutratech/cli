@@ -33,4 +33,4 @@ jobs:
       - name: Basic Tests / CLI / Integration
         run: |
           n -v
-          nutra --no-pager recipe
+          # nutra --no-pager recipe
