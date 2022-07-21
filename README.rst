@@ -87,8 +87,7 @@ Simply install them with this (inside your ``venv`` environment).
   pip install -r requirements-old.txt
 
 This won't guarantee compatibility for every version, but it will help.
-We provide a wide range. The oldest version of colorama is twice as old
-as what ships with Ubuntu-14.04.
+We provide a wide range. The oldest version of colorama is from 2010.
 
 To use an old interpreter (Python 3.4 does not have the ``typing`` module!
 Only ``collections.abc``.) you may need to use
