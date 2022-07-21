@@ -1,5 +1,5 @@
 ---
-name: test-win32
+name: install-win32
 
 "on":
   push: {}
@@ -33,10 +33,4 @@ jobs:
       - name: Basic Tests / CLI / Integration
         run: |
           n -v
-          nutra -d init -y
-          nutra --no-pager nt
-          nutra --no-pager sort -c 789
-          nutra --no-pager search ultraviolet mushrooms
-          nutra --no-pager anl 9050
           nutra --no-pager recipe
-          nutra day tests/resources/day/human-test.csv

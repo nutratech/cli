@@ -1,0 +1,23 @@
+---
+name: install-linux
+
+"on":
+  push: {}
+
+jobs:
+  python:
+    runs-on: [self-hosted, dev-east]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-test.txt
+
+      - name: Test
+        run: make _test
