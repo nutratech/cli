@@ -6,4 +6,4 @@ include ntclient/ntsqlite/sql/data/*.csv
 
 include ntclient/resources/**/*.csv
 
-global-exclude nt.sqlite3
+global-exclude *.sqlite3

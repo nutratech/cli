@@ -1,4 +1,11 @@
-"""Custom types for argparse validation"""
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon May 31 09:19:00 2021 -0400
+
+@author: shane
+Custom types for argparse validation
+"""
 import argparse
 import os
 

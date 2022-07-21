@@ -135,7 +135,7 @@ def foods_analyze(food_ids: set, grams: int = 0) -> tuple:
 ################################################################################
 # Day
 ################################################################################
-def day_analyze(day_csv_paths: str, rda_csv_path: str = str()) -> tuple:
+def day_analyze(day_csv_paths: list, rda_csv_path: str = str()) -> tuple:
     """Analyze a day optionally with custom RDAs,
     e.g.  nutra day ~/.nutra/rocky.csv -r ~/.nutra/dog-rdas-18lbs.csv
     TODO: Should be a subset of foods_analyze

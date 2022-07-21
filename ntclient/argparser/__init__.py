@@ -1,4 +1,11 @@
-"""Main module for things related to argparse"""
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue May 25 13:08:55 2021 -0400
+
+@author: shane
+Main module for things related to argparse
+"""
 import argparse
 
 from ntclient.argparser import funcs as parser_funcs

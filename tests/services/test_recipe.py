@@ -17,8 +17,8 @@ def test_recipes_overview():
     assert exit_code == 1
     assert isinstance(_recipes, list)
 
-    exit_code, _recipes = r.recipes_overview(
-        (
+    exit_code, _recipes_overview = r.recipes_overview(
+        _recipes=(
             (1, "test1", "tag1", 10, 75),
             (2, "test2", "tag2", 15, 100),
             (999, "test999", "tag999", 2, 5),
@@ -26,7 +26,7 @@ def test_recipes_overview():
     )
 
     assert exit_code == 0
-    assert len(_recipes) == 3
+    assert len(_recipes_overview) == 3
 
 
 def test_recipe_overview_throws_exc_for_negative_id():

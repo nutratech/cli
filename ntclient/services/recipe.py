@@ -29,8 +29,10 @@ def recipes_init() -> tuple:
     """
     A filesystem function which copies the stock data into f"{NUTRA_HOME}/recipes".
     TODO: put filesystem functions into separate module and ignore in coverage report.
+
     @return: exit_code: int, copy_count: int
     """
+    recipes_target = os.path.join(NUTRA_HOME, )
 
     return 0, 0
 
@@ -39,6 +41,7 @@ def recipes_overview(_recipes: tuple = ()) -> tuple:
     """
     Shows overview for all recipes.
     Accepts recipes input Tuple[tuple], else reads from disk to look for some.
+
     @param _recipes: List[dict] {id, name, tagname, n_foods: int, weight: float}
     @return: exit_code, results: dict
     """

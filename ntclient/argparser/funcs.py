@@ -1,4 +1,11 @@
-"""Current home to subparsers and service-level logic"""
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jul 18 16:30:28 2020 -0400
+
+@author: shane
+Current home to subparsers and service-level logic
+"""
 import argparse
 import os
 
@@ -47,9 +54,8 @@ def analyze(args: argparse.Namespace) -> tuple:
 
 def day(args: argparse.Namespace) -> tuple:
     """Analyze a day's worth of meals"""
-    day_csv_paths = args.food_log
-    day_csv_paths = [os.path.expanduser(x) for x in day_csv_paths]
-    rda_csv_path = os.path.expanduser(args.rda) if args.rda else None
+    day_csv_paths = [str(os.path.expanduser(x)) for x in args.food_log]
+    rda_csv_path = str(os.path.expanduser(args.rda)) if args.rda else str()
 
     return services.analyze.day_analyze(day_csv_paths, rda_csv_path=rda_csv_path)
 
@@ -57,6 +63,11 @@ def day(args: argparse.Namespace) -> tuple:
 ################################################################################
 # Recipes
 ################################################################################
+def recipes_init() -> tuple:
+    """Copy over stock recipes into 'f{NUTRA_HOME}/recipes'"""
+    return services.recipe.recipes_init()
+
+
 def recipes() -> tuple:
     """Return recipes"""
     return services.recipe.recipes_overview()

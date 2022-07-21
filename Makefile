@@ -51,7 +51,7 @@ PIP ?= $(PY_VIRTUAL_INTERPRETER) -m pip
 REQ_OPT := requirements-optional.txt
 REQ_LINT := requirements-lint.txt
 REQ_TEST := requirements-test.txt
-REQ_OLD := requirements-test-win_xp-ubu1604.txt
+REQ_TEST_OLD := requirements-test-win_xp-ubu1604.txt
 
 PIP_OPT_ARGS ?=
 
@@ -62,7 +62,7 @@ _deps:
 	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_OPT)
 	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_LINT)
 	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_TEST) || \
-	echo "TEST REQs failed. Try with '--user' flag, or old version: $(PIP) install -r $(REQ_OLD)"
+	echo "TEST REQs failed. Try with '--user' flag, or old version: $(PIP) install -r $(REQ_TEST_OLD)"
 
 .PHONY: deps
 deps: _venv _deps	## Install requirements
