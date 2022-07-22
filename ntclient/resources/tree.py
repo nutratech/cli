@@ -1,38 +1,98 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+
+"""Python 3 remiplementation of the linux 'tree' utility"""
+
 import os
+import sys
+
+chars = {"nw": "\u2514", "nws": "\u251c", "ew": "\u2500", "ns": "\u2502"}
+
+strs = [
+    chars["ns"] + "   ",
+    chars["nws"] + chars["ew"] * 2 + " ",
+    chars["nw"] + chars["ew"] * 2 + " ",
+    "    ",
+]
 
 
-def realname(path, root=None):
-    if root is not None:
-        path = os.path.join(root, path)
-    result = os.path.basename(path)
+class colors:
+    dir = "\033[01;34m"
+    exec = "\033[01;32m"
+    link = "\033[01;36m"
+    deadlink = "\033[40;31;01m"
+    end = "\033[00m"
+
+
+def colorize(path, full=False):
+    file = path if full else os.path.basename(path)
+
     if os.path.islink(path):
-        realpath = os.readlink(path)
-        result = "%s -> %s" % (os.path.basename(path), realpath)
-    return result
+        return (
+            colors.link + file + colors.end + " -> " + colorize(os.readlink(path), True)
+        )
+
+    if os.path.isdir(path):
+        return colors.dir + file + colors.end
+
+    if os.access(path, os.X_OK):
+        return colors.exec + file + colors.end
+
+    return file
 
 
-def ptree(startpath, depth=-1):
-    prefix = 0
-    if startpath != "/":
-        if startpath.endswith("/"):
-            startpath = startpath[:-1]
-        prefix = len(startpath)
-    for root, dirs, files in os.walk(startpath):
-        level = root[prefix:].count(os.sep)
-        if depth > -1 and level > depth:
+def print_dir(dir, pre="", opts={}):
+    dirs = 0
+    files = 0
+    size = 0
+
+    if pre == "":
+        print(colors.dir + dir + colors.end)
+
+    dir_len = len(os.listdir(dir)) - 1
+    for i, file in enumerate(sorted(os.listdir(dir), key=str.lower)):
+        path = os.path.join(dir, file)
+        if file[0] == "." and not opts["show_hidden"]:
             continue
-        indent = subindent = ""
-        if level > 0:
-            indent = "|   " * (level - 1) + "|-- "
-        subindent = "|   " * (level) + "|-- "
-        print("{}{}/".format(indent, realname(root)))
-        # print dir only if symbolic link; otherwise, will be printed as root
-        for d in dirs:
-            if os.path.islink(os.path.join(root, d)):
-                print("{}{}".format(subindent, realname(d, root=root)))
-        for f in files:
-            print("{}{}".format(subindent, realname(f, root=root)))
+        if os.path.isdir(path):
+            print(pre + strs[2 if i == dir_len else 1] + colorize(path))
+            if os.path.islink(path):
+                dirs += 1
+            else:
+                d, f, s = print_dir(
+                    path, pre + strs[3 if i == dir_len else 0], opts=opts
+                )
+                dirs += d + 1
+                files += f
+                size += s
+        else:
+            files += 1
+            size += os.path.getsize(path)
+            print(
+                pre
+                + strs[2 if i == dir_len else 1]
+                + ("[{:>11}]  ".format(size) if opts["show_size"] else "")
+                + colorize(path)
+            )
 
-if __name__ == "__main__":
-    ptree(".")
+    return (dirs, files, size)
+
+
+dirs = 0
+files = 0
+
+opts = {"show_hidden": False, "show_size": False, "follow_symlinks": False}
+
+if len(sys.argv) == 1:
+    dirs, files, size = print_dir(".", opts=opts)
+else:
+    for dir in sys.argv[1:]:
+        d, f = print_dir(dir, opts=opts)
+        dirs += d
+        files += f
+
+print()
+print(
+    "{} director{}, {} file{}".format(
+        dirs, "ies" if dirs != 1 else "y", files, "s" if files != 1 else ""
+    )
+)
