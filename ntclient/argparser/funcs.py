@@ -63,7 +63,7 @@ def day(args: argparse.Namespace) -> tuple:
 # Recipes
 ################################################################################
 def recipes_init() -> tuple:
-    """Copy over stock recipes into 'f{NUTRA_HOME}/recipes'"""
+    """Copy over stock recipes into RECIPE_HOME"""
     return services.recipe.recipes_init()
 
 

@@ -20,6 +20,9 @@ from ntclient.persistence.sql.usda.funcs import (
 )
 from ntclient.services.recipe.csv_utils import csv_analyze_recipe, csv_tree
 
+_RECIPE_SUB_PATH = "recipe"
+RECIPE_HOME = os.path.join(NUTRA_HOME, _RECIPE_SUB_PATH)
+
 
 def recipes_init(_copy: bool = True) -> tuple:
     """
@@ -29,8 +32,8 @@ def recipes_init(_copy: bool = True) -> tuple:
     @return: exit_code: int, copy_count: int
     """
     recipes_source = os.path.join(ROOT_DIR, "resources", "")
-    recipes_destination = os.path.join(NUTRA_HOME, "")
-    os.makedirs(recipes_destination, 0o775, True)
+    # Create directory if it doesn't exist
+    os.makedirs(RECIPE_HOME, 0o775, True)
 
     csv_files = glob.glob(recipes_source + "/**/*.csv")
 
@@ -38,7 +41,7 @@ def recipes_init(_copy: bool = True) -> tuple:
         return 1, len(csv_files)
 
     for csv_file in csv_files:
-        shutil.copy(csv_file, recipes_destination)
+        shutil.copy(csv_file, RECIPE_HOME)
     return 0, len(csv_files)
 
 

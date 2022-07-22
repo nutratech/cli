@@ -133,6 +133,13 @@ def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
     recipe_parser = subparsers.add_parser("recipe", help="list and analyze recipes")
     recipe_subparsers = recipe_parser.add_subparsers(title="recipe subcommands")
 
+    # Init
+    recipe_init_parser = recipe_subparsers.add_parser(
+        "init", help="create recipe folder, copy stock data in"
+    )
+    recipe_init_parser.set_defaults(func=parser_funcs.recipes_init)
+
+    # Analyze
     recipe_anl_parser = recipe_subparsers.add_parser(
         "anl", help="view and analyze for recipe"
     )

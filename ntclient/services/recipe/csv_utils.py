@@ -8,6 +8,13 @@ CSV utilities for reading and processing recipes.
 TODO: copy to & cache in sqlite3, only look to CSV if it doesn't exist?
  Well then what if they edit CSV... gah.
 """
+import os
+
+
+def csv_files() -> list:
+    """Returns full filenames for everything under 'f{}/recipe'"""
+
+    return glob.glob(recipes_source + "/**/*.csv")
 
 
 def csv_tree() -> tuple:
