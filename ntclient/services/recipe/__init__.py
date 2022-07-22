@@ -5,7 +5,6 @@ Created on Wed Aug 12 15:14:00 2020
 @author: shane
 Supporting methods for main service
 """
-import csv
 import glob
 import os
 import shutil
@@ -19,7 +18,7 @@ from ntclient.persistence.sql.usda.funcs import (
     sql_food_details,
     sql_nutrients_overview,
 )
-from ntclient.services.recipe.csv_utils import csv_tree
+from ntclient.services.recipe.csv_utils import csv_analyze_recipe, csv_tree
 
 
 def recipes_init(_copy: bool = True) -> tuple:
@@ -77,10 +76,10 @@ def recipes_overview(_recipes: tuple = ()) -> tuple:
     return 0, results
 
 
-def recipe_overview(recipe_id: int, _recipes: tuple = ()) -> tuple:
+def recipe_overview(recipe_uuid: str, _recipes: tuple = ()) -> tuple:
     """Shows single recipe overview"""
-    recipe = csv_analyze_recipe(recipe_id)
-    name = recipe[0][1]
+    _, recipe = csv_analyze_recipe(recipe_uuid)
+    name = recipe
     print(name)
 
     food_ids_dict = {x[2]: x[3] for x in recipe}
