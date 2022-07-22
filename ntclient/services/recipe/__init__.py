@@ -60,18 +60,19 @@ def recipes_overview(_recipes: tuple = ()) -> tuple:
         )
         return 1, []
 
+    headers = ("id", "name", "tagname", "n_foods", "weight")
     results = []
     for recipe in _recipes:
-        result = {
-            "id": recipe[0],
-            "name": recipe[2],
-            "tagname": recipe[1],
-            "n_foods": recipe[3],
-            "weight": recipe[4],
-        }
+        result = (
+            recipe[0],
+            recipe[2],
+            recipe[1],
+            recipe[3],
+            recipe[4],
+        )
         results.append(result)
 
-    table = tabulate(results, headers="keys", tablefmt="presto")
+    table = tabulate(results, headers=headers, tablefmt="presto")
     print(table)
     return 0, results
 
