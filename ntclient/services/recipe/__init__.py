@@ -65,8 +65,8 @@ def recipes_overview(_recipes: tuple = ()) -> tuple:
     for recipe in _recipes:
         result = (
             recipe[0],
-            recipe[2],
             recipe[1],
+            recipe[2],
             recipe[3],
             recipe[4],
         )
