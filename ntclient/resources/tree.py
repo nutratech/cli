@@ -4,7 +4,7 @@
 import os
 import sys
 
-from colorama import Fore, Style
+from colorama import Fore, Style, init
 
 chars = {"nw": "\u2514", "nws": "\u251c", "ew": "\u2500", "ns": "\u2502"}
 
@@ -16,6 +16,7 @@ strs = [
 ]
 
 # Colors and termination strings
+init()
 COLOR_DIR = Style.BRIGHT + Fore.BLUE
 COLOR_EXEC = Style.BRIGHT + Fore.GREEN
 COLOR_LINK = Style.BRIGHT + Fore.CYAN
