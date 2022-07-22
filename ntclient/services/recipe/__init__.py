@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Wed Aug 12 15:14:00 2020
 
 @author: shane
+Supporting methods for main service
 """
 import csv
 import glob
@@ -14,12 +14,6 @@ from tabulate import tabulate
 
 from ntclient import NUTRA_HOME, ROOT_DIR
 from ntclient.core.nutprogbar import nutprogbar
-from ntclient.persistence.sql.nt.funcs import (
-    sql_analyze_recipe,
-    sql_nt_next_index,
-    sql_recipe,
-    sql_recipes,
-)
 from ntclient.persistence.sql.usda.funcs import (
     sql_analyze_foods,
     sql_food_details,
@@ -34,8 +28,8 @@ def recipes_init(_copy: bool = True) -> tuple:
 
     @return: exit_code: int, copy_count: int
     """
-    recipes_source = os.path.join(ROOT_DIR, "resources", "recipe")
-    recipes_destination = os.path.join(NUTRA_HOME, "recipe")
+    recipes_source = os.path.join(ROOT_DIR, "resources", "")
+    recipes_destination = os.path.join(NUTRA_HOME, "")
     os.makedirs(recipes_destination, 0o775, True)
 
     csv_files = glob.glob(recipes_source + "/*.csv")
@@ -104,65 +98,3 @@ def recipe_overview(recipe_id: int, _recipes: tuple = ()) -> tuple:
     print(progbars)
 
     return 0, recipe
-
-
-def recipe_import(file_path: str) -> tuple:
-    """Import a recipe to SQL database"""
-
-    def extract_id_from_filename(path: str) -> int:
-        filename = str(os.path.basename(path))
-        if (
-            "[" in filename
-            and "]" in filename
-            and filename.index("[") < filename.index("]")
-        ):
-            # TODO: try, raise: print/warn
-            return int(filename.split("[")[1].split("]")[0])
-        return 0  # zero is falsy
-
-    if os.path.isfile(file_path):
-        # TODO: better logic than this
-        recipe_id = extract_id_from_filename(file_path) or sql_nt_next_index("recipe")
-        print(recipe_id)
-        with open(file_path, encoding="utf-8") as file:
-            reader = csv.DictReader(file)
-            # headers = next(reader)
-            rows = list(reader)
-        print(rows)
-    else:  # os.path.isdir()
-        print("not implemented ;]")
-    return 1, False
-
-
-def recipe_add(name: str, food_amts: dict) -> tuple:
-    """Add a recipe to SQL database"""
-    print()
-    print("New recipe: " + name + "\n")
-
-    food_ids = set(food_amts.keys())
-    food_names = {x[0]: x[2] for x in sql_food_details(food_ids)}
-
-    results = []
-    for food_id, grams in food_amts.items():
-        results.append([food_id, food_names[food_id], grams])
-
-    table = tabulate(results, headers=["id", "food_name", "grams"], tablefmt="presto")
-    print(table)
-
-    confirm = input("\nCreate recipe? [Y/n] ")
-
-    if confirm.lower() == "y":
-        print("not implemented ;]")
-    return 1, False
-
-
-def recipe_delete(recipe_id: int) -> tuple:
-    """Deletes recipe by ID, along with any FK constraints"""
-    recipe = sql_recipe(recipe_id)[0]
-
-    print(recipe[4])
-    confirm = input("Do you wish to delete? [Y/n] ")
-
-    if confirm.lower() == "y":
-        print("not implemented ;]")
-    return 1, False
