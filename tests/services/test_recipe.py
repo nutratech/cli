@@ -8,7 +8,7 @@ import unittest
 
 import pytest
 
-import ntclient.services.recipe as r
+import ntclient.services.recipe.utils as r
 
 
 class TestRecipe(unittest.TestCase):

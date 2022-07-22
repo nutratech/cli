@@ -9,6 +9,7 @@ import argparse
 import os
 
 from ntclient import services
+from ntclient.services.recipe import utils as r_service
 
 
 def init(args: argparse.Namespace) -> tuple:
@@ -64,14 +65,14 @@ def day(args: argparse.Namespace) -> tuple:
 ################################################################################
 def recipes_init() -> tuple:
     """Copy over stock recipes into RECIPE_HOME"""
-    return services.recipe.utils.recipes_init()
+    return r_service.recipes_init()
 
 
 def recipes() -> tuple:
     """Return recipes"""
-    return services.recipe.utils.recipes_overview()
+    return r_service.recipes_overview()
 
 
 def recipe(args: argparse.Namespace) -> tuple:
     """Return recipe view (analysis)"""
-    return services.recipe.utils.recipe_overview(args.recipe_id)
+    return r_service.recipe_overview(args.recipe_id)
