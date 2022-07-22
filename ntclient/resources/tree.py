@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-
-"""Python 3 remiplementation of the linux 'tree' utility"""
+"""Python 3 reimplementation of the linux 'tree' utility"""
 
 import os
 import sys
@@ -16,85 +15,101 @@ strs = [
     "    ",
 ]
 
-
-class colors:
-    dir = Style.BRIGHT + Fore.BLUE
-    exec = Style.BRIGHT + Fore.GREEN
-    link = Style.BRIGHT + Fore.CYAN
-    deadlink = Style.BRIGHT + Fore.RED
-    end = Style.RESET_ALL
+# Colors and termination strings
+COLOR_DIR = Style.BRIGHT + Fore.BLUE
+COLOR_EXEC = Style.BRIGHT + Fore.GREEN
+COLOR_LINK = Style.BRIGHT + Fore.CYAN
+COLOR_DEAD_LINK = Style.BRIGHT + Fore.RED
 
 
-def colorize(path, full=False):
+def colorize(path: str, full: bool = False) -> str:
+    """Returns string with color / bold"""
     file = path if full else os.path.basename(path)
 
     if os.path.islink(path):
-        return (
-            colors.link + file + colors.end + " -> " + colorize(os.readlink(path), True)
+        return "".join(
+            [
+                COLOR_LINK,
+                file,
+                Style.RESET_ALL,
+                " -> ",
+                colorize(os.readlink(path), True),
+            ]
         )
 
     if os.path.isdir(path):
-        return colors.dir + file + colors.end
+        return "".join([COLOR_DIR, file, Style.RESET_ALL])
 
     if os.access(path, os.X_OK):
-        return colors.exec + file + colors.end
+        return "".join([COLOR_EXEC, file, Style.RESET_ALL])
 
     return file
 
 
-def print_dir(dir, pre="", opts={}):
-    dirs = 0
-    files = 0
-    size = 0
+def print_dir(_dir: str, pre: str = str(), opts: dict = None) -> tuple:
+    """Prints the whole tree"""
+    n_dirs = 0
+    n_files = 0
+    n_size = 0
 
-    if pre == "":
-        print(colors.dir + dir + colors.end)
+    if not opts:
+        opts = {}
 
-    dir_len = len(os.listdir(dir)) - 1
-    for i, file in enumerate(sorted(os.listdir(dir), key=str.lower)):
-        path = os.path.join(dir, file)
+    if not pre:
+        print(COLOR_DIR + _dir + Style.RESET_ALL)
+
+    dir_len = len(os.listdir(_dir)) - 1
+    for i, file in enumerate(sorted(os.listdir(_dir), key=str.lower)):
+        path = os.path.join(_dir, file)
         if file[0] == "." and not opts["show_hidden"]:
             continue
         if os.path.isdir(path):
             print(pre + strs[2 if i == dir_len else 1] + colorize(path))
             if os.path.islink(path):
-                dirs += 1
+                n_dirs += 1
             else:
-                d, f, s = print_dir(
+                n_d, n_f, n_s = print_dir(
                     path, pre + strs[3 if i == dir_len else 0], opts=opts
                 )
-                dirs += d + 1
-                files += f
-                size += s
+                n_dirs += n_d + 1
+                n_files += n_f
+                n_size += n_s
         else:
-            files += 1
-            size += os.path.getsize(path)
+            n_files += 1
+            n_size += os.path.getsize(path)
             print(
                 pre
                 + strs[2 if i == dir_len else 1]
-                + ("[{:>11}]  ".format(size) if opts["show_size"] else "")
+                + ("[{:>11}]  ".format(n_size) if opts["show_size"] else "")
                 + colorize(path)
             )
 
-    return (dirs, files, size)
+    return (n_dirs, n_files, n_size)
 
 
-dirs = 0
-files = 0
+def main() -> int:
+    """Handle input arguments, print off tree"""
+    n_dirs = 0
+    n_files = 0
 
-opts = {"show_hidden": False, "show_size": False, "follow_symlinks": False}
+    opts = {"show_hidden": False, "show_size": False, "follow_symlinks": False}
 
-if len(sys.argv) == 1:
-    dirs, files, size = print_dir(".", opts=opts)
-else:
-    for dir in sys.argv[1:]:
-        d, f, s = print_dir(dir, opts=opts)
-        dirs += d
-        files += f
+    if len(sys.argv) == 1:
+        n_dirs, n_files, _size = print_dir(".", opts=opts)
+    else:
+        for _dir in sys.argv[1:]:
+            n_d, n_f, _size = print_dir(_dir, opts=opts)
+            n_dirs += n_d
+            n_files += n_f
 
-print()
-print(
-    "{} director{}, {} file{}".format(
-        dirs, "ies" if dirs != 1 else "y", files, "s" if files != 1 else ""
+    print()
+    print(
+        "{} director{}, {} file{}".format(
+            n_dirs, "ies" if n_dirs != 1 else "y", n_files, "s" if n_files != 1 else ""
+        )
     )
-)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
