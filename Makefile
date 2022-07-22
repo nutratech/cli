@@ -160,7 +160,14 @@ clean:	## Clean up __pycache__ and leftover bits
 	rm -rf build/
 	rm -rf nutra.egg-info/
 	rm -rf .pytest_cache/ .mypy_cache/
-	find ntclient/ tests/ -name __pycache__ -o -name .coverage -o -name .pytest_cache | xargs rm -rf
+	find ntclient/ tests/ \
+	-name \
+	__pycache__ \
+	-o -name \
+	.coverage \
+	-o -name .mypy_cache \
+	-o -name .pytest_cache \
+	| xargs rm -rf
 
 
 # ---------------------------------------
