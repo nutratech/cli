@@ -64,25 +64,14 @@ def day(args: argparse.Namespace) -> tuple:
 ################################################################################
 def recipes_init() -> tuple:
     """Copy over stock recipes into 'f{NUTRA_HOME}/recipes'"""
-    return ntclient.services.recipe.recipe.recipes_init()
+    return services.recipe.recipes_init()
 
 
 def recipes() -> tuple:
     """Return recipes"""
-    return ntclient.services.recipe.recipe.recipes_overview()
+    return services.recipe.recipes_overview()
 
 
 def recipe(args: argparse.Namespace) -> tuple:
     """Return recipe view (analysis)"""
-    return ntclient.services.recipe.recipe.recipe_overview(args.recipe_id)
-
-
-def recipe_import(args: argparse.Namespace) -> tuple:
-    """Add a recipe"""
-    # TODO: custom serving sizes, not always in grams?
-    return ntclient.services.recipe.recipe.recipe_import(args.path)
-
-
-def recipe_delete(args: argparse.Namespace) -> tuple:
-    """Delete a recipe"""
-    return ntclient.services.recipe.recipe.recipe_delete(args.recipe_id)
+    return services.recipe.recipe_overview(args.recipe_id)

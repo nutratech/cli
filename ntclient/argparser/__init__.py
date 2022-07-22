@@ -140,21 +140,3 @@ def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
         "recipe_id", type=int, help="view (and analyze) recipe by ID"
     )
     recipe_anl_parser.set_defaults(func=parser_funcs.recipe)
-
-    recipe_import_parser = recipe_subparsers.add_parser("import", help="add a recipe")
-    recipe_import_parser.add_argument(
-        "path",
-        type=types.file_or_dir_path,
-        help="path to recipe.csv (or folder with multiple CSV files)",
-    )
-    recipe_import_parser.set_defaults(func=parser_funcs.recipe_import)
-
-    # TODO: edit.. support renaming, and overwriting/re-importing food_amts (from CSV)
-
-    recipe_delete_parser = recipe_subparsers.add_parser(
-        "delete", help="delete a recipe(s) by ID or range"
-    )
-    recipe_delete_parser.add_argument("recipe_id", type=int, help="delete recipe by ID")
-    recipe_delete_parser.set_defaults(func=parser_funcs.recipe_delete)
-
-    recipe_parser.set_defaults(func=parser_funcs.recipes)

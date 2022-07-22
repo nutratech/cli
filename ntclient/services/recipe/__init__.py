@@ -19,6 +19,7 @@ from ntclient.persistence.sql.usda.funcs import (
     sql_food_details,
     sql_nutrients_overview,
 )
+from ntclient.services.recipe.csv_utils import csv_tree
 
 
 def recipes_init(_copy: bool = True) -> tuple:
@@ -52,7 +53,7 @@ def recipes_overview(_recipes: tuple = ()) -> tuple:
     """
 
     if not _recipes:
-        _, _recipes = sql_recipes()
+        _, _recipes = csv_tree()
     if not _recipes:
         print(
             "WARN: no recipes. Add to '%s/recipes', or run: n recipe init" % NUTRA_HOME
