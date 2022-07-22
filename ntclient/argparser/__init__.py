@@ -131,6 +131,8 @@ def build_day_subcommand(subparsers: argparse._SubParsersAction) -> None:
 def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """View, add, edit, delete recipes"""
     recipe_parser = subparsers.add_parser("recipe", help="list and analyze recipes")
+    recipe_parser.set_defaults(func=parser_funcs.recipes)
+
     recipe_subparsers = recipe_parser.add_subparsers(title="recipe subcommands")
 
     # Init

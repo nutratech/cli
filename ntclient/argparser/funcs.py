@@ -64,14 +64,14 @@ def day(args: argparse.Namespace) -> tuple:
 ################################################################################
 def recipes_init() -> tuple:
     """Copy over stock recipes into RECIPE_HOME"""
-    return services.recipe.recipes_init()
+    return services.recipe.utils.recipes_init()
 
 
 def recipes() -> tuple:
     """Return recipes"""
-    return services.recipe.recipes_overview()
+    return services.recipe.utils.recipes_overview()
 
 
 def recipe(args: argparse.Namespace) -> tuple:
     """Return recipe view (analysis)"""
-    return services.recipe.recipe_overview(args.recipe_id)
+    return services.recipe.utils.recipe_overview(args.recipe_id)
