@@ -5,6 +5,8 @@
 import os
 import sys
 
+from colorama import Fore, Style
+
 chars = {"nw": "\u2514", "nws": "\u251c", "ew": "\u2500", "ns": "\u2502"}
 
 strs = [
@@ -16,11 +18,11 @@ strs = [
 
 
 class colors:
-    dir = "\033[01;34m"
-    exec = "\033[01;32m"
-    link = "\033[01;36m"
-    deadlink = "\033[40;31;01m"
-    end = "\033[00m"
+    dir = Style.BRIGHT + Fore.BLUE
+    exec = Style.BRIGHT + Fore.GREEN
+    link = Style.BRIGHT + Fore.CYAN
+    deadlink = Style.BRIGHT + Fore.RED
+    end = Style.RESET_ALL
 
 
 def colorize(path, full=False):
@@ -86,7 +88,7 @@ if len(sys.argv) == 1:
     dirs, files, size = print_dir(".", opts=opts)
 else:
     for dir in sys.argv[1:]:
-        d, f = print_dir(dir, opts=opts)
+        d, f, s = print_dir(dir, opts=opts)
         dirs += d
         files += f
 
