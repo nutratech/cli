@@ -78,7 +78,7 @@ def recipes_overview(_recipes: tuple = ()) -> tuple:
 
 def recipe_overview(recipe_id: int, _recipes: tuple = ()) -> tuple:
     """Shows single recipe overview"""
-    recipe = sql_analyze_recipe(recipe_id)
+    recipe = csv_analyze_recipe(recipe_id)
     name = recipe[0][1]
     print(name)
 
