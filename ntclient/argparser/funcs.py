@@ -48,7 +48,7 @@ def analyze(args: argparse.Namespace) -> tuple:
     """Analyze a food"""
     # exc: ValueError,
     food_ids = set(args.food_id)
-    grams = float(args.grams)
+    grams = float(args.grams) if args.grams else 0
 
     return services.analyze.foods_analyze(food_ids, grams)
 
