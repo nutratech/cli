@@ -29,11 +29,11 @@ def csv_print_details() -> None:
     print("Not implemented!")
 
 
-def csv_recipes() -> list:
+def csv_recipes() -> tuple:
     """
     Return overview & analysis of a selected recipe
     TODO: separate methods to search by uuid OR file_name
     """
     _csv_files = csv_files()
     print(_csv_files)
-    return _csv_files
+    return tuple(_csv_files)

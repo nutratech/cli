@@ -86,7 +86,7 @@ YAML_LOCS := ntclient/ntsqlite/.*.yml .github/workflows/ .*.yml
 .PHONY: _lint
 _lint:
 	# check formatting: Python
-	pycodestyle --max-line-length=99 --statistics $(LINT_LOCS)
+	pycodestyle --statistics $(LINT_LOCS)
 	autopep8 --recursive --diff --max-line-length 88 --exit-code $(LINT_LOCS)
 	isort --diff --check $(LINT_LOCS)
 	black --check $(LINT_LOCS)

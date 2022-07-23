@@ -54,4 +54,4 @@ def recipes_overview() -> tuple:
 def recipe_overview(recipe_uuid: str, _recipes: tuple = ()) -> tuple:
     """Shows single recipe overview"""
     _recipes = csv_utils.csv_recipes()
-    return 0, None
+    return 0, _recipes
