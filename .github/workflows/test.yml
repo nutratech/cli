@@ -23,11 +23,9 @@ jobs:
           /usr/bin/python3 -m pip install -r requirements-test.txt
 
       - name: Test
-        run: |
-          export PATH=~/.local/bin:$PATH
-          make _test
+        run: PATH=~/.local/bin:$PATH make _test
 
       - name: Submit coverage report / coveralls
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: PATH=$PATH:~/.local/bin coveralls --service=github
+        run: PATH=~/.local/bin:$PATH coveralls --service=github
