@@ -20,68 +20,48 @@ from ntclient.persistence.sql.usda.funcs import (
     sql_nutrients_overview,
 )
 from ntclient.services.recipe import RECIPE_HOME
-from ntclient.services.recipe.csv_utils import csv_analyze_recipe, csv_files
+from ntclient.services.recipe.csv_utils import (
+    csv_analyze_recipe,
+    csv_files,
+    csv_print_tree,
+)
 
 
-def recipes_init(_copy: bool = True) -> tuple:
+def recipes_init(_force: bool = True) -> tuple:
     """
     A filesystem function which copies the stock data into
         os.path.join(NUTRA_HOME, "recipes")
     TODO: put filesystem functions into separate module and ignore in coverage report.
 
-    @return: exit_code: int, copy_count: int
+    @return: exit_code: int
     """
     recipes_source = os.path.join(ROOT_DIR, "resources", "recipe")
     recipes_destination = os.path.join(RECIPE_HOME, "core")
 
-    # Create directory if it doesn't exist
-    os.makedirs(recipes_destination, 0o775, True)
+    if _force:
+        print("WARN: force removing core recipes: %s" % recipes_destination)
+        shutil.rmtree(recipes_destination)
 
-    csv_source_dirs = glob.glob(os.path.join(recipes_source, "*"))
-
-    if not _copy:
-        return 1, len(csv_source_dirs)
-
-    for csv_source_dirs in csv_source_dirs:
-        print("Copy default recipes: %s" % csv_source_dirs)
-        shutil.copytree(csv_source_dirs, recipes_destination)
-    return 0, len(csv_source_dirs)
+    try:
+        shutil.copytree(recipes_source, recipes_destination)
+        return 0, None
+    except FileExistsError:
+        print("ERROR: file/directory exists: %s")
+        print(" remove it, or use the '-f' flag")
+        return 1, None
 
 
-def recipes_overview(_recipes: tuple = ()) -> tuple:
+def recipes_overview() -> tuple:
     """
     Shows overview for all recipes.
-    Accepts recipes input Tuple[tuple], else reads from disk to look for some.
+    TODO: Accept recipes input Tuple[tuple], else read from disk.
 
     @param _recipes: List[dict] {id, name, tagname, n_foods: int, weight: float}
     @return: exit_code, results: dict
     """
 
-    if not _recipes:
-        _recipes = csv_files()
-    if not _recipes:
-        print(
-            "WARN: no recipes. Add to '%s/recipes', or run: n recipe init" % NUTRA_HOME
-        )
-        return 1, []
-
-    # TODO: if tree, print_tree. else, print detail view
-
-    headers = ("id", "name", "tagname", "n_foods", "weight")
-    results = []
-    for recipe in _recipes:
-        result = (
-            recipe[0],
-            recipe[1],
-            recipe[2],
-            recipe[3],
-            recipe[4],
-        )
-        results.append(result)
-
-    table = tabulate(results, headers=headers, tablefmt="presto")
-    print(table)
-    return 0, results
+    csv_print_tree()
+    return 0, None
 
 
 def recipe_overview(recipe_uuid: str, _recipes: tuple = ()) -> tuple:
