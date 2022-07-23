@@ -19,7 +19,7 @@ def csv_files() -> list:
     return glob.glob(RECIPE_HOME + "/**/*.csv")
 
 
-def csv_print_tree() -> None:
+def csv_recipe_print_tree() -> None:
     """Print off the recipe tree"""
     tree.print_dir(RECIPE_HOME)
 
@@ -29,9 +29,11 @@ def csv_print_details() -> None:
     print("Not implemented!")
 
 
-def csv_analyze_recipe(uuid: str) -> tuple:
+def csv_recipes() -> list:
     """
     Return overview & analysis of a selected recipe
     TODO: separate methods to search by uuid OR file_name
     """
-    return 1, (str(), "testName")
+    _csv_files = csv_files()
+    print(_csv_files)
+    return _csv_files

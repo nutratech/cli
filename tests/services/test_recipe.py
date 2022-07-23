@@ -29,9 +29,13 @@ class TestRecipe(unittest.TestCase):
         exit_code, _ = r.recipes_overview()
         assert exit_code == 0
 
-    def test_recipe_overview_throws_exc_for_negative_id(self):
+    def test_recipe_overview_throws_exc_for_nonexistent_id(self):
         """Raises index error if recipe int id is invalid"""
 
         # TODO: should we be using guid / uuid instead of integer id?
         with pytest.raises(IndexError):
-            r.recipe_overview(-12345)
+            r.recipe_overview("-12345-FAKEID-")
+
+    def test_recipe_overview_might_succeed_for_maybe_existing_id(self):
+        """Tries check for existing ID, but only can if the user initialized"""
+        r.recipe_overview("e403ede0-76a1-4992-81f9-2f72e9e4bc0e")

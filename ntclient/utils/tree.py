@@ -54,7 +54,11 @@ FOLLOW_SYMLINKS = False
 
 
 def print_dir(_dir: str, pre: str = str()) -> tuple:
-    """Prints the whole tree"""
+    """
+    Prints the whole tree
+
+    TODO: integrate with data sources to display more than just filenames
+    """
     n_dirs = 0
     n_files = 0
     n_size = 0
@@ -86,6 +90,7 @@ def print_dir(_dir: str, pre: str = str()) -> tuple:
                 + colorize(path)
             )
 
+    # noinspection PyRedundantParentheses
     return (n_dirs, n_files, n_size)
 
 
