@@ -24,7 +24,7 @@ def recipes_init(_force: bool = True) -> tuple:
     recipes_source = os.path.join(ROOT_DIR, "resources", "recipe")
     recipes_destination = os.path.join(RECIPE_HOME, "core")
 
-    if _force:
+    if _force and os.path.exists(recipes_destination):
         print("WARN: force removing core recipes: %s" % recipes_destination)
         # NOTE: is this best?
         shutil.rmtree(recipes_destination, ignore_errors=True)
@@ -47,8 +47,12 @@ def recipes_overview() -> tuple:
     @return: exit_code, None
     """
 
-    csv_utils.csv_recipe_print_tree()
-    return 0, None
+    try:
+        csv_utils.csv_recipe_print_tree()
+        return 0, None
+    except FileNotFoundError:
+        print("WARN: no recipes found, create some or run: nutra recipe init")
+        return 1, None
 
 
 def recipe_overview(recipe_uuid: str, _recipes: tuple = ()) -> tuple:

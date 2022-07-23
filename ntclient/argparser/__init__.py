@@ -142,6 +142,7 @@ def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
     recipe_init_parser.set_defaults(func=parser_funcs.recipes_init)
 
     # Analyze
+    # TODO: tab-completion for not just cwd, but also inject for RECIPE_HOME
     recipe_anl_parser = recipe_subparsers.add_parser(
         "anl", help="view and analyze for recipe"
     )

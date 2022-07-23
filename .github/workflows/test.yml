@@ -15,6 +15,7 @@ jobs:
           submodules: recursive
 
       - name: Cloc
+        if: github.ref_name = 'master'
         run: make extras/cloc
 
       - name: Install requirements
