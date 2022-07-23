@@ -34,7 +34,7 @@ def colorize(path: str, full: bool = False) -> str:
                 file,
                 Style.RESET_ALL,
                 " -> ",
-                colorize(os.readlink(path), True),
+                colorize(os.readlink(path), full=True),
             ]
         )
 
@@ -58,6 +58,7 @@ def print_dir(_dir: str, pre: str = str()) -> tuple:
     Prints the whole tree
 
     TODO: integrate with data sources to display more than just filenames
+    TODO: filter hidden files, non-CSV files, and hide *.csv extension from files
     """
     n_dirs = 0
     n_files = 0
@@ -94,16 +95,19 @@ def print_dir(_dir: str, pre: str = str()) -> tuple:
     return (n_dirs, n_files, n_size)
 
 
-def main() -> int:
+def main_tree(_args: list = None) -> int:
     """Handle input arguments, print off tree"""
     n_dirs = 0
     n_files = 0
 
-    if len(sys.argv) == 1:
+    if not _args:
+        _args = sys.argv
+
+    if len(_args) == 1:
         # Used for development
         n_dirs, n_files, _size = print_dir("../resources")
     else:
-        for _dir in sys.argv[1:]:
+        for _dir in _args[1:]:
             n_d, n_f, _size = print_dir(_dir)
             n_dirs += n_d
             n_files += n_f
@@ -111,11 +115,11 @@ def main() -> int:
     print()
     print(
         "{} director{}, {} file{}".format(
-            n_dirs, "ies" if n_dirs != 1 else "y", n_files, "s" if n_files != 1 else ""
+            n_dirs, "ies" if n_dirs > 1 else "y", n_files, "s" if n_files > 1 else ""
         )
     )
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main_tree())
