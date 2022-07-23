@@ -39,4 +39,5 @@ class TestRecipe(unittest.TestCase):
 
     def test_recipe_overview_might_succeed_for_maybe_existing_id(self):
         """Tries check for existing ID, but only can if the user initialized"""
-        r.recipe_overview("e403ede0-76a1-4992-81f9-2f72e9e4bc0e")
+        exit_code, result = r.recipe_overview("e403ede0-76a1-4992-81f9-2f72e9e4bc0e")
+        assert exit_code in {0, 1}

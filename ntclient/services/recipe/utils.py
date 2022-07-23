@@ -10,6 +10,7 @@ import os
 import shutil
 
 from ntclient import ROOT_DIR
+from ntclient.models import Recipe
 from ntclient.services.recipe import RECIPE_HOME, csv_utils
 
 
@@ -55,7 +56,8 @@ def recipes_overview() -> tuple:
         return 1, None
 
 
-def recipe_overview(recipe_uuid: str, _recipes: tuple = ()) -> tuple:
+def recipe_overview(recipe_path: str) -> tuple:
     """Shows single recipe overview"""
-    _recipes = csv_utils.csv_recipes()
+    _recipes = tuple(csv_utils.csv_files())
+    recipes = [Recipe(_file_path) for _file_path in _recipes]
     return 0, _recipes
