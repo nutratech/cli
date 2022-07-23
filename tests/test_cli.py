@@ -4,7 +4,6 @@ Created on Fri Jan 31 15:19:53 2020
 
 @author: shane
 """
-# pylint: disable=wrong-import-position
 import os
 import sys
 import unittest
