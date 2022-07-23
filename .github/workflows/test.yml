@@ -24,7 +24,7 @@ jobs:
 
       - name: Test
         env:
-          PATH: ~/.local/bin:${{ env.PATH }}
+          PATH: ~/.local/bin:$(echo $PATH)
         run: make _test
 
       - name: Submit coverage report / coveralls
