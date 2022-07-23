@@ -4,11 +4,13 @@ Created on Wed Jul 20 21:36:43 2022
 
 @author: shane
 """
+import os
 import unittest
 
 import pytest
 
 import ntclient.services.recipe.utils as r
+from ntclient.services.recipe import RECIPE_STOCK
 
 
 class TestRecipe(unittest.TestCase):
@@ -30,14 +32,16 @@ class TestRecipe(unittest.TestCase):
         assert exit_code == 0
 
     @pytest.mark.xfail(reason="Due to a wip refactor")
-    def test_recipe_overview_throws_exc_for_nonexistent_id(self):
+    def test_recipe_overview_throws_exc_for_nonexistent_path(self):
         """Raises index error if recipe int id is invalid"""
 
         # TODO: should we be using guid / uuid instead of integer id?
         with pytest.raises(IndexError):
-            r.recipe_overview("-12345-FAKEID-")
+            r.recipe_overview("-12345-FAKE-PATH-")
 
     def test_recipe_overview_might_succeed_for_maybe_existing_id(self):
         """Tries check for existing ID, but only can if the user initialized"""
-        exit_code, result = r.recipe_overview("e403ede0-76a1-4992-81f9-2f72e9e4bc0e")
+        exit_code, _ = r.recipe_overview(
+            os.path.join(RECIPE_STOCK, "dinner", "burrito-bowl.csv")
+        )
         assert exit_code in {0, 1}

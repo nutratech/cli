@@ -8,7 +8,7 @@ import os
 
 from ntclient import NUTRA_HOME, ROOT_DIR
 
-RECIPE_STOCK = os.path.join(ROOT_DIR, "resources")
+RECIPE_STOCK = os.path.join(ROOT_DIR, "resources", "recipe")
 
 _RECIPE_SUB_PATH = "recipe"
 RECIPE_HOME = os.path.join(NUTRA_HOME, _RECIPE_SUB_PATH)

@@ -9,9 +9,8 @@ Supporting methods for main service
 import os
 import shutil
 
-from ntclient import ROOT_DIR
 from ntclient.models import Recipe
-from ntclient.services.recipe import RECIPE_HOME, csv_utils
+from ntclient.services.recipe import RECIPE_HOME, RECIPE_STOCK, csv_utils
 
 
 def recipes_init(_force: bool = True) -> tuple:
@@ -22,7 +21,6 @@ def recipes_init(_force: bool = True) -> tuple:
 
     @return: exit_code: int
     """
-    recipes_source = os.path.join(ROOT_DIR, "resources", "recipe")
     recipes_destination = os.path.join(RECIPE_HOME, "core")
 
     if _force and os.path.exists(recipes_destination):
@@ -31,7 +29,7 @@ def recipes_init(_force: bool = True) -> tuple:
         shutil.rmtree(recipes_destination, ignore_errors=True)
 
     try:
-        shutil.copytree(recipes_source, recipes_destination)
+        shutil.copytree(RECIPE_STOCK, recipes_destination)
         return 0, None
     except FileExistsError:
         print("ERROR: file/directory exists: %s")
@@ -58,6 +56,14 @@ def recipes_overview() -> tuple:
 
 def recipe_overview(recipe_path: str) -> tuple:
     """Shows single recipe overview"""
-    _recipes = tuple(csv_utils.csv_files())
-    recipes = [Recipe(_file_path) for _file_path in _recipes]
-    return 0, _recipes
+
+    try:
+        _recipe = Recipe(recipe_path)
+        _recipe.process_data()
+        return 0, _recipe
+    except (FileNotFoundError, IndexError) as err:
+        print("WARN: %s" % repr(err))
+        return 1, None
+    # _recipes = tuple(csv_utils.csv_files())
+    # _recipes = tuple(Recipe(_file_path) for _file_path in _recipes)
+    # return 0, _recipes

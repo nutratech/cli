@@ -5,21 +5,35 @@ Created on Fri Jul 22 15:34:07 2022
 @author: shane
 Classes, structures for storing, displaying, and editing data.
 """
+import csv
 
 
 class Recipe:
-    """Allows"""
+    """Allows reading up CSV, filtering by UUID, and displaying detail view"""
 
     def __init__(self, file_path: str) -> None:
         """Initialize entity"""
 
         self.file_path = file_path
-        with open(file_path, "r", encoding="utf-8") as _file:
-            self.raw_data = _file.readlines()
+        self.csv_reader = csv.reader(str())
 
         # Defined now, populated later
-        self.rows: list = []
+        self.headers = tuple()  # type: ignore
+        self.rows = tuple()  # type: ignore
+
+        self.uuid = str()
 
     def process_data(self) -> None:
         """Parses out the raw CSV input read in during self.__init__()"""
-        self.rows = [x.rstrip() for x in self.raw_data]
+
+        # Read into memory
+        with open(self.file_path, "r", encoding="utf-8") as _file:
+            self.csv_reader = csv.DictReader(_file)
+            _rows = tuple(self.csv_reader)
+            self.headers = tuple(_rows[0])
+            self.rows = tuple(_rows[1:])
+
+        # Validate data
+        uuids = {x for x in self.rows}
+
+        print("hi")
