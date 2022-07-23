@@ -60,10 +60,8 @@ def recipe_overview(recipe_path: str) -> tuple:
     try:
         _recipe = Recipe(recipe_path)
         _recipe.process_data()
+        # TODO: extract relavant bits off, process, use nutprogbar (e.g. day analysis)
         return 0, _recipe
     except (FileNotFoundError, IndexError) as err:
-        print("WARN: %s" % repr(err))
+        print("ERROR: %s" % repr(err))
         return 1, None
-    # _recipes = tuple(csv_utils.csv_files())
-    # _recipes = tuple(Recipe(_file_path) for _file_path in _recipes)
-    # return 0, _recipes

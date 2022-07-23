@@ -15,7 +15,7 @@ class Recipe:
         """Initialize entity"""
 
         self.file_path = file_path
-        self.csv_reader = csv.reader(str())
+        self.csv_reader = csv.DictReader(str())
 
         # Defined now, populated later
         self.headers = tuple()  # type: ignore
@@ -23,17 +23,26 @@ class Recipe:
 
         self.uuid = str()
 
+        self.food_data = {}  # type: ignore
+
     def process_data(self) -> None:
-        """Parses out the raw CSV input read in during self.__init__()"""
+        """
+        Parses out the raw CSV input read in during self.__init__()
+        TODO: test this with an empty CSV file
+        """
 
         # Read into memory
         with open(self.file_path, "r", encoding="utf-8") as _file:
             self.csv_reader = csv.DictReader(_file)
-            _rows = tuple(self.csv_reader)
-            self.headers = tuple(_rows[0])
-            self.rows = tuple(_rows[1:])
+            self.rows = tuple(self.csv_reader)
 
         # Validate data
-        uuids = {x for x in self.rows}
+        uuids = {x['recipe_id'] for x in self.rows}
+        if len(uuids) != 1:
+            raise IndexError("FATAL: must have exactly 1 uuid per recipe CSV file!")
+        self.uuid = list(uuids)[0]
+
+        # exc: ValueError (could not cast int / float)
+        self.food_data = {int(x['food_id']): float(x['grams']) for x in self.rows}
 
         print("hi")

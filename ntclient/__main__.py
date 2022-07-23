@@ -55,7 +55,8 @@ def build_argparser() -> argparse.ArgumentParser:
         "--version",
         action="version",
         version="{0} cli version {1} ".format(__title__, __version__)
-        + "[DB usda v{0}, nt v{1}]".format(__db_target_usda__, __db_target_nt__),
+                + "[DB usda v{0}, nt v{1}]".format(__db_target_usda__,
+                                                   __db_target_nt__),
     )
 
     arg_parser.add_argument(
@@ -134,7 +135,7 @@ def main(args: list = None) -> int:
         if DEBUG:
             raise
     except Exception as exception:  # pylint: disable=broad-except
-        print("There was an unforeseen error: " + repr(exception))
+        print("Unforeseen error, run with -d for more info: " + repr(exception))
         if DEBUG:
             raise
     finally:
