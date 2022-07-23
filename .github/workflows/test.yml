@@ -23,9 +23,9 @@ jobs:
           /usr/bin/python3 -m pip install -r requirements-test.txt
 
       - name: Test
-        env:
-          PATH: ~/.local/bin:$(echo $PATH)
-        run: make _test
+        run: |
+          export PATH=~/.local/bin:$PATH
+          make _test
 
       - name: Submit coverage report / coveralls
         env:
