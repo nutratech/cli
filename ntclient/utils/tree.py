@@ -47,10 +47,13 @@ def colorize(path: str, full: bool = False) -> str:
     return file
 
 
-OPTS = {"show_hidden": False, "show_size": False, "follow_symlinks": False}
+# Tree properties - display / print
+SHOW_HIDDEN = False
+SHOW_SIZE = False
+FOLLOW_SYMLINKS = False
 
 
-def print_dir(_dir: str, pre: str = str(), opts: dict = OPTS) -> tuple:
+def print_dir(_dir: str, pre: str = str()) -> tuple:
     """Prints the whole tree"""
     n_dirs = 0
     n_files = 0
@@ -62,16 +65,14 @@ def print_dir(_dir: str, pre: str = str(), opts: dict = OPTS) -> tuple:
     dir_len = len(os.listdir(_dir)) - 1
     for i, file in enumerate(sorted(os.listdir(_dir), key=str.lower)):
         path = os.path.join(_dir, file)
-        if file[0] == "." and not opts["show_hidden"]:
+        if file[0] == "." and not SHOW_HIDDEN:
             continue
         if os.path.isdir(path):
             print(pre + strs[2 if i == dir_len else 1] + colorize(path))
             if os.path.islink(path):
                 n_dirs += 1
             else:
-                n_d, n_f, n_s = print_dir(
-                    path, pre + strs[3 if i == dir_len else 0], opts=opts
-                )
+                n_d, n_f, n_s = print_dir(path, pre + strs[3 if i == dir_len else 0])
                 n_dirs += n_d + 1
                 n_files += n_f
                 n_size += n_s
@@ -81,7 +82,7 @@ def print_dir(_dir: str, pre: str = str(), opts: dict = OPTS) -> tuple:
             print(
                 pre
                 + strs[2 if i == dir_len else 1]
-                + ("[{:>11}]  ".format(n_size) if opts["show_size"] else "")
+                + ("[{:>11}]  ".format(n_size) if SHOW_SIZE else "")
                 + colorize(path)
             )
 
@@ -93,13 +94,12 @@ def main() -> int:
     n_dirs = 0
     n_files = 0
 
-    opts = {"show_hidden": False, "show_size": False, "follow_symlinks": False}
-
     if len(sys.argv) == 1:
-        n_dirs, n_files, _size = print_dir("../resources", opts=opts)
+        # Used for development
+        n_dirs, n_files, _size = print_dir("../resources")
     else:
         for _dir in sys.argv[1:]:
-            n_d, n_f, _size = print_dir(_dir, opts=opts)
+            n_d, n_f, _size = print_dir(_dir)
             n_dirs += n_d
             n_files += n_f
 

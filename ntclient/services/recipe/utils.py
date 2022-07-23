@@ -6,13 +6,12 @@ Created on Fri Jul 22 17:12:28 2022
 
 Supporting methods for main service
 """
-import glob
 import os
 import shutil
 
 from tabulate import tabulate
 
-from ntclient import NUTRA_HOME, ROOT_DIR
+from ntclient import ROOT_DIR
 from ntclient.core.nutprogbar import nutprogbar
 from ntclient.persistence.sql.usda.funcs import (
     sql_analyze_foods,
@@ -20,11 +19,7 @@ from ntclient.persistence.sql.usda.funcs import (
     sql_nutrients_overview,
 )
 from ntclient.services.recipe import RECIPE_HOME
-from ntclient.services.recipe.csv_utils import (
-    csv_analyze_recipe,
-    csv_files,
-    csv_print_tree,
-)
+from ntclient.services.recipe.csv_utils import csv_analyze_recipe, csv_print_tree
 
 
 def recipes_init(_force: bool = True) -> tuple:
