@@ -11,19 +11,27 @@ TODO: copy to & cache in sqlite3, only look to CSV if it doesn't exist?
 import glob
 
 from ntclient.services.recipe import RECIPE_HOME
+from ntclient.utils import tree
 
 
 def csv_files() -> list:
     """Returns full filenames for everything under 'f{}/recipe'"""
-
     return glob.glob(RECIPE_HOME + "/**/*.csv")
 
 
-def csv_tree() -> tuple:
+def csv_print_tree() -> None:
     """Print off the recipe tree"""
-    return 1, 0
+    tree.print_dir(RECIPE_HOME)
+
+
+def csv_print_details() -> None:
+    """Print off details (as table)"""
+    print("Not implemented!")
 
 
 def csv_analyze_recipe(uuid: str) -> tuple:
-    """Return overview & analysis of a selected recipe"""
+    """
+    Return overview & analysis of a selected recipe
+    TODO: separate methods to search by uuid OR file_name
+    """
     return 1, (str(), "testName")

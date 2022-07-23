@@ -47,14 +47,14 @@ def colorize(path: str, full: bool = False) -> str:
     return file
 
 
-def print_dir(_dir: str, pre: str = str(), opts: dict = None) -> tuple:
+OPTS = {"show_hidden": False, "show_size": False, "follow_symlinks": False}
+
+
+def print_dir(_dir: str, pre: str = str(), opts: dict = OPTS) -> tuple:
     """Prints the whole tree"""
     n_dirs = 0
     n_files = 0
     n_size = 0
-
-    if not opts:
-        opts = {}
 
     if not pre:
         print(COLOR_DIR + _dir + Style.RESET_ALL)
@@ -96,7 +96,7 @@ def main() -> int:
     opts = {"show_hidden": False, "show_size": False, "follow_symlinks": False}
 
     if len(sys.argv) == 1:
-        n_dirs, n_files, _size = print_dir(".", opts=opts)
+        n_dirs, n_files, _size = print_dir("../resources", opts=opts)
     else:
         for _dir in sys.argv[1:]:
             n_d, n_f, _size = print_dir(_dir, opts=opts)

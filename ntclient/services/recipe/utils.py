@@ -20,7 +20,8 @@ from ntclient.persistence.sql.usda.funcs import (
     sql_nutrients_overview,
 )
 from ntclient.services.recipe import RECIPE_HOME
-from ntclient.services.recipe.csv_utils import csv_analyze_recipe, csv_tree
+from ntclient.services.recipe.csv_utils import csv_analyze_recipe, csv_print_tree, \
+    csv_files
 
 
 def recipes_init(_copy: bool = True) -> tuple:
@@ -30,18 +31,19 @@ def recipes_init(_copy: bool = True) -> tuple:
 
     @return: exit_code: int, copy_count: int
     """
-    recipes_source = os.path.join(ROOT_DIR, "resources", "")
+    recipes_source = os.path.join(ROOT_DIR, "resources", "recipe")
     # Create directory if it doesn't exist
-    os.makedirs(RECIPE_HOME, 0o775, True)
+    # os.makedirs(RECIPE_HOME, 0o775, True)
 
-    csv_files = glob.glob(recipes_source + "/**/*.csv")
+    csv_source_files = glob.glob(recipes_source + "/**/*.csv")
 
     if not _copy:
-        return 1, len(csv_files)
+        return 1, len(csv_source_files)
 
-    for csv_file in csv_files:
-        shutil.copy(csv_file, RECIPE_HOME)
-    return 0, len(csv_files)
+    shutil.copytree(recipes_source, RECIPE_HOME)
+    # for csv_file in csv_source_files:
+    #     shutil.copytree(csv_file, RECIPE_HOME)
+    return 0, len(csv_source_files)
 
 
 def recipes_overview(_recipes: tuple = ()) -> tuple:
@@ -54,12 +56,14 @@ def recipes_overview(_recipes: tuple = ()) -> tuple:
     """
 
     if not _recipes:
-        _, _recipes = csv_tree()
+        _recipes = csv_files()
     if not _recipes:
         print(
             "WARN: no recipes. Add to '%s/recipes', or run: n recipe init" % NUTRA_HOME
         )
         return 1, []
+
+    # TODO: if tree, print_tree. else, print detail view
 
     headers = ("id", "name", "tagname", "n_foods", "weight")
     results = []

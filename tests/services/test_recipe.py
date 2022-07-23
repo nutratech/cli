@@ -18,11 +18,11 @@ class TestRecipe(unittest.TestCase):
         """Checks the init function, which copies over default data (if not already)"""
         exit_code, copy_count = r.recipes_init(_copy=False)
         assert exit_code == 1
-        assert copy_count == 3
+        assert copy_count >= 3
 
         exit_code, copy_count = r.recipes_init()
         assert exit_code == 0
-        assert copy_count == 3
+        assert copy_count >= 3
 
     def test_recipes_overview(self):
         """Test type coercion and one-to-one input/output relationship"""
