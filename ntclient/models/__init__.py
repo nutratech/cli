@@ -37,12 +37,12 @@ class Recipe:
             self.rows = tuple(self.csv_reader)
 
         # Validate data
-        uuids = {x['recipe_id'] for x in self.rows}
+        uuids = {x["recipe_id"] for x in self.rows}
         if len(uuids) != 1:
             raise IndexError("FATAL: must have exactly 1 uuid per recipe CSV file!")
         self.uuid = list(uuids)[0]
 
         # exc: ValueError (could not cast int / float)
-        self.food_data = {int(x['food_id']): float(x['grams']) for x in self.rows}
+        self.food_data = {int(x["food_id"]): float(x["grams"]) for x in self.rows}
 
         print("hi")
