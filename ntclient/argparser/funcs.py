@@ -17,9 +17,9 @@ def init(args: argparse.Namespace) -> tuple:
     return services.init(yes=args.yes)
 
 
-################################################################################
+##############################################################################
 # Nutrients, search and sort
-################################################################################
+##############################################################################
 def nutrients():  # type: ignore
     """List nutrients"""
     return services.usda.list_nutrients()
@@ -41,13 +41,14 @@ def sort(args: argparse.Namespace) -> tuple:
     return services.usda.sort_foods(args.nutr_id, by_kcal=args.kcal)
 
 
-################################################################################
+##############################################################################
 # Analysis and Day scoring
-################################################################################
+##############################################################################
 def analyze(args: argparse.Namespace) -> tuple:
     """Analyze a food"""
-    food_ids = args.food_id
-    grams = args.grams
+    # exc: ValueError,
+    food_ids = set(args.food_id)
+    grams = float(args.grams)
 
     return services.analyze.foods_analyze(food_ids, grams)
 
@@ -60,9 +61,9 @@ def day(args: argparse.Namespace) -> tuple:
     return services.analyze.day_analyze(day_csv_paths, rda_csv_path=rda_csv_path)
 
 
-################################################################################
+##############################################################################
 # Recipes
-################################################################################
+##############################################################################
 def recipes_init() -> tuple:
     """Copy example/stock data into RECIPE_HOME"""
     return r_service.recipes_init()
@@ -75,4 +76,6 @@ def recipes() -> tuple:
 
 def recipe(args: argparse.Namespace) -> tuple:
     """View and analyze a single (or a range)"""
-    return r_service.recipe_overview(args.recipe_id)
+    recipe_path = args.path
+
+    return r_service.recipe_overview(recipe_path)

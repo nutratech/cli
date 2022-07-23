@@ -143,10 +143,11 @@ def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
 
     # Analyze
     # TODO: tab-completion for not just cwd, but also inject for RECIPE_HOME
+    # TODO: support analysis for multiple file path(s) in one call
     recipe_anl_parser = recipe_subparsers.add_parser(
         "anl", help="view and analyze for recipe"
     )
     recipe_anl_parser.add_argument(
-        "recipe_id", type=int, help="view (and analyze) recipe by ID"
+        "path", type=str, help="view (and analyze) recipe by file path"
     )
     recipe_anl_parser.set_defaults(func=parser_funcs.recipe)

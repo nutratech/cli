@@ -4,7 +4,7 @@ Created on Fri Jul 22 17:12:28 2022
 
 @author: shane
 
-Supporting methods for main service
+Supporting methods for service
 """
 import os
 import shutil
@@ -19,7 +19,10 @@ def recipes_init(_force: bool = True) -> tuple:
         os.path.join(NUTRA_HOME, "recipes")
     TODO: put filesystem functions into separate module and ignore in coverage report.
 
-    @return: exit_code: int
+    TODO: check other places, if the tuple is used or just return code.
+     And potentially create a function or class to return the tuple object
+     as a named tuple, and easily constructed & recognized.
+    @return: (exit_code: int, None)
     """
     recipes_destination = os.path.join(RECIPE_HOME, "core")
 
@@ -43,7 +46,7 @@ def recipes_overview() -> tuple:
     TODO: Accept recipes input Tuple[tuple], else read from disk.
     TODO: option to print tree vs. detail view
 
-    @return: exit_code, None
+    @return: (exit_code: int, None)
     """
 
     try:
@@ -55,12 +58,17 @@ def recipes_overview() -> tuple:
 
 
 def recipe_overview(recipe_path: str) -> tuple:
-    """Shows single recipe overview"""
+    """
+    Shows single recipe overview
+
+    @param recipe_path: full path on disk
+    @return: (exit_code: int, None)
+    """
 
     try:
         _recipe = Recipe(recipe_path)
         _recipe.process_data()
-        # TODO: extract relavant bits off, process, use nutprogbar (e.g. day analysis)
+        # TODO: extract relevant bits off, process, use nutprogbar (e.g. day analysis)
         return 0, _recipe
     except (FileNotFoundError, IndexError) as err:
         print("ERROR: %s" % repr(err))

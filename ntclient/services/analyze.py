@@ -37,7 +37,7 @@ from ntclient.utils import (
 ################################################################################
 # Foods
 ################################################################################
-def foods_analyze(food_ids: set, grams: int = 0) -> tuple:
+def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
     """
     Analyze a list of food_ids against stock RDA values
     TODO: from ntclient.utils.nutprogbar import nutprogbar
