@@ -20,30 +20,32 @@ from ntclient.persistence.sql.usda.funcs import (
     sql_nutrients_overview,
 )
 from ntclient.services.recipe import RECIPE_HOME
-from ntclient.services.recipe.csv_utils import csv_analyze_recipe, csv_print_tree, \
-    csv_files
+from ntclient.services.recipe.csv_utils import csv_analyze_recipe, csv_files
 
 
 def recipes_init(_copy: bool = True) -> tuple:
     """
-    A filesystem function which copies the stock data into f"{NUTRA_HOME}/recipes".
+    A filesystem function which copies the stock data into
+        os.path.join(NUTRA_HOME, "recipes")
     TODO: put filesystem functions into separate module and ignore in coverage report.
 
     @return: exit_code: int, copy_count: int
     """
     recipes_source = os.path.join(ROOT_DIR, "resources", "recipe")
-    # Create directory if it doesn't exist
-    # os.makedirs(RECIPE_HOME, 0o775, True)
+    recipes_destination = os.path.join(RECIPE_HOME, "core")
 
-    csv_source_files = glob.glob(recipes_source + "/**/*.csv")
+    # Create directory if it doesn't exist
+    os.makedirs(recipes_destination, 0o775, True)
+
+    csv_source_dirs = glob.glob(os.path.join(recipes_source, "*"))
 
     if not _copy:
-        return 1, len(csv_source_files)
+        return 1, len(csv_source_dirs)
 
-    shutil.copytree(recipes_source, RECIPE_HOME)
-    # for csv_file in csv_source_files:
-    #     shutil.copytree(csv_file, RECIPE_HOME)
-    return 0, len(csv_source_files)
+    for csv_source_dirs in csv_source_dirs:
+        print("Copy default recipes: %s" % csv_source_dirs)
+        shutil.copytree(csv_source_dirs, recipes_destination)
+    return 0, len(csv_source_dirs)
 
 
 def recipes_overview(_recipes: tuple = ()) -> tuple:
