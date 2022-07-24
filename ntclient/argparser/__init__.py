@@ -11,6 +11,7 @@ from ntclient.argparser import funcs as parser_funcs
 from ntclient.argparser import types
 
 
+# noinspection PyUnresolvedReferences,PyProtectedMember
 def build_subcommands(subparsers: argparse._SubParsersAction) -> None:
     """Attaches subcommands to main parser"""
     build_init_subcommand(subparsers)
@@ -25,6 +26,7 @@ def build_subcommands(subparsers: argparse._SubParsersAction) -> None:
 ################################################################################
 # Methods to build subparsers, and attach back to main arg_parser
 ################################################################################
+# noinspection PyUnresolvedReferences,PyProtectedMember
 def build_init_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Self running init command"""
     init_parser = subparsers.add_parser(
@@ -39,6 +41,7 @@ def build_init_subcommand(subparsers: argparse._SubParsersAction) -> None:
     init_parser.set_defaults(func=parser_funcs.init)
 
 
+# noinspection PyUnresolvedReferences,PyProtectedMember
 def build_nt_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Lists out nutrients details with computed totals and averages"""
     nutrient_parser = subparsers.add_parser(
@@ -47,6 +50,7 @@ def build_nt_subcommand(subparsers: argparse._SubParsersAction) -> None:
     nutrient_parser.set_defaults(func=parser_funcs.nutrients)
 
 
+# noinspection PyUnresolvedReferences,PyProtectedMember
 def build_search_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Search: terms [terms ... ]"""
     search_parser = subparsers.add_parser(
@@ -73,6 +77,7 @@ def build_search_subcommand(subparsers: argparse._SubParsersAction) -> None:
     search_parser.set_defaults(func=parser_funcs.search)
 
 
+# noinspection PyUnresolvedReferences,PyProtectedMember
 def build_sort_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Sort foods ranked by nutr_id, per 100g or 200kcal"""
     sort_parser = subparsers.add_parser("sort", help="sort foods by nutrient ID")
@@ -93,6 +98,7 @@ def build_sort_subcommand(subparsers: argparse._SubParsersAction) -> None:
     sort_parser.set_defaults(func=parser_funcs.sort)
 
 
+# noinspection PyUnresolvedReferences,PyProtectedMember
 def build_analyze_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Analyzes (foods only for now)"""
     analyze_parser = subparsers.add_parser("anl", help="analyze food(s)")
@@ -106,6 +112,7 @@ def build_analyze_subcommand(subparsers: argparse._SubParsersAction) -> None:
     analyze_parser.set_defaults(func=parser_funcs.analyze)
 
 
+# noinspection PyUnresolvedReferences,PyProtectedMember
 def build_day_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Analyzes a DAY.csv, uses new colored progress bar spec"""
     day_parser = subparsers.add_parser(
@@ -128,6 +135,7 @@ def build_day_subcommand(subparsers: argparse._SubParsersAction) -> None:
     day_parser.set_defaults(func=parser_funcs.day)
 
 
+# noinspection PyUnresolvedReferences,PyProtectedMember
 def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """View, add, edit, delete recipes"""
     recipe_parser = subparsers.add_parser("recipe", help="list and analyze recipes")
