@@ -41,7 +41,7 @@ def init(yes: bool = False) -> tuple:
         """
 Nutrient tracker is free software. It comes with NO warranty or guarantee.
 You may use it as you please.
-You may make changes as long as they are open-source.
+You may make changes, as long as you disclose and publish them.
     """
     )
     return 0, True
