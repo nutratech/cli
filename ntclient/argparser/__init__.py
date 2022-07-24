@@ -139,6 +139,12 @@ def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
     recipe_init_parser = recipe_subparsers.add_parser(
         "init", help="create recipe folder, copy stock data in"
     )
+    recipe_init_parser.add_argument(
+        "--force",
+        "-f",
+        action="store_true",
+        help="forcibly remove and re-copy stock/core data",
+    )
     recipe_init_parser.set_defaults(func=parser_funcs.recipes_init)
 
     # Analyze

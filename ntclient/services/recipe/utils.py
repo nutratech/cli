@@ -35,7 +35,7 @@ def recipes_init(_force: bool = True) -> tuple:
         shutil.copytree(RECIPE_STOCK, recipes_destination)
         return 0, None
     except FileExistsError:
-        print("ERROR: file/directory exists: %s")
+        print("ERROR: file/directory exists: %s" % recipes_destination)
         print(" remove it, or use the '-f' flag")
         return 1, None
 

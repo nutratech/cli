@@ -37,4 +37,11 @@ def init(yes: bool = False) -> tuple:
     nt_init()
 
     print("\nAll checks have passed!")
+    print(
+        """
+Nutrient tracker is free software. It comes with NO warranty or guarantee.
+You may use it as you please.
+You may make changes as long as they are open-source.
+    """
+    )
     return 0, True

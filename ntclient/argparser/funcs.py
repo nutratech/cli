@@ -48,7 +48,7 @@ def analyze(args: argparse.Namespace) -> tuple:
     """Analyze a food"""
     # exc: ValueError,
     food_ids = set(args.food_id)
-    grams = float(args.grams) if args.grams else 0
+    grams = float(args.grams) if args.grams else 0.0
 
     return services.analyze.foods_analyze(food_ids, grams)
 
@@ -64,9 +64,11 @@ def day(args: argparse.Namespace) -> tuple:
 ##############################################################################
 # Recipes
 ##############################################################################
-def recipes_init() -> tuple:
+def recipes_init(args: argparse.Namespace) -> tuple:
     """Copy example/stock data into RECIPE_HOME"""
-    return r_service.recipes_init()
+    _force = args.force
+
+    return r_service.recipes_init(_force=_force)
 
 
 def recipes() -> tuple:
