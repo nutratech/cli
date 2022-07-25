@@ -25,7 +25,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 import argparse
-import sys
 import time
 from urllib.error import HTTPError, URLError
 
@@ -121,7 +120,6 @@ def main(args: list = None) -> int:
     exit_code = 1
     try:
         exit_code, *_results = func(_parser)
-        return exit_code
     except SqlException as sql_exception:
         print("Issue with an sqlite database: " + repr(sql_exception))
         if DEBUG:
@@ -143,12 +141,8 @@ def main(args: list = None) -> int:
             raise
     finally:
         if DEBUG:
-            exc_time = time.time() - start_time  # type: ignore
+            exc_time = time.time() - start_time
             print("\nExecuted in: %s ms" % round(exc_time * 1000, 1))
             print("Exit code: %s" % exit_code)
 
     return exit_code
-
-
-if __name__ == "__main__":
-    sys.exit(main())

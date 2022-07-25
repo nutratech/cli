@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 """
+Most of the original tests for the CLI package were developed here.
+Need to offload them into special modules. The refactor has started.
+
 Created on Fri Jan 31 15:19:53 2020
 
 @author: shane
@@ -32,16 +35,19 @@ from ntclient.services.recipe import RECIPE_HOME
 from ntclient.utils.exceptions import SqlInvalidVersionError
 
 TEST_HOME = os.path.dirname(os.path.abspath(__file__))
+arg_parser = build_argparser()
+
+
 # NOTE: this doesn't work currently, b/c it's already read up (in imports above)
 #  We're just setting it on the shell, as an env var
 # os.environ["NUTRA_HOME"] = os.path.join(TEST_HOME, ".nutra.test")
 
-# TODO: integration tests.. create user, recipe, log.. analyze & compare
-arg_parser = build_argparser()
-
 
 class TestCli(unittest.TestCase):
-    """Original one-stop-shop for testing"""
+    """
+    Original one-stop-shop for testing.
+    @todo: integration tests.. create user, recipe, log.. analyze & compare
+    """
 
     # pylint: disable=import-outside-toplevel
 
@@ -144,6 +150,8 @@ class TestCli(unittest.TestCase):
         assert len(nutrients_rows[0]) == 30
         assert len(servings_rows[0]) == 1
 
+    def test_410_nt_argparser_funcs(self):
+        """Tests nt functions in argparser.funcs (to varying degrees each)"""
         # Day
         rda_csv_path = os.path.join(TEST_HOME, "resources", "rda", "dog-18lbs.csv")
         day_csv_path = os.path.join(TEST_HOME, "resources", "day", "dog.csv")
@@ -172,7 +180,7 @@ class TestCli(unittest.TestCase):
         code, _ = args.func(args)
         assert code == 0
 
-    def test_401_invalid_path_day_throws_error(self):
+    def test_415_invalid_path_day_throws_error(self):
         """Ensures invalid path throws exception in `day` subcommand"""
         invalid_day_csv_path = os.path.join(
             TEST_HOME, "resources", "day", "__NONEXISTENT_CSV_FILE__.csv"
@@ -190,21 +198,24 @@ class TestCli(unittest.TestCase):
             )
         assert sys_exit.value.code == 2
 
-    def test_402_nt_argparser_funcs(self):
-        """Tests nt functions in argparser.funcs (to varying degrees each)"""
-
     def test_500_main_module(self):
         """Tests execution of main() and __main__, in __main__.py"""
         code = nt_main(args=["--no-pager", "nt"])
         assert code == 0
 
+        # Injection test
         sys.argv = ["./nutra"]
         code = nt_main()
         assert code == 0
 
+        # -h
         with pytest.raises(SystemExit) as system_exit:
             nt_main(args=["-h"])
         assert system_exit.value.code == 0
+
+        # -d
+        code = nt_main(args=["-d"])
+        assert code == 0
 
         # __main__: if args_dict
         code = nt_main(args=["anl", "9053", "-g", "80"])
