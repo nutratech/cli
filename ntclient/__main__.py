@@ -35,7 +35,9 @@ from colorama import init as colorama_init
 from ntclient import (
     __db_target_nt__,
     __db_target_usda__,
+    __email__,
     __title__,
+    __url__,
     __version__,
     set_flags,
 )
@@ -135,6 +137,8 @@ def main(args: list = None) -> int:
             raise
     except Exception as exception:  # pylint: disable=broad-except
         print("Unforeseen error, run with -d for more info: " + repr(exception))
+        print(f"You can open an issue here: {__url__}")
+        print(f"Or send me an email with the debug output: {__email__}")
         if DEBUG:
             raise
     finally:
