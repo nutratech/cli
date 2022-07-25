@@ -59,7 +59,7 @@ NTSQLITE_BUILDPATH = os.path.join(ROOT_DIR, "ntsqlite", "sql", NT_DB_NAME)
 NTSQLITE_DESTINATION = os.path.join(NUTRA_HOME, NT_DB_NAME)
 
 # Check Python version
-PY_MIN_VER = (3, 4, 0)
+PY_MIN_VER = (3, 3, 0)
 PY_SYS_VER = sys.version_info[0:3]
 PY_MIN_STR = ".".join(str(x) for x in PY_MIN_VER)
 PY_SYS_STR = ".".join(str(x) for x in PY_SYS_VER)
