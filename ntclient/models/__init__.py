@@ -29,9 +29,12 @@ class Recipe:
         """
         Parses out the raw CSV input read in during self.__init__()
         TODO: test this with an empty CSV file
+        @todo: CliConfig class, to avoid these non top-level import shenanigans
         """
+        from ntclient import DEBUG
 
         # Read into memory
+        print("Processing recipe file: %s" % self.file_path)
         with open(self.file_path, "r", encoding="utf-8") as _file:
             self.csv_reader = csv.DictReader(_file)
             self.rows = tuple(self.csv_reader)
@@ -46,7 +49,8 @@ class Recipe:
         # exc: ValueError (could not cast int / float)
         self.food_data = {int(x["food_id"]): float(x["grams"]) for x in self.rows}
 
-        print("hi")
+        if DEBUG:
+            print("Finished with recipe.")
 
     def print_analysis(self) -> None:
         """Run analysis on a single recipe"""
