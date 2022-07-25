@@ -21,6 +21,7 @@ def build_subcommands(subparsers: argparse._SubParsersAction) -> None:
     build_analyze_subcommand(subparsers)
     build_day_subcommand(subparsers)
     build_recipe_subcommand(subparsers)
+    build_calc_subcommand(subparsers)
 
 
 ################################################################################
@@ -165,3 +166,19 @@ def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
         "path", type=str, help="view (and analyze) recipe by file path"
     )
     recipe_anl_parser.set_defaults(func=parser_funcs.recipe)
+
+
+# noinspection PyUnresolvedReferences,PyProtectedMember
+def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
+    """BMR, 1 rep-max, and other calculators"""
+    calc_parser = subparsers.add_parser(
+        "calc", help="find you 1 rep max, body fat, BMR"
+    )
+    calc_parser.set_defaults(func=calc_parser.print_help)
+
+    calc_subparsers = calc_parser.add_subparsers(title="recipe subcommands")
+
+    # Init
+    calc_1rm_parser = calc_subparsers.add_parser(
+        "1rm", help="calculate 1 rep maxes, by different equations"
+    )

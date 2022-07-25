@@ -80,16 +80,15 @@ DEFAULT_SEARCH_H_BUFFER = (
 
 # TODO:
 #  Nested nutrient tree, like:
-#   http://www.whfoods.com/genpage.php?tname=nutrientprofile&dbid=132
+#       http://www.whfoods.com/genpage.php?tname=nutrientprofile&dbid=132
 #  Attempt to record errors in failed try/catch block (bottom of __main__.py)
 #  Make use of argcomplete.warn(msg) ?
 
 
 def set_flags(args: argparse.Namespace) -> None:
     """
-    Sets
-      DEBUG flag
-      PAGING flag
+    Sets flags:
+      {DEBUG, PAGING}
         from main (after arg parse). Accessible throughout package.
         Must be re-imported globally.
     """
