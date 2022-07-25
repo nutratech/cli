@@ -180,6 +180,11 @@ class TestCli(unittest.TestCase):
         code, _ = args.func(args)
         assert code == 0
 
+        # Calc
+        args = arg_parser.parse_args(args=["calc", "1rm", "225", "12"])
+        code, _ = args.func(args)
+        assert code == 0
+
     def test_415_invalid_path_day_throws_error(self):
         """Ensures invalid path throws exception in `day` subcommand"""
         invalid_day_csv_path = os.path.join(
@@ -219,6 +224,10 @@ class TestCli(unittest.TestCase):
 
         # __main__: if args_dict
         code = nt_main(args=["anl", "9053", "-g", "80"])
+        assert code == 0
+
+        # nested sub-command with no args
+        code = nt_main(args=["calc"])
         assert code == 0
 
     def test_600_sql_integrity_error__service_wip(self):
