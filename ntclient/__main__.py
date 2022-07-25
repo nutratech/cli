@@ -81,8 +81,7 @@ def main(args: list = None) -> int:
 
             # Run function
             if parser.func.__name__ == "print_help":
-                parser.func()
-                return 0, None
+                return 0, parser.func()
             if args_dict:
                 # Make sure the parser.func() always returns: Tuple[Int, Any]
                 return parser.func(args=parser)  # type: ignore
