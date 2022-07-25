@@ -92,3 +92,20 @@ def recipe(args: argparse.Namespace) -> tuple:
     recipe_path = args.path
 
     return ntclient.services.recipe.utils.recipe_overview(recipe_path=recipe_path)
+
+
+##############################################################################
+# Calculators
+##############################################################################
+def calc_1rm(args: argparse.Namespace) -> tuple:
+    """Perform 1-rep max calculations"""
+
+    weight = float(args.weight)
+    reps = int(args.reps)
+
+    print(reps, weight)
+    print("Not implemented yet.")
+    print("TODO: transfer service logic from server repository over here.")
+    print("TODO: add test in section: nt / arg parser.")
+
+    return 0, None
