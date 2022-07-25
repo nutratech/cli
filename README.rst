@@ -150,7 +150,10 @@ Initialize the DBs (``nt`` and ``usda``).
   n init
 
 If installed (or inside ``cli``) folder, the program can also run
-with ``python -m ntclient``
+with ``python -m ntclient``.
+
+You may need to set the ``PY_SYS_INTERPRETER`` value for the ``Makefile``
+if trying to install other than with ``/usr/bin/python3``.
 
 Building the PyPi release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

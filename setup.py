@@ -65,7 +65,7 @@ kwargs = {
     "install_requires": REQUIREMENTS,
     "python_requires": ">=%s" % PY_MIN_STR,
     "zip_safe": False,
-    "packages": find_packages(exclude=["tests"]),
+    "packages": find_packages(exclude=["tests", "ntclient.docs"]),
     "include_package_data": True,
     "platforms": ["linux", "darwin", "win32"],
     "description": "Home and office nutrient tracking software",
