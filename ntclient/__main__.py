@@ -80,12 +80,12 @@ def main(args: list = None) -> int:
                 args_dict.pop(expected_arg)
 
             # Run function
-            if args_dict:
-                # Make sure the parser.func() always returns: Tuple[Int, Any]
-                return parser.func(args=parser)  # type: ignore
             if parser.func.__name__ == "print_help":
                 parser.func()
                 return 0, None
+            if args_dict:
+                # Make sure the parser.func() always returns: Tuple[Int, Any]
+                return parser.func(args=parser)  # type: ignore
             return parser.func()  # type: ignore
 
         # Otherwise print help
