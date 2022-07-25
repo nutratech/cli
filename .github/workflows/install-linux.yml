@@ -39,5 +39,5 @@ jobs:
       - name: Basic Tests / CLI / Integration
         run: |
           n -v
-          nutra recipe init
+          nutra -d recipe init
           nutra --no-pager recipe
