@@ -28,6 +28,7 @@ from ntclient.persistence.sql.usda import funcs as usda_funcs
 from ntclient.persistence.sql.usda import sql as _usda_sql
 from ntclient.persistence.sql.usda import usda_ver
 from ntclient.services import init
+from ntclient.services.recipe import RECIPE_HOME
 from ntclient.utils.exceptions import SqlInvalidVersionError
 
 TEST_HOME = os.path.dirname(os.path.abspath(__file__))
@@ -151,6 +152,25 @@ class TestCli(unittest.TestCase):
         assert code == 0
         assert result[0][213] == 1.295
         assert len(result[0]) == 177
+
+        # Recipe
+        args = arg_parser.parse_args(args=["recipe", "init", "-f"])
+        code, _ = args.func(args)
+        assert code == 0
+        # Recipes overview
+        args = arg_parser.parse_args(args=["recipe"])
+        code, _ = args.func()
+        assert code == 0
+        # Detail view (one recipe)
+        args = arg_parser.parse_args(
+            args=[
+                "recipe",
+                "anl",
+                os.path.join(RECIPE_HOME, "core", "dinner", "burrito-bowl.csv"),
+            ]
+        )
+        code, _ = args.func(args)
+        assert code == 0
 
     def test_401_invalid_path_day_throws_error(self):
         """Ensures invalid path throws exception in `day` subcommand"""

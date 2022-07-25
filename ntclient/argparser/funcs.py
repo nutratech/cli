@@ -84,7 +84,11 @@ def recipes() -> tuple:
 
 
 def recipe(args: argparse.Namespace) -> tuple:
-    """View and analyze a single (or a range)"""
+    """
+    View and analyze a single (or a range)
+    @todo: argcomplete based on RECIPE_HOME folder
+    @todo: use as default command? Currently this is reached by `nutra recipe anl`
+    """
     recipe_path = args.path
 
     return ntclient.services.recipe.utils.recipe_overview(recipe_path=recipe_path)
