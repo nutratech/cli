@@ -35,7 +35,7 @@ from ntclient.ntsqlite.sql import NT_DB_NAME
 
 # Package info
 __title__ = "nutra"
-__version__ = "0.2.6.dev2"
+__version__ = "0.2.6.dev3"
 __author__ = "Shane Jaroch"
 __email__ = "chown_tee@proton.me"
 __license__ = "GPL v3"
