@@ -75,13 +75,16 @@ def main(args: list = None) -> int:
     def func(parser: argparse.Namespace) -> tuple:
         """Executes a function for a given argument call to the parser"""
         if hasattr(parser, "func"):
+            # Print help for nested commands
+            if parser.func.__name__ == "print_help":
+                return 0, parser.func()
+
+            # Collect non-default args
             args_dict = dict(vars(parser))
             for expected_arg in ["func", "debug", "no_pager"]:
                 args_dict.pop(expected_arg)
 
             # Run function
-            if parser.func.__name__ == "print_help":
-                return 0, parser.func()
             if args_dict:
                 # Make sure the parser.func() always returns: Tuple[Int, Any]
                 return parser.func(args=parser)  # type: ignore
