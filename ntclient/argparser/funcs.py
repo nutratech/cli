@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+Current home to subparsers and service-level logic.
+These functions all return a tuple of (exit_code: int, results: list|dict).
+
 Created on Sat Jul 18 16:30:28 2020 -0400
 
 @author: shane
-Current home to subparsers and service-level logic
 """
 import argparse
 import os
@@ -21,7 +23,7 @@ def init(args: argparse.Namespace) -> tuple:
 ##############################################################################
 # Nutrients, search and sort
 ##############################################################################
-def nutrients():  # type: ignore
+def nutrients() -> tuple:
     """List nutrients"""
     return ntclient.services.usda.list_nutrients()
 
@@ -85,4 +87,4 @@ def recipe(args: argparse.Namespace) -> tuple:
     """View and analyze a single (or a range)"""
     recipe_path = args.path
 
-    return ntclient.services.recipe.utils.recipe_overview(recipe_path)
+    return ntclient.services.recipe.utils.recipe_overview(recipe_path=recipe_path)
