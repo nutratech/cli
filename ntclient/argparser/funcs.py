@@ -8,13 +8,14 @@ Current home to subparsers and service-level logic
 import argparse
 import os
 
-from ntclient import services
-from ntclient.services.recipe import utils as r_service
+import ntclient.services.analyze
+import ntclient.services.recipe.utils
+import ntclient.services.usda
 
 
 def init(args: argparse.Namespace) -> tuple:
     """Wrapper init method for persistence stuff"""
-    return services.init(yes=args.yes)
+    return ntclient.services.init(yes=args.yes)
 
 
 ##############################################################################
@@ -22,23 +23,25 @@ def init(args: argparse.Namespace) -> tuple:
 ##############################################################################
 def nutrients():  # type: ignore
     """List nutrients"""
-    return services.usda.list_nutrients()
+    return ntclient.services.usda.list_nutrients()
 
 
 def search(args: argparse.Namespace) -> tuple:
     """Searches all dbs, foods, recipes, recent items and favorites."""
     if args.top:
-        return services.usda.search(
+        return ntclient.services.usda.search(
             words=args.terms, fdgrp_id=args.fdgrp_id, limit=args.top
         )
-    return services.usda.search(words=args.terms, fdgrp_id=args.fdgrp_id)
+    return ntclient.services.usda.search(words=args.terms, fdgrp_id=args.fdgrp_id)
 
 
 def sort(args: argparse.Namespace) -> tuple:
     """Sorts based on nutrient id"""
     if args.top:
-        return services.usda.sort_foods(args.nutr_id, by_kcal=args.kcal, limit=args.top)
-    return services.usda.sort_foods(args.nutr_id, by_kcal=args.kcal)
+        return ntclient.services.usda.sort_foods(
+            args.nutr_id, by_kcal=args.kcal, limit=args.top
+        )
+    return ntclient.services.usda.sort_foods(args.nutr_id, by_kcal=args.kcal)
 
 
 ##############################################################################
@@ -50,7 +53,7 @@ def analyze(args: argparse.Namespace) -> tuple:
     food_ids = set(args.food_id)
     grams = float(args.grams) if args.grams else 0.0
 
-    return services.analyze.foods_analyze(food_ids, grams)
+    return ntclient.services.analyze.foods_analyze(food_ids, grams)
 
 
 def day(args: argparse.Namespace) -> tuple:
@@ -58,7 +61,9 @@ def day(args: argparse.Namespace) -> tuple:
     day_csv_paths = [str(os.path.expanduser(x)) for x in args.food_log]
     rda_csv_path = str(os.path.expanduser(args.rda)) if args.rda else str()
 
-    return services.analyze.day_analyze(day_csv_paths, rda_csv_path=rda_csv_path)
+    return ntclient.services.analyze.day_analyze(
+        day_csv_paths, rda_csv_path=rda_csv_path
+    )
 
 
 ##############################################################################
@@ -68,16 +73,16 @@ def recipes_init(args: argparse.Namespace) -> tuple:
     """Copy example/stock data into RECIPE_HOME"""
     _force = args.force
 
-    return r_service.recipes_init(_force=_force)
+    return ntclient.services.recipe.utils.recipes_init(_force=_force)
 
 
 def recipes() -> tuple:
     """Show all, in tree or detail view"""
-    return r_service.recipes_overview()
+    return ntclient.services.recipe.utils.recipes_overview()
 
 
 def recipe(args: argparse.Namespace) -> tuple:
     """View and analyze a single (or a range)"""
     recipe_path = args.path
 
-    return r_service.recipe_overview(recipe_path)
+    return ntclient.services.recipe.utils.recipe_overview(recipe_path)

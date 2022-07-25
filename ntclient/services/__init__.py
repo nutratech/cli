@@ -5,7 +5,8 @@ from ntclient import NUTRA_HOME
 from ntclient.ntsqlite.sql import build_ntsqlite
 from ntclient.persistence.sql.nt import nt_init
 from ntclient.persistence.sql.usda import usda_init
-from ntclient.services import analyze, recipe, usda
+
+# TODO: rethink the above imports, if this belongs in __init__ or not
 
 
 def init(yes: bool = False) -> tuple:
