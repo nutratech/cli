@@ -135,4 +135,4 @@ def activity_factor_from_float(activity_factor: int) -> float:
     for enum_entry in ActivityFactor:
         if activity_factor in enum_entry.value:
             return float(enum_entry.value[activity_factor])
-    raise ValueError(f"No such ActivityFactor for value: {activity_factor}")
+    raise ValueError("No such ActivityFactor for value: %s" % activity_factor)
