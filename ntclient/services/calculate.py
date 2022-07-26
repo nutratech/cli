@@ -18,7 +18,7 @@ from ntclient import Gender, activity_factor_from_index
 common_n_reps = (1, 2, 3, 5, 6, 8, 10, 12, 15, 20)
 
 
-def orm_epley(reps: float, weight: float) -> dict:
+def orm_epley(weight: float, reps: float) -> dict:
     """
     Returns a dict {n_reps: max_weight, ...}
         for n_reps: (1, 2, 3, 5, 6, 8, 10, 12, 15, 20)
@@ -40,7 +40,7 @@ def orm_epley(reps: float, weight: float) -> dict:
     return maxes
 
 
-def orm_brzycki(reps: float, weight: float) -> dict:
+def orm_brzycki(weight: float, reps: float) -> dict:
     """
     Returns a dict {n_reps: max_weight, ...}
         for n_reps: (1, 2, 3, 5, 6, 8, 10, 12, 15)
@@ -64,7 +64,7 @@ def orm_brzycki(reps: float, weight: float) -> dict:
     return maxes
 
 
-def orm_dos_remedios(reps: int, weight: float) -> dict:
+def orm_dos_remedios(weight: float, reps: int) -> dict:
     """
     Returns dict {n_reps: max_weight, ...}
         for n_reps: (1, 2, 3, 5, 6, 8, 10, 12, 15)

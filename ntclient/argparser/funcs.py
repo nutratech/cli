@@ -11,6 +11,8 @@ import argparse
 import os
 from datetime import datetime
 
+from tabulate import tabulate
+
 import ntclient.services.analyze
 import ntclient.services.recipe.utils
 import ntclient.services.usda
@@ -104,13 +106,33 @@ def calc_1rm(args: argparse.Namespace) -> tuple:
     """Perform 1-rep max calculations"""
 
     weight = float(args.weight)
+    print("Weight: %s" % weight)
     reps = int(args.reps)
+    print("Reps:   %s" % reps)
 
-    print(reps, weight)
-    print("Not implemented yet.")
-    print("TODO: transfer service logic from server repository over here.")
+    _epley = calc.orm_epley(weight, reps)
+    _brzycki = calc.orm_brzycki(weight, reps)
+    _dos_remedios = calc.orm_dos_remedios(weight, reps)
 
-    return 0, None
+    print("EPLEY")
+    _epley_table = tabulate(
+        list(_epley.items()), headers=["reps", "epley"], tablefmt="simple"
+    )
+    print(_epley_table)
+
+    print("BRZYCKI")
+    _brzycki_table = tabulate(
+        list(_brzycki.items()), headers=["reps", "brzycki"], tablefmt="simple"
+    )
+    print(_brzycki_table)
+
+    print("DOS REMEDIOS")
+    _dos_remedios_table = tabulate(
+        list(_dos_remedios.items()), headers=["reps", "dos_remedios"], tablefmt="simple"
+    )
+    print(_dos_remedios_table)
+
+    return 0, {"epley": _epley, "brzycki": _brzycki, "dos_remedios": _dos_remedios}
 
 
 def calc_bmr(args: argparse.Namespace) -> tuple:
