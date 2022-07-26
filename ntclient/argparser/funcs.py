@@ -9,14 +9,14 @@ Created on Sat Jul 18 16:30:28 2020 -0400
 """
 import argparse
 import os
-from datetime import datetime
+import traceback
 
 from tabulate import tabulate
 
 import ntclient.services.analyze
 import ntclient.services.recipe.utils
 import ntclient.services.usda
-from ntclient import Gender, activity_factor_from_index
+from ntclient import CLI_CONFIG, Gender, activity_factor_from_index
 from ntclient.services import calculate as calc
 
 
@@ -151,19 +151,30 @@ def calc_bmr(args: argparse.Namespace) -> tuple:
     """
 
     activity_factor = activity_factor_from_index(args.activity_factor)
-    weight = float(args.weight)  # kg
 
-    body_fat = float(args.body_fat)
-    height = float(args.height)  # cm
-    gender = Gender(args.gender)
-    dob = datetime.fromisoformat(args.dob)  # e.g. 1970-01-01
+    # TODO: require these all for any? Or do exception handling & optional args like bf?
+    _katch_mcardle = calc.bmr_katch_mcardle(activity_factor, args=args)
+    _cunningham = calc.bmr_cunningham(activity_factor, args=args)
+    _mifflin_st_jeor = calc.bmr_mifflin_st_jeor(activity_factor, args=args)
 
-    print(weight, height, gender, dob, body_fat, activity_factor)
-    print("Not implemented yet.")
-    print("TODO: transfer service logic from server repository over here.")
-    print("TODO: add test in section: nt / arg parser.")
+    result = {
+        "katch_mcardle": _katch_mcardle,
+        "cunningham": _cunningham,
+        "mifflin_st_jeor": _mifflin_st_jeor,
+    }
 
-    return 0, None
+    # Prepare the table for printing
+    headers = ("Equation", "BMR", "TDEE")
+    rows = []
+    for _equation, _calculation in result.items():
+        row = [_equation]
+        row.extend(_calculation.values())
+        rows.append(row)
+
+    _katch_mcardle_table = tabulate(rows, headers=headers, tablefmt="simple")
+    print(_katch_mcardle_table)
+
+    return 0, result
 
 
 def calc_body_fat(args: argparse.Namespace) -> tuple:
@@ -190,10 +201,12 @@ def calc_body_fat(args: argparse.Namespace) -> tuple:
 
     gender = Gender.FEMALE if args.female_gender else Gender.MALE
     print("Gender: %s" % gender)
-
     try:
         _navy = calc.bf_navy(gender, args)
     except (TypeError, ValueError):
+        print()
+        if CLI_CONFIG.debug:
+            traceback.print_exc()
         print(
             "WARN: Navy failed, requires: gender, height, waist, neck, "
             "and (if female) hip."
@@ -202,6 +215,9 @@ def calc_body_fat(args: argparse.Namespace) -> tuple:
     try:
         _3site = calc.bf_3site(gender, args)
     except (TypeError, ValueError):
+        print()
+        if CLI_CONFIG.debug:
+            traceback.print_exc()
         print(
             "WARN: 3-Site failed, requires: gender, age, chest (mm), "
             "abdominal (mm), and thigh (mm)."
@@ -210,15 +226,18 @@ def calc_body_fat(args: argparse.Namespace) -> tuple:
     try:
         _7site = calc.bf_7site(gender, args)
     except (TypeError, ValueError):
+        print()
+        if CLI_CONFIG.debug:
+            traceback.print_exc()
         print(
             "WARN: 7-Site failed, requires: gender, age, chest (mm), "
             "abdominal (mm), thigh (mm), tricep (mm), sub (mm), sup (mm), and mid (mm)."
         )
         _7site = 0.0
 
+    _table = tabulate([(_navy, _3site, _7site)], headers=["Navy", "3-Site", "7-Site"])
     print()
-    print("Navy: %s%%" % _navy)
-    print("3-Site: %s%%" % _3site)
-    print("7-Site: %s%%" % _7site)
+    print()
+    print(_table)
 
-    return 0, {"navy": _navy}
+    return 0, {"navy": _navy, "threeSite": _3site, "sevenSite": _7site}

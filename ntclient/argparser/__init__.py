@@ -192,9 +192,13 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
     )
     calc_bmr_parser.add_argument("weight", type=float, help="weight (kg)")
     calc_bmr_parser.add_argument("height", type=float, help="height (cm)")
-    calc_bmr_parser.add_argument("gender", type=str, help="m or f")
+    calc_bmr_parser.add_argument(
+        "-F", dest="female_gender", action="store_true", help="Female gender"
+    )
     # TODO: optional (union) with age as int()
-    calc_bmr_parser.add_argument("dob", type=str, help="date e.g. 1970-01-01")
+    calc_bmr_parser.add_argument(
+        "-a", type=str, dest="age", required=True, help="e.g. 95"
+    )
     calc_bmr_parser.add_argument("body_fat", type=float, help="e.g. 0.16")
     calc_bmr_parser.add_argument(
         "activity_factor", type=int, help="1 thru 5, sedentary thru intense"
@@ -207,23 +211,21 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
         help="calculate body fat %% with Navy, 3-Site, 7-Site",
     )
     calc_bf_parser.add_argument(
-        "-f", dest="female_gender", action="store_true", help="female gender"
+        "-F", dest="female_gender", action="store_true", help="Female gender"
     )
     calc_bf_parser.add_argument(
-        "-a", type=int, dest="age", nargs="?", help="e.g. 95 [3-Site & 7-Site]"
+        "-a", type=int, dest="age", help="e.g. 95 [3-Site & 7-Site]"
     )
     calc_bf_parser.add_argument(
-        "-ht", type=float, dest="height", nargs="?", help="height (cm) [Navy]"
+        "-ht", type=float, dest="height", help="height (cm) [Navy]"
     )
 
     calc_bf_parser.add_argument(
-        "-w", type=float, dest="waist", nargs="?", help="waist (cm) [Navy]"
+        "-w", type=float, dest="waist", help="waist (cm) [Navy]"
     )
+    calc_bf_parser.add_argument("-n", type=float, dest="neck", help="neck (cm) [Navy]")
     calc_bf_parser.add_argument(
-        "-n", type=float, dest="neck", nargs="?", help="neck (cm) [Navy]"
-    )
-    calc_bf_parser.add_argument(
-        "-hip", type=float, dest="hip", nargs="?", help="hip (cm) [Navy / FEMALE only]"
+        "-hip", type=float, dest="hip", help="hip (cm) [Navy / FEMALE only]"
     )
 
     calc_bf_parser.add_argument(

@@ -102,45 +102,59 @@ class TestCli(unittest.TestCase):
 
     def test_400_usda_argparser_funcs(self):
         """Tests udsa functions in argparser.funcs (to varying degrees each)"""
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Init
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         args = arg_parser.parse_args(args=["init", "-y"])
         assert args.yes is True
         code, result = args.func(args=args)
         assert code == 0
         assert result
 
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Nutrients ( and `--no-pager` flag)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         args = arg_parser.parse_args(args=["--no-pager", "nt"])
         CLI_CONFIG.set_flags(args)  # unnecessary due to already happening, but hey
         code, result = args.func()
         assert code == 0
         assert len(result) == 186
 
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Search
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         args = arg_parser.parse_args(args=["search", "grass", "beef"])
         code, result = args.func(args)
         assert code == 0
         assert result
+
         # Top 20 (beats injecting BUFFER_HT/DEFAULT_RESULT_LIMIT)
+        # --------------------
         args = arg_parser.parse_args(args=["search", "grass", "beef", "-t", "20"])
         code, result = args.func(args)
         assert code == 0
         assert len(result) == 20
         assert result[0]["long_desc"] is not None
 
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Sort
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         args = arg_parser.parse_args(args=["sort", "789"])
         code, result = args.func(args)
         assert code == 0
         assert result
+
         # Top 20
+        # --------------------
         args = arg_parser.parse_args(args=["sort", "789", "-t", "20"])
         code, result = args.func(args)
         assert code == 0
         assert len(result) == 20
         assert result[0][4] == "Capers, raw"
 
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Anl
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         args = arg_parser.parse_args(args=["anl", "9053"])
         code, nutrients_rows, servings_rows = args.func(args)
         assert code == 0
@@ -149,7 +163,9 @@ class TestCli(unittest.TestCase):
 
     def test_410_nt_argparser_funcs(self):
         """Tests nt functions in argparser.funcs (to varying degrees each)"""
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Day
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         rda_csv_path = os.path.join(TEST_HOME, "resources", "rda", "dog-18lbs.csv")
         day_csv_path = os.path.join(TEST_HOME, "resources", "day", "dog.csv")
         args = arg_parser.parse_args(args=["day", "-r", rda_csv_path, day_csv_path])
@@ -158,15 +174,21 @@ class TestCli(unittest.TestCase):
         assert result[0][213] == 1.295
         assert len(result[0]) == 177
 
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Recipe
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         args = arg_parser.parse_args(args=["recipe", "init", "-f"])
         code, _ = args.func(args)
         assert code == 0
+
         # Recipes overview
+        # --------------------
         args = arg_parser.parse_args(args=["recipe"])
         code, _ = args.func()
         assert code == 0
+
         # Detail view (one recipe)
+        # --------------------
         args = arg_parser.parse_args(
             args=[
                 "recipe",
@@ -177,32 +199,51 @@ class TestCli(unittest.TestCase):
         code, _ = args.func(args)
         assert code == 0
 
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Calc
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         # 1rm
+        # --------------------
         args = arg_parser.parse_args(args=["calc", "1rm", "225", "12"])
         code, _ = args.func(args)
         assert code == 0
+
         # BMR
-        args = arg_parser.parse_args(args="calc bmr 75 179 m 1992-12-22 0.16 3".split())
+        # --------------------
+        args = arg_parser.parse_args(args="calc bmr -a 29 75 179 0.11 3".split())
         code, _ = args.func(args)
         assert code == 0
+
         # Body fat
+        # --------------------
+
         # Navy only
         args = arg_parser.parse_args(args="calc bf -ht 178 -w 80 -n 40".split())
         code, result = args.func(args)
         assert code == 0
         assert result["navy"] == 10.64
+
+        # Invalid (failed Navy)
+        args = arg_parser.parse_args(args="-d calc bf -w 80 -n 40".split())
+        CLI_CONFIG.set_flags(args)
+        code, result = args.func(args)
+        assert code in {0, 1}  # Might be a failed code one day, but returns 0 for now
+
         # All
         args = arg_parser.parse_args(
-            args="calc bf -a 29 -ht 178 -w 80 -n 40 5 6 9 6 8 7 4".split()
+            args="calc bf -ht 179 -w 80 -n 40 -a 29 7 13 10 9 9 11 10".split()
         )
         code, result = args.func(args)
         assert code == 0
-        assert result["navy"] == 10.64
+        assert result["navy"] == 10.48
+        assert result["threeSite"] == 8.95
+        assert result["sevenSite"] == 9.93
+
         # Female test
         # TODO: better values, and don't require hip above (it's 0)
         args = arg_parser.parse_args(
-            args="calc bf -f -a 29 -ht 178 -w 70 -hip 100 -n 35 5 6 9 6 8 7 4".split()
+            args="calc bf -F -a 29 -ht 178 -w 70 -hip 100 -n 35 5 6 9 6 8 7 4".split()
         )
         code, result = args.func(args)
         assert code == 0

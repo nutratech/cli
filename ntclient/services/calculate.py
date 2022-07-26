@@ -113,18 +113,22 @@ def orm_dos_remedios(weight: float, reps: int) -> dict:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # BMR
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def bmr_katch_mcardle(weight: float, body_fat: float, _activity_factor: int) -> dict:
+# TODO: write true service level calls, which accepts: lbm | (weight & body_fat)
+def bmr_katch_mcardle(activity_factor: float, args: argparse.Namespace) -> dict:
     """
-    @param weight: in kg
-    @param body_fat: e.g. 0.17
-    @param _activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
+    @param lbm: lean mass in kg
+    @param activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
 
     BMR = 370 + (21.6 x Lean Body Mass(kg) )
 
     Source: https://www.calculatorpro.com/calculator/katch-mcardle-bmr-calculator/
     Source: https://tdeecalculator.net/about.php
     """
-    activity_factor = activity_factor_from_index(_activity_factor)
+
+    weight = float(args.weight)  # kg
+    print("Weight: %s kg" % weight)
+    body_fat = float(args.body_fat)
+    print("Body fat: %s %%" % (body_fat * 100))
 
     lbm = weight * (1 - body_fat)
     bmr = 370 + (21.6 * lbm)
@@ -136,14 +140,16 @@ def bmr_katch_mcardle(weight: float, body_fat: float, _activity_factor: int) -> 
     }
 
 
-def bmr_cunningham(weight: float, body_fat: float, _activity_factor: int) -> dict:
+def bmr_cunningham(activity_factor: float, args: argparse.Namespace) -> dict:
     """
-    @param lbm: lean mass in kg
-    @param _activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
+    @param args: must contain weight & body_fat (to calculate lean mass in kg)
+    @param activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
 
     Source: https://www.slideshare.net/lsandon/weight-management-in-athletes-lecture
     """
-    activity_factor = activity_factor_from_index(_activity_factor)
+
+    weight = float(args.weight)
+    body_fat = float(args.body_fat)
 
     lbm = weight * (1 - body_fat)
     bmr = 500 + 22 * lbm
@@ -155,15 +161,14 @@ def bmr_cunningham(weight: float, body_fat: float, _activity_factor: int) -> dic
     }
 
 
-def bmr_mifflin_st_jeor(
-    gender: Gender, weight: float, height: float, dob: int, _activity_factor: int
-) -> dict:
+def bmr_mifflin_st_jeor(activity_factor: float, args: argparse.Namespace) -> dict:
     """
-    @param gender: {'MALE', 'FEMALE'}
-    @param weight: kg
-    @param height: cm
-    @param dob: int, unix timestamp (seconds)
-    @param _activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
+    @param args: Must contain
+        gender: {'MALE', 'FEMALE'}
+        weight: kg
+        height: cm
+        age: float (years)
+    @param activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
 
     Activity Factor\n
     ---------------\n
@@ -183,7 +188,6 @@ def bmr_mifflin_st_jeor(
 
     Source: https://www.myfeetinmotion.com/mifflin-st-jeor-equation/
     """
-    activity_factor = activity_factor_from_index(_activity_factor)
 
     def gender_specific_bmr(_gender: Gender, _bmr: float) -> float:
         _second_term = {
@@ -192,7 +196,18 @@ def bmr_mifflin_st_jeor(
         }
         return _bmr + _second_term[_gender]
 
-    bmr = 10 * weight + 6.25 + 6.25 * height - 5 * _age(dob)
+    gender = Gender.FEMALE if args.female_gender else Gender.MALE
+    print()
+    print("Gender: %s" % gender)
+
+    weight = float(args.weight)
+    height = float(args.height)
+    print("Height: %s cm" % height)
+    age = float(args.age)
+    print("Age: %s years" % age)
+    print()
+
+    bmr = 10 * weight + 6.25 + 6.25 * height - 5 * age
 
     bmr = gender_specific_bmr(gender, bmr)
     tdee = bmr * (1 + activity_factor)
