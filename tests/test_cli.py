@@ -246,6 +246,7 @@ class TestCli(unittest.TestCase):
         code = nt_main(args=["calc"])
         assert code == 0
 
+    @unittest.skip(reason="Vestigial stub, needs replacement / updating.")
     def test_600_sql_integrity_error__service_wip(self):
         """Provokes IntegrityError in nt.sqlite3"""
 
@@ -277,7 +278,7 @@ class TestCli(unittest.TestCase):
         assert os.path.isfile(NTSQLITE_BUILDPATH)
         os.remove(NTSQLITE_BUILDPATH)
 
-    @unittest.skip(reason="Long-running, want to replace with more 'unit' style")
+    @unittest.skip(reason="Long-running test, want to replace with more 'unit' style")
     def test_800_usda_upgrades_or_downgrades(self):
         """Ensures the static usda.sqlite3 file can be upgraded/downgraded as needed"""
         version = usda_ver()
@@ -294,7 +295,7 @@ class TestCli(unittest.TestCase):
         assert code == 0
         assert successful is True
 
-    @unittest.skip(reason="Long-running, want to replace with more 'unit' style")
+    @unittest.skip(reason="Long-running test, want to replace with more 'unit' style")
     def test_801_sql_invalid_version_error_if_version_old(self):
         """Throws base custom SqlException...
         TODO: why lines still missing in `coverage` for __main__ ?"""
@@ -308,7 +309,7 @@ class TestCli(unittest.TestCase):
             nt_main(["-d", "nt"])
         assert sql_invalid_version_error is not None
 
-    @unittest.skip(reason="Long-running, want to replace with more 'unit' style")
+    @unittest.skip(reason="Long-running test, want to replace with more 'unit' style")
     def test_802_usda_downloads_fresh_if_missing_or_deleted(self):
         """Ensure download of usda.sqlite3.tar.xz, if usda.sqlite3 is missing"""
         from ntclient.persistence.sql import usda
@@ -339,7 +340,7 @@ class TestCli(unittest.TestCase):
         assert successful is True
 
     def test_900_nut_rda_bar(self):
-        """Verifies colored/visual output is correctly generated"""
+        """Verifies colored/visual output is successfully generated"""
         analysis = usda_funcs.sql_analyze_foods(food_ids={1001})
         nutrients = usda_funcs.sql_nutrients_overview()
         output = nutprogbar.nutprogbar(

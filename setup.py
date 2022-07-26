@@ -42,11 +42,12 @@ CLASSIFIERS = [
     "Programming Language :: Unix Shell",
 ]
 
-# Read me
+# ReadMe
 with open("README.rst", encoding="utf-8") as file:
     README = file.read()
 
 # Requirements
+# TODO: check PY_SYS_VER, and decide which requirements for e.g. 3.4, 3.6, 3.10, etc...
 with open("requirements.txt", encoding="utf-8") as file:
     REQUIREMENTS = file.read().split()
 

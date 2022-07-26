@@ -3,22 +3,71 @@ from enum import Enum
 
 from colorama import Fore, Style
 
+
 ################################################################################
 # Colors and buffer settings
 ################################################################################
+class RdaColors(Enum):
+    """
+    Stores values for report colors.
+    Default values:
+        Acceptable     =Cyan
+        Overage        =Magenta (Dim)
+        Low            =Yellow
+        Critically Low =Red (Dim)
+    TODO: make configurable in SQLite or prefs.json
+    """
 
-# TODO: make configurable in SQLite or prefs.json
+    THRESH_WARN = 0.7
+    COLOR_WARN = Fore.YELLOW
 
-THRESH_WARN = 0.7
-COLOR_WARN = Fore.YELLOW
+    THRESH_CRIT = 0.4
+    COLOR_CRIT = Style.DIM + Fore.RED
 
-THRESH_CRIT = 0.4
-COLOR_CRIT = Style.DIM + Fore.RED
+    THRESH_OVER = 1.9
+    COLOR_OVER = Style.DIM + Fore.MAGENTA
 
-THRESH_OVER = 1.9
-COLOR_OVER = Style.DIM + Fore.MAGENTA
+    COLOR_DEFAULT = Fore.CYAN
 
-COLOR_DEFAULT = Fore.CYAN
+
+################################################################################
+# Validation Enums
+################################################################################
+class Gender(Enum):
+    """
+    A validator and Enum class for gender inputs; used in several calculations.
+    @note: floating point -1 to 1, or 0 to 1... for non-binary?
+    """
+
+    MALE = "m"
+    FEMALE = "f"
+
+
+class ActivityFactor(Enum):
+    """
+    Used in BMR calculations.
+    Different activity levels: {0.200, 0.375, 0.550, 0.725, 0.900}
+    @todo: Verify the accuracy of these "names". Access by index?
+    """
+
+    SEDENTARY = {1: 0.2}
+    MILDLY_ACTIVE = {2: 0.375}
+    ACTIVE = {3: 0.55}
+    HIGHLY_ACTIVE = {4: 0.725}
+    INTENSELY_ACTIVE = {5: 0.9}
+
+
+def activity_factor_from_float(activity_factor: int) -> float:
+    """
+    Gets ActivityFactor Enum by float value if it exists, else raise ValueError.
+    Basically just verifies the float is among the allowed values, and re-returns it.
+    """
+    for enum_entry in ActivityFactor:
+        if activity_factor in enum_entry.value:
+            return float(enum_entry.value[activity_factor])
+    # TODO: custom exception. And handle in main file?
+    raise ValueError("No such ActivityFactor for value: %s" % activity_factor)
+
 
 ################################################################################
 # Nutrient IDs
@@ -98,42 +147,3 @@ NUTR_IDS_AMINOS = [
     518,
     521,
 ]
-
-
-################################################################################
-# Enums
-################################################################################
-class Gender(Enum):
-    """
-    A validator and Enum class for gender inputs; used in several calculations.
-    @note: floating point -1 to 1, or 0 to 1... for non-binary?
-    """
-
-    MALE = "m"
-    FEMALE = "f"
-
-
-class ActivityFactor(Enum):
-    """
-    Used in BMR calculations.
-    Different activity levels: {0.200, 0.375, 0.550, 0.725, 0.900}
-    @todo: Verify the accuracy of these "names". Access by index?
-    """
-
-    SEDENTARY = {1: 0.2}
-    MILDLY_ACTIVE = {2: 0.375}
-    ACTIVE = {3: 0.55}
-    HIGHLY_ACTIVE = {4: 0.725}
-    INTENSELY_ACTIVE = {5: 0.9}
-
-
-def activity_factor_from_float(activity_factor: int) -> float:
-    """
-    Gets ActivityFactor Enum by float value if it exists, else raise ValueError.
-    Basically just verifies the float is among the allowed values, and re-returns it.
-    """
-    for enum_entry in ActivityFactor:
-        if activity_factor in enum_entry.value:
-            return float(enum_entry.value[activity_factor])
-    # TODO: custom exception. And handle in main file?
-    raise ValueError("No such ActivityFactor for value: %s" % activity_factor)

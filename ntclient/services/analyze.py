@@ -19,18 +19,12 @@ from ntclient.persistence.sql.usda.funcs import (
     sql_servings,
 )
 from ntclient.utils import (
-    COLOR_CRIT,
-    COLOR_DEFAULT,
-    COLOR_OVER,
-    COLOR_WARN,
     NUTR_ID_CARBS,
     NUTR_ID_FAT_TOT,
     NUTR_ID_FIBER,
     NUTR_ID_KCAL,
     NUTR_ID_PROTEIN,
-    THRESH_CRIT,
-    THRESH_OVER,
-    THRESH_WARN,
+    RdaColors,
 )
 
 
@@ -289,14 +283,14 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         attain = amount / rda
         perc = round(100 * attain, 1)
 
-        if attain >= THRESH_OVER:
-            color = COLOR_OVER
-        elif attain <= THRESH_CRIT:
-            color = COLOR_CRIT
-        elif attain <= THRESH_WARN:
-            color = COLOR_WARN
+        if attain >= RdaColors.THRESH_OVER.value:
+            color = RdaColors.COLOR_OVER.value
+        elif attain <= RdaColors.THRESH_CRIT.value:
+            color = RdaColors.COLOR_CRIT.value
+        elif attain <= RdaColors.THRESH_WARN.value:
+            color = RdaColors.COLOR_WARN.value
         else:
-            color = COLOR_DEFAULT
+            color = RdaColors.COLOR_DEFAULT.value
 
         # Print
         detail_amount = "{0}/{1} {2}".format(round(amount, 1), rda, unit).ljust(18)

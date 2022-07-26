@@ -68,6 +68,7 @@ DEFAULT_SEARCH_H_BUFFER = (
 )
 
 
+# pylint: disable=too-few-public-methods
 class _CliConfig:
     """Mutable global store for configuration values"""
 
