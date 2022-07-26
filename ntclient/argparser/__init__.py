@@ -205,5 +205,7 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
     calc_bf_parser = calc_subparsers.add_parser(
         "bf", help="calculate body fat %% with Navy, 3-Site, 7-Site"
     )
+    calc_bf_parser.add_argument("gender", type=str, help="m or f")
+    calc_bf_parser.add_argument("age", type=int, help="integer, e.g. 95")
 
     # Lean body limits (young male)
