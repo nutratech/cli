@@ -257,8 +257,9 @@ def bf_navy(gender: Gender, args: argparse.Namespace) -> float:
         https://www.thecalculator.co/health/Navy-Method-Body-Fat-Measurement-Calculator-1112.html
     """
 
-    # Navy-specific parameters
+    # Navy values
     height = float(args.height)
+    print()
     print("Height: %s cm" % height)
 
     waist = float(args.waist)
@@ -300,10 +301,16 @@ def bf_3site(gender: Gender, args: argparse.Namespace) -> float:
 
     # Shared parameters for skin manifold 3 & 7 site tests
     age = float(args.age)
+    print()
+    print("Age: %s years" % age)
 
-    chest = float(args.chest)
-    abd = float(args.abd)
-    thigh = float(args.thigh)
+    # 3-Site values
+    chest = int(args.chest)
+    print("Chest: %s mm" % chest)
+    abd = int(args.abd)
+    print("Abdominal: %s mm" % abd)
+    thigh = int(args.thigh)
+    print("Thigh: %s mm" % thigh)
 
     # Compute values
     st3 = chest + abd + thigh
@@ -336,15 +343,21 @@ def bf_7site(gender: Gender, args: argparse.Namespace) -> float:
     # Shared parameters for skin manifold 3 & 7 site tests
     age = float(args.age)
 
-    chest = float(args.chest)
-    abd = float(args.abd)
-    thigh = float(args.thigh)
+    # 3-Site values
+    chest = int(args.chest)
+    abd = int(args.abd)
+    thigh = int(args.thigh)
 
-    # 7site-specific parameters
-    tricep = float(args.tricep)
-    sub = float(args.sub)
-    sup = float(args.sup)
-    mid = float(args.mid)
+    # 7-Site values
+    tricep = int(args.tricep)
+    print()
+    print("Tricep: %s mm" % tricep)
+    sub = int(args.sub)
+    print("Sub: %s mm" % sub)
+    sup = int(args.sup)
+    print("Sup: %s mm" % sup)
+    mid = int(args.mid)
+    print("Mid: %s mm" % mid)
 
     # Compute values
     st7 = chest + abd + thigh + tricep + sub + sup + mid
