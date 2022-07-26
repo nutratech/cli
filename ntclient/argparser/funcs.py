@@ -150,12 +150,13 @@ def calc_bmr(args: argparse.Namespace) -> tuple:
     }
     """
 
+    activity_factor = activity_factor_from_index(args.activity_factor)
     weight = float(args.weight)  # kg
+
+    body_fat = float(args.body_fat)
     height = float(args.height)  # cm
     gender = Gender(args.gender)
     dob = datetime.fromisoformat(args.dob)  # e.g. 1970-01-01
-    body_fat = float(args.body_fat)
-    activity_factor = activity_factor_from_index(args.activity_factor)
 
     print(weight, height, gender, dob, body_fat, activity_factor)
     print("Not implemented yet.")

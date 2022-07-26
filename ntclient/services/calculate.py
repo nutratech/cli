@@ -113,9 +113,10 @@ def orm_dos_remedios(weight: float, reps: int) -> dict:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # BMR
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def bmr_katch_mcardle(lbm: float, _activity_factor: int) -> dict:
+def bmr_katch_mcardle(weight: float, body_fat: float, _activity_factor: int) -> dict:
     """
-    @param lbm: lean mass in kg
+    @param weight: in kg
+    @param body_fat: e.g. 0.17
     @param _activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
 
     BMR = 370 + (21.6 x Lean Body Mass(kg) )
@@ -123,11 +124,9 @@ def bmr_katch_mcardle(lbm: float, _activity_factor: int) -> dict:
     Source: https://www.calculatorpro.com/calculator/katch-mcardle-bmr-calculator/
     Source: https://tdeecalculator.net/about.php
     """
-    # Validate it conforms to one of the enum values
-    # TODO: return 400s in cases like this, not 500
-    # NOTE: is this necessary if it's also done in the controller?
     activity_factor = activity_factor_from_index(_activity_factor)
 
+    lbm = weight * (1 - body_fat)
     bmr = 370 + (21.6 * lbm)
     tdee = bmr * (1 + activity_factor)
 
@@ -137,7 +136,7 @@ def bmr_katch_mcardle(lbm: float, _activity_factor: int) -> dict:
     }
 
 
-def bmr_cunningham(lbm: float, _activity_factor: int) -> dict:
+def bmr_cunningham(weight: float, body_fat: float, _activity_factor: int) -> dict:
     """
     @param lbm: lean mass in kg
     @param _activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
@@ -146,6 +145,7 @@ def bmr_cunningham(lbm: float, _activity_factor: int) -> dict:
     """
     activity_factor = activity_factor_from_index(_activity_factor)
 
+    lbm = weight * (1 - body_fat)
     bmr = 500 + 22 * lbm
     tdee = bmr * (1 + activity_factor)
 
