@@ -15,6 +15,7 @@ import ntclient.services.analyze
 import ntclient.services.recipe.utils
 import ntclient.services.usda
 from ntclient import Gender, activity_factor_from_float
+from ntclient.services import calculate as calc
 
 
 def init(args: argparse.Namespace) -> tuple:
@@ -165,29 +166,44 @@ def calc_body_fat(args: argparse.Namespace) -> tuple:
     """
 
     gender = Gender(args.gender)
-    age = int(args.age)  # in years
-    height = float(args.height)  # cm
+    print("Gender: %s" % gender)
 
-    waist = float(args.waist)  # cm
-    if gender == Gender.FEMALE:
-        hip = float(args.hip)  # cm
-    else:
-        hip = 0.0  # placeholder value, not used anyway in this case
-    neck = float(args.neck)  # cm
+    try:
+        navy = calc.bf_navy(gender, args)
+    except (TypeError, ValueError):
+        print(
+            "WARN: Navy failed, requires: gender, height, waist, neck, "
+            "and (if female) hip."
+        )
+        navy = 0.0
 
-    chest = int(args.chest)  # mm
-    abd = int(args.abd)  # mm
-    thigh = int(args.thigh)  # mm
-    tricep = int(args.tricep)  # mm
-    sub = int(args.sub)  # mm
-    sup = int(args.sup)  # mm
-    mid = int(args.mid)  # mm
+    print()
+    print("Navy: %s%%" % navy)
 
-    print(
-        gender, age, height, waist, hip, neck, chest, abd, thigh, tricep, sub, sup, mid
-    )
-    print("Not implemented yet.")
-    print("TODO: transfer service logic from server repository over here.")
-    print("TODO: add test in section: nt / arg parser.")
+    # age = int(args.age)  # in years
+    # height = float(args.height)  # cm
+    #
+    # waist = float(args.waist)  # cm
+    # if gender == Gender.FEMALE:
+    #     hip = float(args.hip)  # cm
+    # else:
+    #     hip = 0.0  # placeholder value, not used anyway in this case
+    # neck = float(args.neck)  # cm
+    #
+    # chest = int(args.chest)  # mm
+    # abd = int(args.abd)  # mm
+    # thigh = int(args.thigh)  # mm
+    # tricep = int(args.tricep)  # mm
+    # sub = int(args.sub)  # mm
+    # sup = int(args.sup)  # mm
+    # mid = int(args.mid)  # mm
+    #
+    # print(
+    #     gender, age, height, waist, hip, neck,
+    #     chest, abd, thigh, tricep, sub, sup, mid
+    # )
+    # print("Not implemented yet.")
+    # print("TODO: transfer service logic from server repository over here.")
+    # print("TODO: add test in section: nt / arg parser.")
 
-    return 0, None
+    return 0, {"navy": navy}
