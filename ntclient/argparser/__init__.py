@@ -182,6 +182,24 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
     calc_1rm_parser = calc_subparsers.add_parser(
         "1rm", help="calculate 1 rep maxes, by different equations"
     )
-    calc_1rm_parser.add_argument("weight", type=str, help="weight (lbs or kg)")
-    calc_1rm_parser.add_argument("reps", type=str, help="number of reps performed")
+    calc_1rm_parser.add_argument("weight", type=float, help="weight (lbs or kg)")
+    calc_1rm_parser.add_argument("reps", type=int, help="number of reps performed")
     calc_1rm_parser.set_defaults(func=parser_funcs.calc_1rm)
+
+    # BMR
+    calc_bmr_parser = calc_subparsers.add_parser(
+        "bmr", help="calculate BMR and TDEE values"
+    )
+    calc_bmr_parser.add_argument("weight", type=float, help="weight (kg)")
+    calc_bmr_parser.add_argument("height", type=float, help="height (cm)")
+    calc_bmr_parser.add_argument("gender", type=str, help="m or f")
+    calc_bmr_parser.add_argument("dob", type=str, help="date e.g. 1970-01-01")
+    calc_bmr_parser.add_argument("body_fat", type=float, help="e.g. 0.16")
+    calc_bmr_parser.add_argument(
+        "activity_factor", type=int, help="1 thru 5, sedentary thru intense"
+    )
+    calc_bmr_parser.set_defaults(func=parser_funcs.calc_bmr)
+
+    # Body fat
+
+    # Lean body limits (young male)

@@ -9,10 +9,12 @@ Created on Sat Jul 18 16:30:28 2020 -0400
 """
 import argparse
 import os
+from datetime import datetime
 
 import ntclient.services.analyze
 import ntclient.services.recipe.utils
 import ntclient.services.usda
+from ntclient.utils import Gender, activity_factor_from_float
 
 
 def init(args: argparse.Namespace) -> tuple:
@@ -104,6 +106,85 @@ def calc_1rm(args: argparse.Namespace) -> tuple:
     reps = int(args.reps)
 
     print(reps, weight)
+    print("Not implemented yet.")
+    print("TODO: transfer service logic from server repository over here.")
+
+    return 0, None
+
+
+def calc_bmr(args: argparse.Namespace) -> tuple:
+    """
+    Perform BMR & TDEE calculations
+
+    Example POST:
+    {
+        "weight": 71,
+        "height": 177,
+        "gender": "MALE",
+        "dob": 725864400,
+        "bodyFat": 0.14,
+        "activityFactor": 0.55
+    }
+    """
+
+    weight = float(args.weight)  # kg
+    height = float(args.height)  # cm
+    gender = Gender(args.gender)
+    dob = datetime.fromisoformat(args.dob)  # e.g. 1970-01-01
+    body_fat = float(args.body_fat)
+    activity_factor = activity_factor_from_float(args.activity_factor)
+
+    print(weight, height, gender, dob, body_fat, activity_factor)
+    print("Not implemented yet.")
+    print("TODO: transfer service logic from server repository over here.")
+    print("TODO: add test in section: nt / arg parser.")
+
+    return 0, None
+
+
+def calc_body_fat(args: argparse.Namespace) -> tuple:
+    """
+    Perform BMR & TDEE calculations
+
+    Example POST. @note FEMALE, also includes "hip" (cm)
+    {
+        "gender": "MALE",
+        "age": 29,
+        "height": 178,
+        "waist": 80,
+        "neck": 36.8,
+        "chest": 5,
+        "abd": 6,
+        "thigh": 9,
+        "tricep": 6,
+        "sub": 8,
+        "sup": 7,
+        "mid": 4
+    }
+    """
+
+    gender = Gender(args.gender)
+    dob = int(args.dob)  # unix timestamp
+    height = float(args.height)  # cm
+
+    waist = float(args.waist)  # cm
+    if gender == Gender.FEMALE:
+        hip = float(args.hip)  # cm
+    else:
+        hip = 0.0  # placeholder value, not used anyway in this case
+    neck = float(args.neck)  # cm
+
+    chest = float(args.chest)  # mm
+    abd = float(args.abd)  # mm
+    thigh = float(args.thigh)  # mm
+    tricep = float(args.tricep)  # mm
+    sub = float(args.sub)  # mm
+    sup = float(args.sup)  # mm
+    mid = float(args.mid)  # mm
+
+    print(
+        gender, dob, height, waist, hip, neck, chest, abd, thigh, tricep, sub, sup, mid
+    )
     print("Not implemented yet.")
     print("TODO: transfer service logic from server repository over here.")
     print("TODO: add test in section: nt / arg parser.")
