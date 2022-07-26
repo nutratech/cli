@@ -11,7 +11,7 @@ from collections import OrderedDict
 from colorama import Fore, Style
 from tabulate import tabulate
 
-from ntclient import BUFFER_WD
+from ntclient import BUFFER_WD, CLI_CONFIG
 from ntclient.persistence.sql.usda.funcs import (
     sql_analyze_foods,
     sql_food_details,
@@ -140,7 +140,6 @@ def day_analyze(day_csv_paths: list, rda_csv_path: str = str()) -> tuple:
     e.g.  nutra day ~/.nutra/rocky.csv -r ~/.nutra/dog-rdas-18lbs.csv
     TODO: Should be a subset of foods_analyze
     """
-    from ntclient import DEBUG  # pylint: disable=import-outside-toplevel
 
     if rda_csv_path:
         with open(rda_csv_path, encoding="utf-8") as file_path:
@@ -171,7 +170,7 @@ def day_analyze(day_csv_paths: list, rda_csv_path: str = str()) -> tuple:
         for _nutrient in nutrients_lists:
             if _nutrient[0] == nutrient_id:
                 _nutrient[1] = _rda
-                if DEBUG:
+                if CLI_CONFIG.debug:
                     substr = "{0} {1}".format(_rda, _nutrient[2]).ljust(12)
                     print("INJECT RDA: {0} -->  {1}".format(substr, _nutrient[4]))
     nutrients = {x[0]: x for x in nutrients_lists}

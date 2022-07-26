@@ -14,6 +14,7 @@ import unittest
 import pytest
 
 from ntclient import (
+    CLI_CONFIG,
     NTSQLITE_BUILDPATH,
     NUTRA_HOME,
     USDA_DB_NAME,
@@ -21,7 +22,7 @@ from ntclient import (
     __db_target_usda__,
     set_flags,
 )
-from ntclient.__main__ import build_argparser
+from ntclient.__main__ import build_arg_parser
 from ntclient.__main__ import main as nt_main
 from ntclient.core import nutprogbar
 from ntclient.ntsqlite.sql import build_ntsqlite
@@ -35,7 +36,7 @@ from ntclient.services.recipe import RECIPE_HOME
 from ntclient.utils.exceptions import SqlInvalidVersionError
 
 TEST_HOME = os.path.dirname(os.path.abspath(__file__))
-arg_parser = build_argparser()
+arg_parser = build_arg_parser()
 
 
 # NOTE: this doesn't work currently, b/c it's already read up (in imports above)
@@ -98,10 +99,8 @@ class TestCli(unittest.TestCase):
         assert args.debug is True
         assert args.no_pager is True
 
-        from ntclient import DEBUG, PAGING  # pylint: disable=import-outside-toplevel
-
-        assert DEBUG is True
-        assert PAGING is False
+        assert CLI_CONFIG.debug is True
+        assert CLI_CONFIG.paging is False
 
     def test_400_usda_argparser_funcs(self):
         """Tests udsa functions in argparser.funcs (to varying degrees each)"""

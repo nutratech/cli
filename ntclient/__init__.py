@@ -34,8 +34,6 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 NUTRA_HOME = os.getenv("NUTRA_HOME", os.path.join(os.path.expanduser("~"), ".nutra"))
 USDA_DB_NAME = "usda.sqlite"
 # NOTE: NT_DB_NAME = "nt.sqlite3" is defined in ntclient.ntsqlite.sql
-DEBUG = False
-PAGING = True
 
 NTSQLITE_BUILDPATH = os.path.join(PROJECT_ROOT, "ntsqlite", "sql", NT_DB_NAME)
 NTSQLITE_DESTINATION = os.path.join(NUTRA_HOME, NT_DB_NAME)
@@ -70,12 +68,15 @@ DEFAULT_SEARCH_H_BUFFER = (
 )
 
 
-# NOTE: wip
-# class CLIConfig:
-#     def __init__(self):
-#         prop1 = True
-#         usda_sqlite
-#         nt_sqlitedriver
+class _CliConfig:
+    """Mutable global store for configuration values"""
+
+    def __init__(self, debug: bool = False, paging: bool = True) -> None:
+        self.debug = debug
+        self.paging = paging
+
+
+CLI_CONFIG = _CliConfig()
 
 
 # TODO:
@@ -92,9 +93,11 @@ def set_flags(args: argparse.Namespace) -> None:
         from main (after arg parse). Accessible throughout package.
         Must be re-imported globally.
     """
-    global DEBUG, PAGING  # pylint: disable=global-statement
-    DEBUG = args.debug
-    PAGING = not args.no_pager
+    debug = args.debug
+    paging = not args.no_pager
 
-    if DEBUG:
+    CLI_CONFIG.debug = debug
+    CLI_CONFIG.paging = paging
+
+    if CLI_CONFIG.debug:
         print("Console size: %sh x %sw" % (BUFFER_HT, BUFFER_WD))

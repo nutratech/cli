@@ -15,6 +15,7 @@ import argcomplete
 from colorama import init as colorama_init
 
 from ntclient import (
+    CLI_CONFIG,
     __db_target_nt__,
     __db_target_usda__,
     __email__,
@@ -29,7 +30,7 @@ from ntclient.utils.exceptions import SqlException
 colorama_init()
 
 
-def build_argparser() -> argparse.ArgumentParser:
+def build_arg_parser() -> argparse.ArgumentParser:
     """Adds all subparsers and parsing logic"""
 
     arg_parser = argparse.ArgumentParser(prog=__title__)
@@ -63,7 +64,7 @@ def main(args: list = None) -> int:
     """
 
     start_time = time.time()
-    arg_parser = build_argparser()
+    arg_parser = build_arg_parser()
     argcomplete.autocomplete(arg_parser)
 
     def parse_args() -> argparse.Namespace:
@@ -97,7 +98,6 @@ def main(args: list = None) -> int:
     # Build the parser, set flags
     _parser = parse_args()
     set_flags(_parser)
-    from ntclient import DEBUG  # pylint: disable=import-outside-toplevel
 
     # Try to run the function
     exit_code = 1
@@ -105,25 +105,25 @@ def main(args: list = None) -> int:
         exit_code, *_results = func(_parser)
     except SqlException as sql_exception:
         print("Issue with an sqlite database: " + repr(sql_exception))
-        if DEBUG:
+        if CLI_CONFIG.debug:
             raise
     except HTTPError as http_error:
         err_msg = "{0}: {1}".format(http_error.code, repr(http_error))
         print("Server response error, try again: " + err_msg)
-        if DEBUG:
+        if CLI_CONFIG.debug:
             raise
     except URLError as url_error:
         print("Connection error, check your internet: " + repr(url_error.reason))
-        if DEBUG:
+        if CLI_CONFIG.debug:
             raise
     except Exception as exception:  # pylint: disable=broad-except
         print("Unforeseen error, run with -d for more info: " + repr(exception))
         print("You can open an issue here: %s" % __url__)
         print("Or send me an email with the debug output: %s" % __email__)
-        if DEBUG:
+        if CLI_CONFIG.debug:
             raise
     finally:
-        if DEBUG:
+        if CLI_CONFIG.debug:
             exc_time = time.time() - start_time
             print("\nExecuted in: %s ms" % round(exc_time * 1000, 1))
             print("Exit code: %s" % exit_code)

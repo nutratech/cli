@@ -10,6 +10,7 @@ import pydoc
 from tabulate import tabulate
 
 from ntclient import (
+    CLI_CONFIG,
     DEFAULT_RESULT_LIMIT,
     DEFAULT_SEARCH_H_BUFFER,
     DEFAULT_SORT_H_BUFFER,
@@ -27,8 +28,6 @@ from ntclient.utils import NUTR_ID_KCAL, NUTR_IDS_AMINOS, NUTR_IDS_FLAVONES
 def list_nutrients() -> tuple:
     """Lists out nutrients with basic details"""
 
-    from ntclient import PAGING  # pylint: disable=import-outside-toplevel
-
     headers, nutrients = sql_nutrients_details()
     # TODO: include in SQL table cache?
     headers.append("avg_rda")
@@ -42,7 +41,7 @@ def list_nutrients() -> tuple:
             nutrient.append(None)
 
     table = tabulate(nutrients, headers=headers, tablefmt="simple")
-    if PAGING:
+    if CLI_CONFIG.paging:
         pydoc.pager(table)
     else:
         print(table)
