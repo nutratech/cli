@@ -14,6 +14,9 @@ from ntclient import (
     DEFAULT_RESULT_LIMIT,
     DEFAULT_SEARCH_H_BUFFER,
     DEFAULT_SORT_H_BUFFER,
+    NUTR_ID_KCAL,
+    NUTR_IDS_AMINOS,
+    NUTR_IDS_FLAVONES,
 )
 from ntclient.persistence.sql.usda.funcs import (
     sql_analyze_foods,
@@ -22,7 +25,6 @@ from ntclient.persistence.sql.usda.funcs import (
     sql_nutrients_overview,
     sql_sort_helper1,
 )
-from ntclient.utils import NUTR_ID_KCAL, NUTR_IDS_AMINOS, NUTR_IDS_FLAVONES
 
 
 def list_nutrients() -> tuple:

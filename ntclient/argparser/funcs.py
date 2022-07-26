@@ -14,7 +14,7 @@ from datetime import datetime
 import ntclient.services.analyze
 import ntclient.services.recipe.utils
 import ntclient.services.usda
-from ntclient.utils import Gender, activity_factor_from_float
+from ntclient import Gender, activity_factor_from_float
 
 
 def init(args: argparse.Namespace) -> tuple:

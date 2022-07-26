@@ -12,7 +12,6 @@ import time
 from urllib.error import HTTPError, URLError
 
 import argcomplete
-from colorama import init as colorama_init
 
 from ntclient import (
     CLI_CONFIG,
@@ -25,8 +24,6 @@ from ntclient import (
 )
 from ntclient.argparser import build_subcommands
 from ntclient.utils.exceptions import SqlException
-
-colorama_init()
 
 
 def build_arg_parser() -> argparse.ArgumentParser:

@@ -8,23 +8,22 @@ Created on Sun Nov 11 23:57:03 2018
 import csv
 from collections import OrderedDict
 
-from colorama import Fore, Style
 from tabulate import tabulate
 
-from ntclient import BUFFER_WD, CLI_CONFIG
-from ntclient.persistence.sql.usda.funcs import (
-    sql_analyze_foods,
-    sql_food_details,
-    sql_nutrients_overview,
-    sql_servings,
-)
-from ntclient.utils import (
+from ntclient import (
+    BUFFER_WD,
+    CLI_CONFIG,
     NUTR_ID_CARBS,
     NUTR_ID_FAT_TOT,
     NUTR_ID_FIBER,
     NUTR_ID_KCAL,
     NUTR_ID_PROTEIN,
-    RdaColors,
+)
+from ntclient.persistence.sql.usda.funcs import (
+    sql_analyze_foods,
+    sql_food_details,
+    sql_nutrients_overview,
+    sql_servings,
 )
 
 
@@ -210,11 +209,11 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
     """Formats day analysis for printing to console"""
 
     def print_header(header: str) -> None:
-        print(Fore.CYAN, end="")
+        print(CLI_CONFIG.color_default, end="")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print("--> %s" % header)
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print(Style.RESET_ALL)
+        print(CLI_CONFIG.color_reset_all)
 
     def print_macro_bar(
         _fat: float, _net_carb: float, _pro: float, _kcals_max: float, _buffer: int = 0
@@ -237,21 +236,21 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         p_buf = " " * (n_pro // 2) + "Pro" + " " * (n_pro - n_pro // 2 - 3)
         print(
             "  "
-            + Fore.YELLOW
+            + CLI_CONFIG.color_yellow
             + f_buf
-            + Fore.BLUE
+            + CLI_CONFIG.color_blue
             + c_buf
-            + Fore.RED
+            + CLI_CONFIG.color_red
             + p_buf
-            + Style.RESET_ALL
+            + CLI_CONFIG.color_reset_all
         )
 
         # Bars
         print(" <", end="")
-        print(Fore.YELLOW + "=" * n_fat, end="")
-        print(Fore.BLUE + "=" * n_car, end="")
-        print(Fore.RED + "=" * n_pro, end="")
-        print(Style.RESET_ALL + ">")
+        print(CLI_CONFIG.color_yellow + "=" * n_fat, end="")
+        print(CLI_CONFIG.color_blue + "=" * n_car, end="")
+        print(CLI_CONFIG.color_red + "=" * n_pro, end="")
+        print(CLI_CONFIG.color_reset_all + ">")
 
         # Calorie footers
         k_fat = str(round(fat * 9))
@@ -262,13 +261,13 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         p_buf = " " * (n_pro // 2) + k_pro + " " * (n_pro - n_pro // 2 - len(k_pro))
         print(
             "  "
-            + Fore.YELLOW
+            + CLI_CONFIG.color_yellow
             + f_buf
-            + Fore.BLUE
+            + CLI_CONFIG.color_blue
             + c_buf
-            + Fore.RED
+            + CLI_CONFIG.color_red
             + p_buf
-            + Style.RESET_ALL
+            + CLI_CONFIG.color_reset_all
         )
 
     def print_nute_bar(_n_id: int, amount: float, _nutrients: dict) -> tuple:
@@ -283,14 +282,14 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         attain = amount / rda
         perc = round(100 * attain, 1)
 
-        if attain >= RdaColors.THRESH_OVER.value:
-            color = RdaColors.COLOR_OVER.value
-        elif attain <= RdaColors.THRESH_CRIT.value:
-            color = RdaColors.COLOR_CRIT.value
-        elif attain <= RdaColors.THRESH_WARN.value:
-            color = RdaColors.COLOR_WARN.value
+        if attain >= CLI_CONFIG.thresh_over:
+            color = CLI_CONFIG.color_over
+        elif attain <= CLI_CONFIG.thresh_crit:
+            color = CLI_CONFIG.color_crit
+        elif attain <= CLI_CONFIG.thresh_warn:
+            color = CLI_CONFIG.color_warn
         else:
-            color = RdaColors.COLOR_DEFAULT.value
+            color = CLI_CONFIG.color_default
 
         # Print
         detail_amount = "{0}/{1} {2}".format(round(amount, 1), rda, unit).ljust(18)
@@ -300,7 +299,7 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         print(" {0}<".format(color), end="")
         print("=" * left_pos + " " * (left_index - left_pos) + ">", end="")
         print(" {0}%\t[{1}]".format(perc, detail_amount), end="")
-        print(Style.RESET_ALL)
+        print(CLI_CONFIG.color_reset_all)
 
         return True, perc
 

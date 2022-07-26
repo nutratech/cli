@@ -12,6 +12,16 @@ import os
 import platform
 import shutil
 import sys
+from enum import Enum
+
+try:
+    from colorama import Fore, Style
+    from colorama import init as colorama_init
+
+    COLORAMA_CAPABLE = True
+    colorama_init()
+except (ImportError, ModuleNotFoundError):
+    COLORAMA_CAPABLE = False
 
 from ntclient.ntsqlite.sql import NT_DB_NAME
 
@@ -44,7 +54,7 @@ PY_SYS_VER = sys.version_info[0:3]
 PY_MIN_STR = ".".join(str(x) for x in PY_MIN_VER)
 PY_SYS_STR = ".".join(str(x) for x in PY_SYS_VER)
 if PY_SYS_VER < PY_MIN_VER:
-    # TODO: make this testable with: `class CliConfig`
+    # TODO: make this testable with: `class CliConfig`?
     raise RuntimeError(
         "ERROR: %s requires Python %s or later to run" % (__title__, PY_MIN_STR),
         "HINT:  You're running Python %s" % PY_SYS_STR,
@@ -68,7 +78,51 @@ DEFAULT_SEARCH_H_BUFFER = (
 )
 
 
-# pylint: disable=too-few-public-methods
+################################################################################
+# CLI config class (settings & preferences / defaults)
+################################################################################
+class RdaColors(Enum):
+    """
+    Stores values for report colors.
+    Default values:
+        Acceptable     =Cyan
+        Overage        =Magenta (Dim)
+        Low            =Yellow
+        Critically Low =Red (Dim)
+    TODO: make configurable in SQLite or prefs.json
+    """
+
+    THRESH_WARN = 0.7
+    THRESH_CRIT = 0.4
+    THRESH_OVER = 1.9
+
+    if COLORAMA_CAPABLE:
+        COLOR_WARN = Fore.YELLOW
+        COLOR_CRIT = Style.DIM + Fore.RED
+        COLOR_OVER = Style.DIM + Fore.MAGENTA
+
+        COLOR_DEFAULT = Fore.CYAN
+
+        COLOR_RESET_ALL = Style.RESET_ALL
+
+        # Used in macro bars
+        COLOR_YELLOW = Fore.YELLOW
+        COLOR_BLUE = Fore.BLUE
+        COLOR_RED = Fore.RED
+    else:
+        COLOR_WARN = str()  # type: ignore
+        COLOR_CRIT = str()  # type: ignore
+        COLOR_OVER = str()  # type: ignore
+
+        COLOR_DEFAULT = str()  # type: ignore
+
+        COLOR_RESET_ALL = str()  # type: ignore
+
+        COLOR_YELLOW = str()  # type: ignore
+        COLOR_BLUE = str()  # type: ignore
+        COLOR_RED = str()  # type: ignore
+
+
 class _CliConfig:
     """Mutable global store for configuration values"""
 
@@ -77,7 +131,19 @@ class _CliConfig:
         self.paging = paging
 
         # TODO: respect a prefs.json, or similar config file.
-        # self.thresh_warn = Rda
+        self.thresh_warn = RdaColors.THRESH_WARN.value
+        self.thresh_crit = RdaColors.THRESH_CRIT.value
+        self.thresh_over = RdaColors.THRESH_OVER.value
+
+        self.color_warn = RdaColors.COLOR_WARN.value
+        self.color_crit = RdaColors.COLOR_CRIT.value
+        self.color_over = RdaColors.COLOR_OVER.value
+        self.color_default = RdaColors.COLOR_DEFAULT.value
+
+        self.color_reset_all = RdaColors.COLOR_RESET_ALL.value
+        self.color_yellow = RdaColors.COLOR_YELLOW.value
+        self.color_red = RdaColors.COLOR_RED.value
+        self.color_blue = RdaColors.COLOR_BLUE.value
 
     def set_flags(self, args: argparse.Namespace) -> None:
         """
@@ -97,8 +163,128 @@ class _CliConfig:
 # Create the shared instance object
 CLI_CONFIG = _CliConfig()
 
+
 # TODO:
 #  Nested nutrient tree, like:
 #       http://www.whfoods.com/genpage.php?tname=nutrientprofile&dbid=132
 #  Attempt to record errors in failed try/catch block (bottom of __main__.py)
 #  Make use of argcomplete.warn(msg) ?
+
+
+################################################################################
+# Validation Enums
+################################################################################
+class Gender(Enum):
+    """
+    A validator and Enum class for gender inputs; used in several calculations.
+    @note: floating point -1 to 1, or 0 to 1... for non-binary?
+    """
+
+    MALE = "m"
+    FEMALE = "f"
+
+
+class ActivityFactor(Enum):
+    """
+    Used in BMR calculations.
+    Different activity levels: {0.200, 0.375, 0.550, 0.725, 0.900}
+    @todo: Verify the accuracy of these "names". Access by index?
+    """
+
+    SEDENTARY = {1: 0.2}
+    MILDLY_ACTIVE = {2: 0.375}
+    ACTIVE = {3: 0.55}
+    HIGHLY_ACTIVE = {4: 0.725}
+    INTENSELY_ACTIVE = {5: 0.9}
+
+
+def activity_factor_from_float(activity_factor: int) -> float:
+    """
+    Gets ActivityFactor Enum by float value if it exists, else raise ValueError.
+    Basically just verifies the float is among the allowed values, and re-returns it.
+    """
+    for enum_entry in ActivityFactor:
+        if activity_factor in enum_entry.value:
+            return float(enum_entry.value[activity_factor])
+    # TODO: custom exception. And handle in main file?
+    raise ValueError("No such ActivityFactor for value: %s" % activity_factor)
+
+
+################################################################################
+# Nutrient IDs
+################################################################################
+NUTR_ID_KCAL = 208
+
+NUTR_ID_PROTEIN = 203
+
+NUTR_ID_CARBS = 205
+NUTR_ID_SUGAR = 269
+NUTR_ID_FIBER = 291
+
+NUTR_ID_FAT_TOT = 204
+NUTR_ID_FAT_SAT = 606
+NUTR_ID_FAT_MONO = 645
+NUTR_ID_FAT_POLY = 646
+
+NUTR_IDS_FLAVONES = [
+    710,
+    711,
+    712,
+    713,
+    714,
+    715,
+    716,
+    734,
+    735,
+    736,
+    737,
+    738,
+    731,
+    740,
+    741,
+    742,
+    743,
+    745,
+    749,
+    750,
+    751,
+    752,
+    753,
+    755,
+    756,
+    758,
+    759,
+    762,
+    770,
+    773,
+    785,
+    786,
+    788,
+    789,
+    791,
+    792,
+    793,
+    794,
+]
+
+NUTR_IDS_AMINOS = [
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509,
+    510,
+    511,
+    512,
+    513,
+    514,
+    515,
+    516,
+    517,
+    518,
+    521,
+]

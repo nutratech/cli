@@ -4,7 +4,14 @@
 import os
 import sys
 
-from colorama import Fore, Style, init
+try:
+    from colorama import Fore, Style
+    from colorama import init as colorama_init
+
+    COLORAMA_CAPABLE = True
+    colorama_init()
+except (ImportError, ModuleNotFoundError):
+    COLORAMA_CAPABLE = False
 
 chars = {"nw": "\u2514", "nws": "\u251c", "ew": "\u2500", "ns": "\u2502"}
 
@@ -15,12 +22,17 @@ strs = [
     "    ",
 ]
 
-# Colors and termination strings
-init()
-COLOR_DIR = Style.BRIGHT + Fore.BLUE
-COLOR_EXEC = Style.BRIGHT + Fore.GREEN
-COLOR_LINK = Style.BRIGHT + Fore.CYAN
-COLOR_DEAD_LINK = Style.BRIGHT + Fore.RED
+if COLORAMA_CAPABLE:
+    # Colors and termination strings
+    COLOR_DIR = Style.BRIGHT + Fore.BLUE
+    COLOR_EXEC = Style.BRIGHT + Fore.GREEN
+    COLOR_LINK = Style.BRIGHT + Fore.CYAN
+    COLOR_DEAD_LINK = Style.BRIGHT + Fore.RED
+else:
+    COLOR_DIR = str()
+    COLOR_EXEC = str()
+    COLOR_LINK = str()
+    COLOR_DEAD_LINK = str()
 
 
 def colorize(path: str, full: bool = False) -> str:
