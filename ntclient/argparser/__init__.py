@@ -193,6 +193,7 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
     calc_bmr_parser.add_argument("weight", type=float, help="weight (kg)")
     calc_bmr_parser.add_argument("height", type=float, help="height (cm)")
     calc_bmr_parser.add_argument("gender", type=str, help="m or f")
+    # TODO: optional (union) with age as int()
     calc_bmr_parser.add_argument("dob", type=str, help="date e.g. 1970-01-01")
     calc_bmr_parser.add_argument("body_fat", type=float, help="e.g. 0.16")
     calc_bmr_parser.add_argument(
@@ -201,5 +202,8 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
     calc_bmr_parser.set_defaults(func=parser_funcs.calc_bmr)
 
     # Body fat
+    calc_bf_parser = calc_subparsers.add_parser(
+        "bf", help="calculate body fat %% with Navy, 3-Site, 7-Site"
+    )
 
     # Lean body limits (young male)

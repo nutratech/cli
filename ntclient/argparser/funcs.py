@@ -153,6 +153,7 @@ def calc_body_fat(args: argparse.Namespace) -> tuple:
         "height": 178,
         "waist": 80,
         "neck": 36.8,
+        // also: hip, if FEMALE
         "chest": 5,
         "abd": 6,
         "thigh": 9,
