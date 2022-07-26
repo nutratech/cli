@@ -106,7 +106,7 @@ NUTR_IDS_AMINOS = [
 class Gender(Enum):
     """
     A validator and Enum class for gender inputs; used in several calculations.
-    NOTE: floating point -1 to 1, or 0 to 1... for non-binary?
+    @note: floating point -1 to 1, or 0 to 1... for non-binary?
     """
 
     MALE = "m"
@@ -117,7 +117,7 @@ class ActivityFactor(Enum):
     """
     Used in BMR calculations.
     Different activity levels: {0.200, 0.375, 0.550, 0.725, 0.900}
-    @todo Verify the accuracy of these "names". Access by index?
+    @todo: Verify the accuracy of these "names". Access by index?
     """
 
     SEDENTARY = {1: 0.2}
@@ -135,4 +135,5 @@ def activity_factor_from_float(activity_factor: int) -> float:
     for enum_entry in ActivityFactor:
         if activity_factor in enum_entry.value:
             return float(enum_entry.value[activity_factor])
+    # TODO: custom exception. And handle in main file?
     raise ValueError("No such ActivityFactor for value: %s" % activity_factor)
