@@ -76,29 +76,29 @@ class _CliConfig:
         self.debug = debug
         self.paging = paging
 
+        # TODO: respect a prefs.json, or similar config file.
+        # self.thresh_warn = Rda
 
+    def set_flags(self, args: argparse.Namespace) -> None:
+        """
+        Sets flags:
+          {DEBUG, PAGING}
+            from main (after arg parse). Accessible throughout package.
+            Must be re-imported globally.
+        """
+
+        self.debug = args.debug
+        self.paging = not args.no_pager
+
+        if self.debug:
+            print("Console size: %sh x %sw" % (BUFFER_HT, BUFFER_WD))
+
+
+# Create the shared instance object
 CLI_CONFIG = _CliConfig()
-
 
 # TODO:
 #  Nested nutrient tree, like:
 #       http://www.whfoods.com/genpage.php?tname=nutrientprofile&dbid=132
 #  Attempt to record errors in failed try/catch block (bottom of __main__.py)
 #  Make use of argcomplete.warn(msg) ?
-
-
-def set_flags(args: argparse.Namespace) -> None:
-    """
-    Sets flags:
-      {DEBUG, PAGING}
-        from main (after arg parse). Accessible throughout package.
-        Must be re-imported globally.
-    """
-    debug = args.debug
-    paging = not args.no_pager
-
-    CLI_CONFIG.debug = debug
-    CLI_CONFIG.paging = paging
-
-    if CLI_CONFIG.debug:
-        print("Console size: %sh x %sw" % (BUFFER_HT, BUFFER_WD))

@@ -22,7 +22,6 @@ from ntclient import (
     __title__,
     __url__,
     __version__,
-    set_flags,
 )
 from ntclient.argparser import build_subcommands
 from ntclient.utils.exceptions import SqlException
@@ -97,7 +96,7 @@ def main(args: list = None) -> int:
 
     # Build the parser, set flags
     _parser = parse_args()
-    set_flags(_parser)
+    CLI_CONFIG.set_flags(_parser)
 
     # Try to run the function
     exit_code = 1

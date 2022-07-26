@@ -20,7 +20,6 @@ from ntclient import (
     USDA_DB_NAME,
     __db_target_nt__,
     __db_target_usda__,
-    set_flags,
 )
 from ntclient.__main__ import build_arg_parser
 from ntclient.__main__ import main as nt_main
@@ -39,9 +38,10 @@ TEST_HOME = os.path.dirname(os.path.abspath(__file__))
 arg_parser = build_arg_parser()
 
 
-# NOTE: this doesn't work currently, b/c it's already read up (in imports above)
-#  We're just setting it on the shell, as an env var
-# os.environ["NUTRA_HOME"] = os.path.join(TEST_HOME, ".nutra.test")
+# TODO: attach some env props to it, and re-instantiate a CliConfig() class.
+#  We're just setting it on the shell, as an env var, before running tests in CI.
+#  e.g. the equivalent of putting this early in the __init__ file;
+#  os.environ["NUTRA_HOME"] = os.path.join(TEST_HOME, ".nutra.test")
 
 
 class TestCli(unittest.TestCase):
@@ -92,7 +92,7 @@ class TestCli(unittest.TestCase):
     def test_300_argparser_debug_no_paging(self):
         """Verifies the debug and no_paging flags are set"""
         args = arg_parser.parse_args(args=["-d", "--no-pager"])
-        set_flags(args)
+        CLI_CONFIG.set_flags(args)
 
         assert args.debug is True
         assert args.no_pager is True
@@ -111,7 +111,7 @@ class TestCli(unittest.TestCase):
 
         # Nutrients ( and `--no-pager` flag)
         args = arg_parser.parse_args(args=["--no-pager", "nt"])
-        set_flags(args)  # unnecessary due to already happening, but hey
+        CLI_CONFIG.set_flags(args)  # unnecessary due to already happening, but hey
         code, result = args.func()
         assert code == 0
         assert len(result) == 186
