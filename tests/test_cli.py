@@ -211,8 +211,10 @@ class TestCli(unittest.TestCase):
 
         # Invalid range for dos_remedios (11 instead of 12)
         args = arg_parser.parse_args(args=["calc", "1rm", "225", "11"])
-        code, _ = args.func(args)
+        code, result = args.func(args)
         assert code == 0
+        assert set(result.keys()) == {"epley", "brzycki", "dos_remedios"}
+        assert "errMsg" in result["dos_remedios"]
 
         # BMR
         # --------------------
