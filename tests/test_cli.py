@@ -190,6 +190,11 @@ class TestCli(unittest.TestCase):
         code, _ = args.func(args)
         assert code == 0
         # Body fat
+        args = arg_parser.parse_args(
+            args="calc bf m 29 178 80 36.8 0 5 6 9 6 8 7 4".split()
+        )
+        code, _ = args.func(args)
+        assert code == 0
 
     def test_415_invalid_path_day_throws_error(self):
         """Ensures invalid path throws exception in `day` subcommand"""

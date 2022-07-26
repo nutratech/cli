@@ -203,9 +203,40 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
 
     # Body fat
     calc_bf_parser = calc_subparsers.add_parser(
-        "bf", help="calculate body fat %% with Navy, 3-Site, 7-Site"
+        "bf",
+        help="calculate body fat %% with Navy, 3-Site, 7-Site",
     )
     calc_bf_parser.add_argument("gender", type=str, help="m or f")
-    calc_bf_parser.add_argument("age", type=int, help="integer, e.g. 95")
+    calc_bf_parser.add_argument("age", type=int, help="e.g. 95")
+    calc_bf_parser.add_argument("height", type=float, help="height (cm), e.g. 179.5")
+
+    calc_bf_parser.add_argument("waist", type=float, help="waist (cm)")
+    calc_bf_parser.add_argument("neck", type=float, help="neck circumference (cm)")
+    calc_bf_parser.add_argument("hip", type=float, help="hip (cm) [FEMALE only]")
+
+    calc_bf_parser.add_argument(
+        "chest",
+        type=int,
+        help="pectoral (mm) -[3-Site skin caliper measurement]",
+    )
+    calc_bf_parser.add_argument(
+        "abd", type=int, help="abdominal (mm) [3-Site skin caliper measurement]"
+    )
+    calc_bf_parser.add_argument(
+        "thigh", type=int, help="thigh (mm) --- [3-Site skin caliper measurement]"
+    )
+    calc_bf_parser.add_argument(
+        "tricep", type=int, help="triceps (mm) - [7-Site skin caliper measurement]"
+    )
+    calc_bf_parser.add_argument(
+        "sub", type=int, help="sub (mm) ----- [7-Site skin caliper measurement]"
+    )
+    calc_bf_parser.add_argument(
+        "sup", type=int, help="sup (mm) ----- [7-Site skin caliper measurement]"
+    )
+    calc_bf_parser.add_argument(
+        "mid", type=int, help="mid (mm) ----- [7-Site skin caliper measurement]"
+    )
+    calc_bf_parser.set_defaults(func=parser_funcs.calc_body_fat)
 
     # Lean body limits (young male)

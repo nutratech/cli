@@ -165,7 +165,7 @@ def calc_body_fat(args: argparse.Namespace) -> tuple:
     """
 
     gender = Gender(args.gender)
-    dob = int(args.dob)  # unix timestamp
+    age = int(args.age)  # in years
     height = float(args.height)  # cm
 
     waist = float(args.waist)  # cm
@@ -175,16 +175,16 @@ def calc_body_fat(args: argparse.Namespace) -> tuple:
         hip = 0.0  # placeholder value, not used anyway in this case
     neck = float(args.neck)  # cm
 
-    chest = float(args.chest)  # mm
-    abd = float(args.abd)  # mm
-    thigh = float(args.thigh)  # mm
-    tricep = float(args.tricep)  # mm
-    sub = float(args.sub)  # mm
-    sup = float(args.sup)  # mm
-    mid = float(args.mid)  # mm
+    chest = int(args.chest)  # mm
+    abd = int(args.abd)  # mm
+    thigh = int(args.thigh)  # mm
+    tricep = int(args.tricep)  # mm
+    sub = int(args.sub)  # mm
+    sup = int(args.sup)  # mm
+    mid = int(args.mid)  # mm
 
     print(
-        gender, dob, height, waist, hip, neck, chest, abd, thigh, tricep, sub, sup, mid
+        gender, age, height, waist, hip, neck, chest, abd, thigh, tricep, sub, sup, mid
     )
     print("Not implemented yet.")
     print("TODO: transfer service logic from server repository over here.")
