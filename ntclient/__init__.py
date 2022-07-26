@@ -188,6 +188,23 @@ class ActivityFactor(Enum):
     """
     Used in BMR calculations.
     Different activity levels: {0.200, 0.375, 0.550, 0.725, 0.900}
+
+    Activity Factor\n
+    ------------------------\n
+    0.200 = sedentary (little or no exercise)
+
+    0.375 = lightly active
+        (light exercise/sports 1-3 days/week, approx. 590 Cal/day)
+
+    0.550 = moderately active
+        (moderate exercise/sports 3-5 days/week, approx. 870 Cal/day)
+
+    0.725 = very active
+        (hard exercise/sports 6-7 days a week, approx. 1150 Cal/day)
+
+    0.900 = extremely active
+        (very hard exercise/sports and physical job, approx. 1580 Cal/day)
+
     @todo: Verify the accuracy of these "names". Access by index?
     """
 

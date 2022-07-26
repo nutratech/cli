@@ -10,10 +10,11 @@ import argparse
 import math
 from datetime import datetime
 
+from ntclient import Gender
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 1 rep max
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-from ntclient import Gender, activity_factor_from_index
 
 common_n_reps = (1, 2, 3, 5, 6, 8, 10, 12, 15, 20)
 
@@ -114,19 +115,20 @@ def orm_dos_remedios(weight: float, reps: int) -> dict:
 # BMR
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # TODO: write true service level calls, which accepts: lbm | (weight & body_fat)
-def bmr_katch_mcardle(activity_factor: float, args: argparse.Namespace) -> dict:
+def bmr_katch_mcardle(
+    activity_factor: float, weight: float, args: argparse.Namespace
+) -> dict:
     """
-    @param lbm: lean mass in kg
-    @param activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
-
     BMR = 370 + (21.6 x Lean Body Mass(kg) )
 
     Source: https://www.calculatorpro.com/calculator/katch-mcardle-bmr-calculator/
     Source: https://tdeecalculator.net/about.php
+
+    @param activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
+    @param weight: kg
+    @param args: Namespace containing: body_fat (to calculate lean mass in kg)
     """
 
-    weight = float(args.weight)  # kg
-    print("Weight: %s kg" % weight)
     body_fat = float(args.body_fat)
     print("Body fat: %s %%" % (body_fat * 100))
 
@@ -140,15 +142,17 @@ def bmr_katch_mcardle(activity_factor: float, args: argparse.Namespace) -> dict:
     }
 
 
-def bmr_cunningham(activity_factor: float, args: argparse.Namespace) -> dict:
+def bmr_cunningham(
+    activity_factor: float, weight: float, args: argparse.Namespace
+) -> dict:
     """
-    @param args: must contain weight & body_fat (to calculate lean mass in kg)
-    @param activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
-
     Source: https://www.slideshare.net/lsandon/weight-management-in-athletes-lecture
+
+    @param activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
+    @param weight: kg
+    @param args: Namespace containing: body_fat (to calculate lean mass in kg)
     """
 
-    weight = float(args.weight)
     body_fat = float(args.body_fat)
 
     lbm = weight * (1 - body_fat)
@@ -161,32 +165,18 @@ def bmr_cunningham(activity_factor: float, args: argparse.Namespace) -> dict:
     }
 
 
-def bmr_mifflin_st_jeor(activity_factor: float, args: argparse.Namespace) -> dict:
+def bmr_mifflin_st_jeor(
+    activity_factor: float, weight: float, args: argparse.Namespace
+) -> dict:
     """
-    @param args: Must contain
+    Source: https://www.myfeetinmotion.com/mifflin-st-jeor-equation/
+
+    @param activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
+    @param weight: kg
+    @param args: Namespace containing:
         gender: {'MALE', 'FEMALE'}
-        weight: kg
         height: cm
         age: float (years)
-    @param activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
-
-    Activity Factor\n
-    ---------------\n
-    0.200 = sedentary (little or no exercise)
-
-    0.375 = lightly active
-        (light exercise/sports 1-3 days/week, approx. 590 Cal/day)
-
-    0.550 = moderately active
-        (moderate exercise/sports 3-5 days/week, approx. 870 Cal/day)
-
-    0.725 = very active
-        (hard exercise/sports 6-7 days a week, approx. 1150 Cal/day)
-
-    0.900 = extra active
-        (very hard exercise/sports and physical job, approx. 1580 Cal/day)
-
-    Source: https://www.myfeetinmotion.com/mifflin-st-jeor-equation/
     """
 
     def gender_specific_bmr(_gender: Gender, _bmr: float) -> float:
@@ -200,7 +190,6 @@ def bmr_mifflin_st_jeor(activity_factor: float, args: argparse.Namespace) -> dic
     print()
     print("Gender: %s" % gender)
 
-    weight = float(args.weight)
     height = float(args.height)
     print("Height: %s cm" % height)
     age = float(args.age)
@@ -219,15 +208,9 @@ def bmr_mifflin_st_jeor(activity_factor: float, args: argparse.Namespace) -> dic
 
 
 def bmr_harris_benedict(
-    gender: Gender, weight: float, height: float, dob: int, _activity_factor: int
+    activity_factor: float, weight: float, args: argparse.Namespace
 ) -> dict:
     """
-    @param gender: MALE, FEMALE
-    @param weight: kg
-    @param height: cm
-    @param dob: int, unix timestamp (seconds)
-    @param _activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
-
     Harris-Benedict = (13.397m + 4.799h - 5.677a) + 88.362 (MEN)
 
     Harris-Benedict = (9.247m + 3.098h - 4.330a) + 447.593 (WOMEN)
@@ -235,12 +218,21 @@ def bmr_harris_benedict(
     m: mass (kg), h: height (cm), a: age (years)
 
     Source: https://tdeecalculator.net/about.php
+
+    @param activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
+    @param weight: kg
+    @param args: Namespace containing:
+        gender: {'MALE', 'FEMALE'}
+        height: cm
+        age: float (years)
     """
-    activity_factor = activity_factor_from_index(_activity_factor)
+
+    gender = Gender.FEMALE if args.female_gender else Gender.MALE
+
+    height = float(args.height)
+    age = float(args.age)
 
     def gender_specific_bmr(_gender: Gender) -> float:
-        age = _age(dob)
-
         _gender_specific_bmr = {
             Gender.MALE: (13.397 * weight + 4.799 * height - 5.677 * age) + 88.362,
             Gender.FEMALE: (9.247 * weight + 3.098 * height - 4.330 * age) + 447.593,
@@ -389,6 +381,92 @@ def bf_7site(gender: Gender, args: argparse.Namespace) -> float:
     }
 
     return round(495 / _gender_specific_denominator[gender] - 450, 2)
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Lean body limits (young men)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def lbl_berkhan(height: float) -> dict:
+    """
+    Calculate Martin Berkhan's lean body limit for young men.
+
+    Source: https://rippedbody.com/maximum-muscular-potential/
+
+    @param height: cm
+    @return: {"condition": "...", weight_range: "abc ~ xyz"}
+    """
+
+    _min = round((height - 102) * 2.205, 1)
+    _max = round((height - 98) * 2.205, 1)
+    return {"condition": "Contest shape (5-6%)", "weight": f"{_min} ~ {_max} lbs"}
+
+
+def lbl_eric_helms(height: float, args: argparse.Namespace) -> dict:
+    """
+    Calculate Eric Helm's lean body limit for young men.
+
+    Source:
+
+    @param height: cm
+    @param args: Namespace containing desired_bf, e.g. 0.12
+    @return: {"condition": "...", weight_range: "abc ~ xyz"}
+    """
+
+    try:
+        desired_bf = float(args.desired_bf)
+    except (KeyError, TypeError):
+        return {"errMsg": "Eric Helms failed, requires: height, desired_bf."}
+
+    _min = round(4851.00 * height * 0.01 * height * 0.01 / (100.0 - desired_bf), 1)
+    _max = round(5402.25 * height * 0.01 * height * 0.01 / (100.0 - desired_bf), 1)
+    return {
+        "condition": f"{desired_bf}% body fat",
+        "weight": f"{_min} ~ {_max} lbs",
+    }
+
+
+def lbl_casey_butt(height: float, args: argparse.Namespace) -> dict:
+    """
+    Calculate Casey Butt's lean body limit for young men. Includes muscle measurements.
+    Some may find these controversial.
+
+    Source: https://fastfoodmacros.com/maximum-muscular-potential-calculator.asp
+
+    @param height: cm
+    @param args: Namespace containing desired_bf, weight, ankle & wrist circumference.
+    @return: dict with lbm, weight, and maximum measurements for muscle groups.
+    """
+
+    try:
+        desired_bf = float(args.desired_bf)
+
+        wrist = float(args.wrist) / 2.54  # convert cm --> inches
+        ankle = float(args.ankle) / 2.54  # convert cm --> inches
+    except (KeyError, TypeError):
+        return {
+            "errMsg": "Casey Butt failed, requires: height, desired_bf, weight, ankle."
+        }
+
+    lbm = round(
+        height ** (3 / 2)
+        * (math.sqrt(wrist) / 22.6670 + math.sqrt(ankle) / 17.0104)
+        * (1 + desired_bf / 224),
+        1,
+    )
+
+    weight = round(lbm / (1 - desired_bf / 100), 1)
+
+    return {
+        "condition": f"{desired_bf}% body fat",
+        "weight": f"{weight} lbs",
+        "lbm": f"{lbm} lbs",
+        "chest": round(1.6817 * weight + 1.3759 * ankle + 0.3314 * height, 2),
+        "arm": round(1.2033 * weight + 0.1236 * height, 2),
+        "forearm": round(0.9626 * weight + 0.0989 * height, 2),
+        "neck": round(1.1424 * weight + 0.1236 * height, 2),
+        "thigh": round(1.3868 * ankle + 0.1805 * height, 2),
+        "calf": round(0.9298 * ankle + 0.1210 * height, 2),
+    }
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -8,6 +8,7 @@ Created on Sat Jul 18 16:30:28 2020 -0400
 @author: shane
 """
 import argparse
+import json
 import os
 import traceback
 
@@ -116,6 +117,7 @@ def calc_1rm(args: argparse.Namespace) -> tuple:
 
     result = {"epley": _epley, "brzycki": _brzycki, "dos_remedios": _dos_remedios}
 
+    # TODO: fourth column: average or `avg` column too.
     # Prepare table rows, to display all 3 results in one table
     _all = []
     for _rep in _epley.keys():
@@ -156,16 +158,44 @@ def calc_bmr(args: argparse.Namespace) -> tuple:
     """
 
     activity_factor = activity_factor_from_index(args.activity_factor)
+    print("Activity factor: %s" % activity_factor)
+    weight = float(args.weight)  # kg
+    print("Weight: %s kg" % weight)
 
     # TODO: require these all for any? Or do exception handling & optional args like bf?
-    _katch_mcardle = calc.bmr_katch_mcardle(activity_factor, args=args)
-    _cunningham = calc.bmr_cunningham(activity_factor, args=args)
-    _mifflin_st_jeor = calc.bmr_mifflin_st_jeor(activity_factor, args=args)
+    try:
+        _katch_mcardle = calc.bmr_katch_mcardle(activity_factor, weight, args=args)
+    except (KeyError, TypeError, ValueError):
+        _katch_mcardle = {
+            "errMsg": "Katch McArdle failed, requires: "
+            "activity_factor, weight, body_fat."
+        }
+    try:
+        _cunningham = calc.bmr_cunningham(activity_factor, weight, args=args)
+    except (KeyError, TypeError, ValueError):
+        _cunningham = {
+            "errMsg": "Cunningham failed, requires: activity_factor, weight, body_fat."
+        }
+    try:
+        _mifflin_st_jeor = calc.bmr_mifflin_st_jeor(activity_factor, weight, args=args)
+    except (KeyError, TypeError, ValueError):
+        _mifflin_st_jeor = {
+            "errMsg": "Mifflin St Jeor failed, requires: "
+            "activity_factor, weight, gender, height, & age."
+        }
+    try:
+        _harris_benedict = calc.bmr_harris_benedict(activity_factor, weight, args=args)
+    except (KeyError, TypeError, ValueError):
+        _harris_benedict = {
+            "errMsg": "Harris Benedict failed, requires: "
+            "activity_factor, weight, gender, height, & age."
+        }
 
     result = {
         "katch_mcardle": _katch_mcardle,
         "cunningham": _cunningham,
         "mifflin_st_jeor": _mifflin_st_jeor,
+        "harris_benedict": _harris_benedict,
     }
 
     # Prepare the table for printing
@@ -246,3 +276,54 @@ def calc_body_fat(args: argparse.Namespace) -> tuple:
     print(_table)
 
     return 0, {"navy": _navy, "threeSite": _3site, "sevenSite": _7site}
+
+
+def calc_lbm_limits(args: argparse.Namespace) -> tuple:
+    """
+    Perform body fat calculations for Navy, 3-Site, and 7-Site.
+
+    Example POST.
+    {
+        "height": 179,
+        "desired-bf": 12,
+        "wrist": 17.2,
+        "ankle": 21.5
+    }
+    """
+
+    height = float(args.height)
+
+    # Perform calculations & handle errors
+    _berkhan = calc.lbl_berkhan(height)
+    _eric_helms = calc.lbl_eric_helms(height, args)
+    _casey_butt = calc.lbl_casey_butt(height, args)
+
+    result = {"berkhan": _berkhan, "helms": _eric_helms, "casey": _casey_butt}
+    print(json.dumps(result, indent=2))
+
+    headers = ["Property", "Berkhan", "Helms", "Casey"]
+    _keys = [
+        "condition",
+        "weight",
+        "lbm",
+        "chest",
+        "arm",
+        "forearm",
+        "neck",
+        "thigh",
+        "calf",
+    ]
+    rows = []
+    for _key in _keys:
+        for _calc, _values in result.items():
+            print(_calc)
+            print(_values)
+            row = [_calc]
+            for _key, _value in _values.items():
+                row.append(_value)
+            rows.append(row)
+
+    _table = tabulate(rows, headers=headers, tablefmt="simple")
+    print(_table)
+
+    return 0, result

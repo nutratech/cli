@@ -14,6 +14,7 @@ from ntclient.argparser import types
 # noinspection PyUnresolvedReferences,PyProtectedMember
 def build_subcommands(subparsers: argparse._SubParsersAction) -> None:
     """Attaches subcommands to main parser"""
+
     build_init_subcommand(subparsers)
     build_nt_subcommand(subparsers)
     build_search_subcommand(subparsers)
@@ -30,6 +31,7 @@ def build_subcommands(subparsers: argparse._SubParsersAction) -> None:
 # noinspection PyUnresolvedReferences,PyProtectedMember
 def build_init_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Self running init command"""
+
     init_parser = subparsers.add_parser(
         "init", help="setup profiles, USDA and NT database"
     )
@@ -45,6 +47,7 @@ def build_init_subcommand(subparsers: argparse._SubParsersAction) -> None:
 # noinspection PyUnresolvedReferences,PyProtectedMember
 def build_nt_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Lists out nutrients details with computed totals and averages"""
+
     nutrient_parser = subparsers.add_parser(
         "nt", help="list out nutrients and their info"
     )
@@ -54,6 +57,7 @@ def build_nt_subcommand(subparsers: argparse._SubParsersAction) -> None:
 # noinspection PyUnresolvedReferences,PyProtectedMember
 def build_search_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Search: terms [terms ... ]"""
+
     search_parser = subparsers.add_parser(
         "search", help="search foods by name, list overview info"
     )
@@ -81,7 +85,9 @@ def build_search_subcommand(subparsers: argparse._SubParsersAction) -> None:
 # noinspection PyUnresolvedReferences,PyProtectedMember
 def build_sort_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Sort foods ranked by nutr_id, per 100g or 200kcal"""
+
     sort_parser = subparsers.add_parser("sort", help="sort foods by nutrient ID")
+
     sort_parser.add_argument(
         "-c",
         dest="kcal",
@@ -102,7 +108,9 @@ def build_sort_subcommand(subparsers: argparse._SubParsersAction) -> None:
 # noinspection PyUnresolvedReferences,PyProtectedMember
 def build_analyze_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Analyzes (foods only for now)"""
+
     analyze_parser = subparsers.add_parser("anl", help="analyze food(s)")
+
     analyze_parser.add_argument(
         "-g",
         dest="grams",
@@ -116,6 +124,7 @@ def build_analyze_subcommand(subparsers: argparse._SubParsersAction) -> None:
 # noinspection PyUnresolvedReferences,PyProtectedMember
 def build_day_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Analyzes a DAY.csv, uses new colored progress bar spec"""
+
     day_parser = subparsers.add_parser(
         "day", help="analyze a DAY.csv file, RDAs optional"
     )
@@ -139,12 +148,15 @@ def build_day_subcommand(subparsers: argparse._SubParsersAction) -> None:
 # noinspection PyUnresolvedReferences,PyProtectedMember
 def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """View, add, edit, delete recipes"""
+
     recipe_parser = subparsers.add_parser("recipe", help="list and analyze recipes")
     recipe_parser.set_defaults(func=parser_funcs.recipes)
 
     recipe_subparsers = recipe_parser.add_subparsers(title="recipe subcommands")
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Init
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     recipe_init_parser = recipe_subparsers.add_parser(
         "init", help="create recipe folder, copy stock data in"
     )
@@ -156,7 +168,9 @@ def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
     )
     recipe_init_parser.set_defaults(func=parser_funcs.recipes_init)
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Analyze
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # TODO: tab-completion for not just cwd, but also inject for RECIPE_HOME
     # TODO: support analysis for multiple file path(s) in one call
     recipe_anl_parser = recipe_subparsers.add_parser(
@@ -171,6 +185,7 @@ def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
 # noinspection PyUnresolvedReferences,PyProtectedMember
 def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """BMR, 1 rep-max, and other calculators"""
+
     calc_parser = subparsers.add_parser(
         "calc", help="find you 1 rep max, body fat, BMR"
     )
@@ -178,7 +193,9 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
     calc_subparsers = calc_parser.add_subparsers(title="recipe subcommands")
     calc_parser.set_defaults(func=calc_parser.print_help)
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # 1-rep max
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     calc_1rm_parser = calc_subparsers.add_parser(
         "1rm", help="calculate 1 rep maxes, by different equations"
     )
@@ -186,26 +203,34 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
     calc_1rm_parser.add_argument("reps", type=int, help="number of reps performed")
     calc_1rm_parser.set_defaults(func=parser_funcs.calc_1rm)
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # BMR
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     calc_bmr_parser = calc_subparsers.add_parser(
         "bmr", help="calculate BMR and TDEE values"
     )
-    calc_bmr_parser.add_argument("weight", type=float, help="weight (kg)")
-    calc_bmr_parser.add_argument("height", type=float, help="height (cm)")
     calc_bmr_parser.add_argument(
         "-F", dest="female_gender", action="store_true", help="Female gender"
     )
-    # TODO: optional (union) with age as int()
+    # TODO: optional (union) with age / dob
+    calc_bmr_parser.add_argument("-a", type=str, dest="age", help="e.g. 95")
+    calc_bmr_parser.add_argument("-ht", type=float, dest="height", help="height (cm)")
+    calc_bmr_parser.add_argument("-bf", dest="body_fat", type=float, help="e.g. 0.16")
     calc_bmr_parser.add_argument(
-        "-a", type=str, dest="age", required=True, help="e.g. 95"
+        "-wt", dest="weight", type=float, required=True, help="weight (kg)"
     )
-    calc_bmr_parser.add_argument("body_fat", type=float, help="e.g. 0.16")
     calc_bmr_parser.add_argument(
-        "activity_factor", type=int, help="1 thru 5, sedentary thru intense"
+        "-x",
+        type=int,
+        dest="activity_factor",
+        required=True,
+        help="1 thru 5, sedentary thru intense",
     )
     calc_bmr_parser.set_defaults(func=parser_funcs.calc_bmr)
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Body fat
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     calc_bf_parser = calc_subparsers.add_parser(
         "bf",
         help="calculate body fat %% with Navy, 3-Site, 7-Site",
@@ -272,4 +297,23 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
     )
     calc_bf_parser.set_defaults(func=parser_funcs.calc_body_fat)
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Lean body limits (young male)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    calc_lbl_parser = calc_subparsers.add_parser(
+        "lbl", help="lean body limits (young, male)"
+    )
+    calc_lbl_parser.add_argument("height", type=float, help="height (cm)")
+    calc_lbl_parser.add_argument(
+        "desired_bf",
+        type=float,
+        nargs="?",
+        help="e.g. 0.12 -[eric_helms & casey_butt]",
+    )
+    calc_lbl_parser.add_argument(
+        "wrist", type=float, nargs="?", help="wrist (cm) [casey_butt]"
+    )
+    calc_lbl_parser.add_argument(
+        "ankle", type=float, nargs="?", help="ankle (cm) [casey_butt]"
+    )
+    calc_lbl_parser.set_defaults(func=parser_funcs.calc_lbm_limits)
