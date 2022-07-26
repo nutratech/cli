@@ -145,7 +145,7 @@ def calc_bmr(args: argparse.Namespace) -> tuple:
 
 def calc_body_fat(args: argparse.Namespace) -> tuple:
     """
-    Perform BMR & TDEE calculations
+    Perform body fat calculations for Navy, 3-Site, and 7-Site.
 
     Example POST. @note FEMALE, also includes "hip" (cm)
     {
@@ -179,41 +179,23 @@ def calc_body_fat(args: argparse.Namespace) -> tuple:
     try:
         _3site = calc.bf_3site(gender, args)
     except (TypeError, ValueError):
+        print(
+            "WARN: 3-Site failed, requires: gender, age, chest (mm), "
+            "abdominal (mm), and thigh (mm)."
+        )
         _3site = 0.0
     try:
         _7site = calc.bf_7site(gender, args)
     except (TypeError, ValueError):
+        print(
+            "WARN: 7-Site failed, requires: gender, age, chest (mm), "
+            "abdominal (mm), thigh (mm), tricep (mm), sub (mm), sup (mm), and mid (mm)."
+        )
         _7site = 0.0
 
     print()
     print("Navy: %s%%" % _navy)
     print("3-Site: %s%%" % _3site)
     print("7-Site: %s%%" % _7site)
-
-    # age = int(args.age)  # in years
-    # height = float(args.height)  # cm
-    #
-    # waist = float(args.waist)  # cm
-    # if gender == Gender.FEMALE:
-    #     hip = float(args.hip)  # cm
-    # else:
-    #     hip = 0.0  # placeholder value, not used anyway in this case
-    # neck = float(args.neck)  # cm
-    #
-    # chest = int(args.chest)  # mm
-    # abd = int(args.abd)  # mm
-    # thigh = int(args.thigh)  # mm
-    # tricep = int(args.tricep)  # mm
-    # sub = int(args.sub)  # mm
-    # sup = int(args.sup)  # mm
-    # mid = int(args.mid)  # mm
-    #
-    # print(
-    #     gender, age, height, waist, hip, neck,
-    #     chest, abd, thigh, tricep, sub, sup, mid
-    # )
-    # print("Not implemented yet.")
-    # print("TODO: transfer service logic from server repository over here.")
-    # print("TODO: add test in section: nt / arg parser.")
 
     return 0, {"navy": _navy}
