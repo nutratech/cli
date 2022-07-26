@@ -114,25 +114,30 @@ def calc_1rm(args: argparse.Namespace) -> tuple:
     _brzycki = calc.orm_brzycki(weight, reps)
     _dos_remedios = calc.orm_dos_remedios(weight, reps)
 
-    print("EPLEY")
-    _epley_table = tabulate(
-        list(_epley.items()), headers=["reps", "epley"], tablefmt="simple"
-    )
-    print(_epley_table)
+    result = {"epley": _epley, "brzycki": _brzycki, "dos_remedios": _dos_remedios}
 
-    print("BRZYCKI")
-    _brzycki_table = tabulate(
-        list(_brzycki.items()), headers=["reps", "brzycki"], tablefmt="simple"
-    )
-    print(_brzycki_table)
+    # Prepare table rows, to display all 3 results in one table
+    _all = []
+    for _rep in _epley.keys():
+        row = [_rep]
+        for _calc, _values in result.items():
+            try:
+                # Round down for now
+                row.append(int(_values[_rep]))
+            except KeyError:
+                row.append(None)
+        _all.append(row)
 
-    print("DOS REMEDIOS")
-    _dos_remedios_table = tabulate(
-        list(_dos_remedios.items()), headers=["reps", "dos_remedios"], tablefmt="simple"
-    )
-    print(_dos_remedios_table)
+    # Print results
+    print()
+    print("Results for: epley, brzycki, and dos_remedios")
+    if "errMsg" in _dos_remedios:
+        print("WARN: Dos Remedios failed: %s" % _dos_remedios["errMsg"])
+    print()
+    _table = tabulate(_all, headers=["n", "epl", "brz", "rmds"])
+    print(_table)
 
-    return 0, {"epley": _epley, "brzycki": _brzycki, "dos_remedios": _dos_remedios}
+    return 0, result
 
 
 def calc_bmr(args: argparse.Namespace) -> tuple:

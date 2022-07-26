@@ -209,6 +209,11 @@ class TestCli(unittest.TestCase):
         code, _ = args.func(args)
         assert code == 0
 
+        # Invalid range for dos_remedios (11 instead of 12)
+        args = arg_parser.parse_args(args=["calc", "1rm", "225", "11"])
+        code, _ = args.func(args)
+        assert code == 0
+
         # BMR
         # --------------------
         args = arg_parser.parse_args(args="calc bmr -a 29 75 179 0.11 3".split())
