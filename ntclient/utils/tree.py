@@ -10,7 +10,7 @@ try:
 
     COLORAMA_CAPABLE = True
     colorama_init()
-except (ImportError, ModuleNotFoundError):
+except ImportError:
     COLORAMA_CAPABLE = False
 
 chars = {"nw": "\u2514", "nws": "\u251c", "ew": "\u2500", "ns": "\u2502"}

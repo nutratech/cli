@@ -20,7 +20,7 @@ try:
 
     COLORAMA_CAPABLE = True
     colorama_init()
-except (ImportError, ModuleNotFoundError):
+except ImportError:
     COLORAMA_CAPABLE = False
 
 from ntclient.ntsqlite.sql import NT_DB_NAME
