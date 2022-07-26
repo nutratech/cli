@@ -13,7 +13,7 @@ from datetime import datetime
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 1 rep max
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-from ntclient import Gender, activity_factor_from_float
+from ntclient import Gender, activity_factor_from_index
 
 common_n_reps = (1, 2, 3, 5, 6, 8, 10, 12, 15, 20)
 
@@ -113,7 +113,7 @@ def orm_dos_remedios(reps: int, weight: float) -> dict:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # BMR
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def bmr_katch_mcardle(lbm: float, _activity_factor: float) -> dict:
+def bmr_katch_mcardle(lbm: float, _activity_factor: int) -> dict:
     """
     @param lbm: lean mass in kg
     @param _activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
@@ -126,7 +126,7 @@ def bmr_katch_mcardle(lbm: float, _activity_factor: float) -> dict:
     # Validate it conforms to one of the enum values
     # TODO: return 400s in cases like this, not 500
     # NOTE: is this necessary if it's also done in the controller?
-    activity_factor = activity_factor_from_float(_activity_factor)
+    activity_factor = activity_factor_from_index(_activity_factor)
 
     bmr = 370 + (21.6 * lbm)
     tdee = bmr * (1 + activity_factor)
@@ -137,14 +137,14 @@ def bmr_katch_mcardle(lbm: float, _activity_factor: float) -> dict:
     }
 
 
-def bmr_cunningham(lbm: float, _activity_factor: float) -> dict:
+def bmr_cunningham(lbm: float, _activity_factor: int) -> dict:
     """
     @param lbm: lean mass in kg
     @param _activity_factor: {0.200, 0.375, 0.550, 0.725, 0.900}
 
     Source: https://www.slideshare.net/lsandon/weight-management-in-athletes-lecture
     """
-    activity_factor = activity_factor_from_float(_activity_factor)
+    activity_factor = activity_factor_from_index(_activity_factor)
 
     bmr = 500 + 22 * lbm
     tdee = bmr * (1 + activity_factor)
@@ -156,7 +156,7 @@ def bmr_cunningham(lbm: float, _activity_factor: float) -> dict:
 
 
 def bmr_mifflin_st_jeor(
-    gender: Gender, weight: float, height: float, dob: int, _activity_factor: float
+    gender: Gender, weight: float, height: float, dob: int, _activity_factor: int
 ) -> dict:
     """
     @param gender: {'MALE', 'FEMALE'}
@@ -183,7 +183,7 @@ def bmr_mifflin_st_jeor(
 
     Source: https://www.myfeetinmotion.com/mifflin-st-jeor-equation/
     """
-    activity_factor = activity_factor_from_float(_activity_factor)
+    activity_factor = activity_factor_from_index(_activity_factor)
 
     def gender_specific_bmr(_gender: Gender, _bmr: float) -> float:
         _second_term = {
@@ -204,7 +204,7 @@ def bmr_mifflin_st_jeor(
 
 
 def bmr_harris_benedict(
-    gender: Gender, weight: float, height: float, dob: int, _activity_factor: float
+    gender: Gender, weight: float, height: float, dob: int, _activity_factor: int
 ) -> dict:
     """
     @param gender: MALE, FEMALE
@@ -221,7 +221,7 @@ def bmr_harris_benedict(
 
     Source: https://tdeecalculator.net/about.php
     """
-    activity_factor = activity_factor_from_float(_activity_factor)
+    activity_factor = activity_factor_from_index(_activity_factor)
 
     def gender_specific_bmr(_gender: Gender) -> float:
         age = _age(dob)
@@ -286,10 +286,10 @@ def bf_navy(gender: Gender, args: argparse.Namespace) -> float:
     return round(495 / _gender_specific_denominator[gender] - 450, 2)
 
 
-def bf_3site(gender: Gender, body: dict) -> float:
+def bf_3site(gender: Gender, args: argparse.Namespace) -> float:
     """
     @param gender: MALE or FEMALE
-    @param body: dict containing age, and skin manifolds (mm) for
+    @param args: dict containing age, and skin manifolds (mm) for
         chest, abdominal, and thigh.
 
     @return: float (e.g. 0.17)
@@ -299,11 +299,11 @@ def bf_3site(gender: Gender, body: dict) -> float:
     """
 
     # Shared parameters for skin manifold 3 & 7 site tests
-    age = float(body["age"])
+    age = float(args.age)
 
-    chest = float(body["chest"])
-    abd = float(body["abd"])
-    thigh = float(body["thigh"])
+    chest = float(args.chest)
+    abd = float(args.abd)
+    thigh = float(args.thigh)
 
     # Compute values
     st3 = chest + abd + thigh
@@ -321,10 +321,10 @@ def bf_3site(gender: Gender, body: dict) -> float:
     return round(495 / _gender_specific_denominator[gender] - 450, 2)
 
 
-def bf_7site(gender: Gender, body: dict) -> float:
+def bf_7site(gender: Gender, args: argparse.Namespace) -> float:
     """
     @param gender: MALE or FEMALE
-    @param body: dict containing age, and skin manifolds (mm) for
+    @param args: dict containing age, and skin manifolds (mm) for
         chest, abdominal, thigh, triceps, sub, sup, and mid.
 
     @return: float (e.g. 0.17)
@@ -334,17 +334,17 @@ def bf_7site(gender: Gender, body: dict) -> float:
     """
 
     # Shared parameters for skin manifold 3 & 7 site tests
-    age = float(body["age"])
+    age = float(args.age)
 
-    chest = float(body["chest"])
-    abd = float(body["abd"])
-    thigh = float(body["thigh"])
+    chest = float(args.chest)
+    abd = float(args.abd)
+    thigh = float(args.thigh)
 
     # 7site-specific parameters
-    tricep = float(body["tricep"])
-    sub = float(body["sub"])
-    sup = float(body["sup"])
-    mid = float(body["mid"])
+    tricep = float(args.tricep)
+    sub = float(args.sub)
+    sup = float(args.sup)
+    mid = float(args.mid)
 
     # Compute values
     st7 = chest + abd + thigh + tricep + sub + sup + mid

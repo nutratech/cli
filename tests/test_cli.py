@@ -188,20 +188,21 @@ class TestCli(unittest.TestCase):
         assert code == 0
         # Body fat
         # Navy only
-        args = arg_parser.parse_args(args="calc bf -g m -ht 178 -w 80 -n 40".split())
+        args = arg_parser.parse_args(args="calc bf -ht 178 -w 80 -n 40".split())
         code, result = args.func(args)
         assert code == 0
         assert result["navy"] == 10.64
         # All
         args = arg_parser.parse_args(
-            args="calc bf -g m -a 29 -ht 178 -w 80 -n 40 5 6 9 6 8 7 4".split()
+            args="calc bf -a 29 -ht 178 -w 80 -n 40 5 6 9 6 8 7 4".split()
         )
         code, result = args.func(args)
         assert code == 0
         assert result["navy"] == 10.64
+        # Female test
         # TODO: better values, and don't require hip above (it's 0)
         args = arg_parser.parse_args(
-            args="calc bf -g f -a 29 -ht 178 -w 70 -hip 100 -n 35 5 6 9 6 8 7 4".split()
+            args="calc bf -f -a 29 -ht 178 -w 70 -hip 100 -n 35 5 6 9 6 8 7 4".split()
         )
         code, result = args.func(args)
         assert code == 0

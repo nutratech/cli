@@ -206,7 +206,9 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
         "bf",
         help="calculate body fat %% with Navy, 3-Site, 7-Site",
     )
-    calc_bf_parser.add_argument("-g", type=str, dest="gender", help="m or f")
+    calc_bf_parser.add_argument(
+        "-f", dest="female_gender", action="store_true", help="female gender"
+    )
     calc_bf_parser.add_argument(
         "-a", type=int, dest="age", nargs="?", help="e.g. 95 [3-Site & 7-Site]"
     )

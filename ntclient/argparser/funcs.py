@@ -14,7 +14,7 @@ from datetime import datetime
 import ntclient.services.analyze
 import ntclient.services.recipe.utils
 import ntclient.services.usda
-from ntclient import Gender, activity_factor_from_float
+from ntclient import Gender, activity_factor_from_index
 from ntclient.services import calculate as calc
 
 
@@ -133,7 +133,7 @@ def calc_bmr(args: argparse.Namespace) -> tuple:
     gender = Gender(args.gender)
     dob = datetime.fromisoformat(args.dob)  # e.g. 1970-01-01
     body_fat = float(args.body_fat)
-    activity_factor = activity_factor_from_float(args.activity_factor)
+    activity_factor = activity_factor_from_index(args.activity_factor)
 
     print(weight, height, gender, dob, body_fat, activity_factor)
     print("Not implemented yet.")
@@ -165,20 +165,30 @@ def calc_body_fat(args: argparse.Namespace) -> tuple:
     }
     """
 
-    gender = Gender(args.gender)
+    gender = Gender.FEMALE if args.female_gender else Gender.MALE
     print("Gender: %s" % gender)
 
     try:
-        navy = calc.bf_navy(gender, args)
+        _navy = calc.bf_navy(gender, args)
     except (TypeError, ValueError):
         print(
             "WARN: Navy failed, requires: gender, height, waist, neck, "
             "and (if female) hip."
         )
-        navy = 0.0
+        _navy = 0.0
+    try:
+        _3site = calc.bf_3site(gender, args)
+    except (TypeError, ValueError):
+        _3site = 0.0
+    try:
+        _7site = calc.bf_7site(gender, args)
+    except (TypeError, ValueError):
+        _7site = 0.0
 
     print()
-    print("Navy: %s%%" % navy)
+    print("Navy: %s%%" % _navy)
+    print("3-Site: %s%%" % _3site)
+    print("7-Site: %s%%" % _7site)
 
     # age = int(args.age)  # in years
     # height = float(args.height)  # cm
@@ -206,4 +216,4 @@ def calc_body_fat(args: argparse.Namespace) -> tuple:
     # print("TODO: transfer service logic from server repository over here.")
     # print("TODO: add test in section: nt / arg parser.")
 
-    return 0, {"navy": navy}
+    return 0, {"navy": _navy}

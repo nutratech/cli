@@ -198,7 +198,7 @@ class ActivityFactor(Enum):
     INTENSELY_ACTIVE = {5: 0.9}
 
 
-def activity_factor_from_float(activity_factor: int) -> float:
+def activity_factor_from_index(activity_factor: int) -> float:
     """
     Gets ActivityFactor Enum by float value if it exists, else raise ValueError.
     Basically just verifies the float is among the allowed values, and re-returns it.
