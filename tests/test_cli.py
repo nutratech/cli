@@ -31,7 +31,7 @@ from ntclient.persistence.sql.nt.funcs import sql_nt_next_index
 from ntclient.persistence.sql.usda import funcs as usda_funcs
 from ntclient.persistence.sql.usda import sql as _usda_sql
 from ntclient.persistence.sql.usda import usda_ver
-from ntclient.services import init
+from ntclient.services import init, usda
 from ntclient.services.recipe import RECIPE_HOME
 from ntclient.utils.exceptions import SqlInvalidVersionError
 
@@ -49,8 +49,6 @@ class TestCli(unittest.TestCase):
     Original one-stop-shop for testing.
     @todo: integration tests.. create user, recipe, log.. analyze & compare
     """
-
-    # pylint: disable=import-outside-toplevel
 
     def test_000_init(self):
         """Tests the SQL/persistence init in real time"""
@@ -312,7 +310,6 @@ class TestCli(unittest.TestCase):
     @unittest.skip(reason="Long-running test, want to replace with more 'unit' style")
     def test_802_usda_downloads_fresh_if_missing_or_deleted(self):
         """Ensure download of usda.sqlite3.tar.xz, if usda.sqlite3 is missing"""
-        from ntclient.persistence.sql import usda
 
         # TODO: similar for nt.sqlite3?
         #  Define development standards.. rebuilding, deleting, preserving
