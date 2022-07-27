@@ -285,7 +285,7 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
     Example POST.
     {
         "height": 179,
-        "desired-bf": 12,
+        "desired-bf": 0.12,
         "wrist": 17.2,
         "ankle": 21.5
     }
@@ -301,8 +301,8 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
     result = {"berkhan": _berkhan, "helms": _eric_helms, "casey": _casey_butt}
     print(json.dumps(result, indent=2))
 
-    headers = ["Property", "Berkhan", "Helms", "Casey"]
-    _keys = [
+    headers = [
+        "eq",
         "condition",
         "weight",
         "lbm",
@@ -314,16 +314,18 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
         "calf",
     ]
     rows = []
-    for _key in _keys:
-        for _calc, _values in result.items():
-            print(_calc)
-            print(_values)
-            row = [_calc]
-            for _key, _value in _values.items():
-                row.append(_value)
-            rows.append(row)
-
-    _table = tabulate(rows, headers=headers, tablefmt="simple")
+    for _calc, _result in result.items():
+        _values = list(_result.values())
+        # row = [_calc, _values.pop(0), os.linesep.join(str(x) for x in _values)]
+        # row = [_calc, _values.pop(0), _values.pop(0)]
+        row = [_calc]
+        row.extend(_values)
+        while len(row) < len(headers):
+            row.append(str())
+        rows.append(row)
+    for row in rows:
+        print(row)
+    _table = tabulate(rows, headers=headers, tablefmt="pretty")
     print(_table)
 
     return 0, result

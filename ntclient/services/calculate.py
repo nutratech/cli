@@ -413,7 +413,7 @@ def lbl_eric_helms(height: float, args: argparse.Namespace) -> dict:
     """
 
     try:
-        desired_bf = float(args.desired_bf)
+        desired_bf = float(args.desired_bf) * 100
     except (KeyError, TypeError):
         return {"errMsg": "Eric Helms failed, requires: height, desired_bf."}
 
@@ -438,6 +438,7 @@ def lbl_casey_butt(height: float, args: argparse.Namespace) -> dict:
     """
 
     try:
+        height /= 2.54
         desired_bf = float(args.desired_bf)
 
         wrist = float(args.wrist) / 2.54  # convert cm --> inches
@@ -450,20 +451,19 @@ def lbl_casey_butt(height: float, args: argparse.Namespace) -> dict:
     lbm = round(
         height ** (3 / 2)
         * (math.sqrt(wrist) / 22.6670 + math.sqrt(ankle) / 17.0104)
-        * (1 + desired_bf / 224),
+        * (1 + desired_bf / 2.24),
         1,
     )
-
-    weight = round(lbm / (1 - desired_bf / 100), 1)
+    weight = round(lbm / (1 - desired_bf), 1)
 
     return {
-        "condition": "%s%% body fat" % desired_bf,
+        "condition": "%s%% body fat" % (desired_bf * 100),
         "weight": "%s lbs" % weight,
         "lbm": "%s lbs" % lbm,
-        "chest": round(1.6817 * weight + 1.3759 * ankle + 0.3314 * height, 2),
-        "arm": round(1.2033 * weight + 0.1236 * height, 2),
-        "forearm": round(0.9626 * weight + 0.0989 * height, 2),
-        "neck": round(1.1424 * weight + 0.1236 * height, 2),
+        "chest": round(1.6817 * wrist + 1.3759 * ankle + 0.3314 * height, 2),
+        "arm": round(1.2033 * wrist + 0.1236 * height, 2),
+        "forearm": round(0.9626 * wrist + 0.0989 * height, 2),
+        "neck": round(1.1424 * wrist + 0.1236 * height, 2),
         "thigh": round(1.3868 * ankle + 0.1805 * height, 2),
         "calf": round(0.9298 * ankle + 0.1210 * height, 2),
     }
