@@ -122,9 +122,9 @@ to include ``Scripts`` directory in your ``$PATH``.  This can be done
 manually after installation too.
 
 Windows users may also have differing results if they install for all users
-(as an administrator) vs. installing just for themselves. It may change the 
-location of installed scripts, and affect the ``$PATH`` variable being correctly
-populated for prior installs.
+(as an administrator) vs. installing just for themselves. It may change the
+location of installed scripts, and affect the ``$PATH`` variable being
+correctly populated for prior installs.
 
 Linux may need to install ``python-dev`` package to build
 ``python-Levenshtein``.
