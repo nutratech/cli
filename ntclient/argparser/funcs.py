@@ -8,7 +8,6 @@ Created on Sat Jul 18 16:30:28 2020 -0400
 @author: shane
 """
 import argparse
-import json
 import os
 import traceback
 
