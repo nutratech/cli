@@ -224,6 +224,13 @@ class TestCli(unittest.TestCase):
         code, _ = args.func(args)
         assert code == 0
 
+        # Failed / missing optional: height & body_fat (provoke exceptions)
+        args = arg_parser.parse_args(
+            args="calc bmr -a 29 -wt 75 -x 3".split()
+        )
+        code, _ = args.func(args)
+        assert code in {0, 1}
+
         # Body fat
         # -----------------------------------
 
