@@ -299,7 +299,6 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
     _casey_butt = calc.lbl_casey_butt(height, args)
 
     result = {"berkhan": _berkhan, "helms": _eric_helms, "casey": _casey_butt}
-    print(json.dumps(result, indent=2))
 
     headers = [
         "eq",
@@ -321,8 +320,7 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
         while len(row) < len(headers):
             row.append(str())
         rows.append(row)
-    for row in rows:
-        print(row)
+
     _table = tabulate(rows, headers=headers, tablefmt="pretty")
     print(_table)
 

@@ -433,7 +433,7 @@ def lbl_casey_butt(height: float, args: argparse.Namespace) -> dict:
     Source: https://fastfoodmacros.com/maximum-muscular-potential-calculator.asp
 
     @param height: cm
-    @param args: Namespace containing desired_bf, weight, ankle & wrist circumference.
+    @param args: Namespace containing desired_bf, and wrist & ankle circumference.
     @return: dict with lbm, weight, and maximum measurements for muscle groups.
     """
 
@@ -445,7 +445,7 @@ def lbl_casey_butt(height: float, args: argparse.Namespace) -> dict:
         ankle = float(args.ankle) / 2.54  # convert cm --> inches
     except (KeyError, TypeError):
         return {
-            "errMsg": "Casey Butt failed, requires: height, desired_bf, weight, ankle."
+            "errMsg": "Casey Butt failed, requires: height, desired_bf, wrist, & ankle."
         }
 
     lbm = round(
