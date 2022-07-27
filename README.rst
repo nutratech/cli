@@ -83,15 +83,15 @@ extension.
     direnv
 
 
-You can add the direnv hook, ``direnv hook bash >>.bashrc``.
+You can add the direnv hook, ``direnv hook bash >>~.bashrc``.
 Only run this once.
 
 
 Plugin Development
 #######################################################
 
-We're beginning to develop plugins (or data modifications sets) that
-can be imported and built on the base installation.
+You can develop plugins (or data modifications sets) that
+are imported and built on the base (or core) installation.
 
 
 Supporting Old Versions of Python
@@ -190,7 +190,7 @@ Building the PyPi release (sdist)
 Linting & Tests
 #######################################################
 
-Install the dependencies (``make deps``) and then:
+Install the dependencies (``make deps``). Now you can lint & test.
 
 .. code-block:: bash
 

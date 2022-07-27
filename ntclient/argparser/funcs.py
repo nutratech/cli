@@ -316,8 +316,6 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
     rows = []
     for _calc, _result in result.items():
         _values = list(_result.values())
-        # row = [_calc, _values.pop(0), os.linesep.join(str(x) for x in _values)]
-        # row = [_calc, _values.pop(0), _values.pop(0)]
         row = [_calc]
         row.extend(_values)
         while len(row) < len(headers):
