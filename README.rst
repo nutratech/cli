@@ -69,6 +69,24 @@ Details
     -
 
 
+Linux / macOS requirements (for development)
+#######################################################
+
+You will need to install ``make`` and ``gcc`` to build the ``Levenshtein``
+extension.
+
+::
+
+  sudo apt install \
+    make gcc \
+    python3-dev python3-venv \
+    direnv
+
+
+You can add the direnv hook, ``direnv hook bash >>.bashrc``.
+Only run this once.
+
+
 Plugin Development
 #######################################################
 
@@ -105,10 +123,10 @@ manually after installation too.
 
 Linux may need to install ``python-dev`` package to build
 ``python-Levenshtein``.
+I am currently debating making this an optional dependency to avoid
+confusing install failures for people without ``gcc`` or ``python3-dev``.
 
 Windows users may not be able to install ``python-Levenshtein``.
-
-Mac and Linux developers will do well to install ``direnv``.
 
 Main program works 100%, but ``test`` and ``lint`` may break on older operating
 systems (Ubuntu 14.04, Windows XP).
@@ -155,7 +173,7 @@ with ``python -m ntclient``.
 You may need to set the ``PY_SYS_INTERPRETER`` value for the ``Makefile``
 if trying to install other than with ``/usr/bin/python3``.
 
-Building the PyPi release
+Building the PyPi release (sdist)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash

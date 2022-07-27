@@ -398,7 +398,7 @@ def lbl_berkhan(height: float) -> dict:
 
     _min = round((height - 102) * 2.205, 1)
     _max = round((height - 98) * 2.205, 1)
-    return {"condition": "Contest shape (5-6%)", "weight": f"{_min} ~ {_max} lbs"}
+    return {"condition": "Contest shape (5-6%)", "weight": "%s ~ %s lbs" % (_min, _max)}
 
 
 def lbl_eric_helms(height: float, args: argparse.Namespace) -> dict:
@@ -420,8 +420,8 @@ def lbl_eric_helms(height: float, args: argparse.Namespace) -> dict:
     _min = round(4851.00 * height * 0.01 * height * 0.01 / (100.0 - desired_bf), 1)
     _max = round(5402.25 * height * 0.01 * height * 0.01 / (100.0 - desired_bf), 1)
     return {
-        "condition": f"{desired_bf}% body fat",
-        "weight": f"{_min} ~ {_max} lbs",
+        "condition": "%s%% body fat" % desired_bf,
+        "weight": "%s ~ %s lbs" % (_min, _max),
     }
 
 
@@ -457,9 +457,9 @@ def lbl_casey_butt(height: float, args: argparse.Namespace) -> dict:
     weight = round(lbm / (1 - desired_bf / 100), 1)
 
     return {
-        "condition": f"{desired_bf}% body fat",
-        "weight": f"{weight} lbs",
-        "lbm": f"{lbm} lbs",
+        "condition": "%s%% body fat" % desired_bf,
+        "weight": "%s lbs" % weight,
+        "lbm": "%s lbs" % lbm,
         "chest": round(1.6817 * weight + 1.3759 * ankle + 0.3314 * height, 2),
         "arm": round(1.2033 * weight + 0.1236 * height, 2),
         "forearm": round(0.9626 * weight + 0.0989 * height, 2),
