@@ -126,6 +126,10 @@ Linux may need to install ``python-dev`` package to build
 I am currently debating making this an optional dependency to avoid
 confusing install failures for people without ``gcc`` or ``python3-dev``.
 
+I'm also currently working on doing phased installs of dependencies based on
+the host Python version, since some of the old versions of pip have trouble
+finding something that works, and again, spit out confusing errors.
+
 Windows users may not be able to install ``python-Levenshtein``.
 
 Main program works 100%, but ``test`` and ``lint`` may break on older operating
