@@ -204,7 +204,7 @@ class TestCli(unittest.TestCase):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         # 1rm
-        # --------------------
+        # -----------------------------------
         args = arg_parser.parse_args(args=["calc", "1rm", "225", "12"])
         code, _ = args.func(args)
         assert code == 0
@@ -217,13 +217,15 @@ class TestCli(unittest.TestCase):
         assert "errMsg" in result["dos_remedios"]
 
         # BMR
-        # --------------------
-        args = arg_parser.parse_args(args="calc bmr -a 29 75 179 0.11 3".split())
+        # -----------------------------------
+        args = arg_parser.parse_args(
+            args="calc bmr -a 29 -wt 75 -ht 179 -bf 0.11 -x 3".split()
+        )
         code, _ = args.func(args)
         assert code == 0
 
         # Body fat
-        # --------------------
+        # -----------------------------------
 
         # Navy only
         args = arg_parser.parse_args(args="calc bf -ht 178 -w 80 -n 40".split())
@@ -250,11 +252,20 @@ class TestCli(unittest.TestCase):
         # Female test
         # TODO: better values, and don't require hip above (it's 0)
         args = arg_parser.parse_args(
-            args="calc bf -F -a 29 -ht 178 -w 70 -hip 100 -n 35 5 6 9 6 8 7 4".split()
+            args="calc bf -F -a 29 -ht 178 -w 70 -hip 100 -n 35 "
+            "15 23 19 14 11 10 9".split()
         )
         code, result = args.func(args)
         assert code == 0
         assert result["navy"] == 22.58
+
+        # Lean body limits (young men)
+        # -----------------------------------
+        args = arg_parser.parse_args(args="calc lbl 179 0.1 17.2 21.5".split())
+        code, result = args.func(args)
+        assert code == 0
+        # NOTE: wip
+        print(result)
 
     def test_415_invalid_path_day_throws_error(self):
         """Ensures invalid path throws exception in `day` subcommand"""
