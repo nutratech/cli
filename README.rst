@@ -2,11 +2,31 @@
  nutratracker
 **************
 
+Command line tools for interacting with government food database,
+and analyzing your health trends. The ``SR28`` database includes data
+for ~8500 foods and ~180 nutrients. Customizable with extensions
+and mapping rules built on top.
+
+**Requires**
+
+- Python 3.4.0 or later (``lzma``, ``ssl`` & ``sqlite3`` modules)
+  [Win XP / Ubuntu 14.04].
+- Packages: see ``setup.py``, and ``requirements.txt`` files.
+- Internet connection, to download food database & package dependencies.
+
+See ``nt`` database:   https://github.com/nutratech/nt-sqlite
+
+See ``usda`` database: https://github.com/nutratech/usda-sqlite
+
+
+Details
+#######################################################
+
 .. list-table::
   :widths: 15 25 20
   :header-rows: 1
 
-  * -
+  * - Category
     -
     -
   * - Test / Linux
@@ -48,52 +68,91 @@
         :alt: License GPL-3
     -
 
-Command line tools for interacting with government food databases.
 
-*Requires:*
+Linux / macOS requirements (for development)
+#######################################################
 
-- Python 3.4.0 or later (lzma, ssl & sqlite3 modules) [Win XP / Ubuntu 14.04].
-- Packages: see ``setup.py``, and ``requirements.txt`` files.
-- Internet connection, to download food database & package dependencies.
+You will need to install ``make`` and ``gcc`` to build the ``Levenshtein``
+extension.
 
-See nt database:   https://github.com/nutratech/nt-sqlite
+::
 
-See usda database: https://github.com/nutratech/usda-sqlite
+  sudo apt install \
+    make gcc \
+    python3-dev python3-venv \
+    direnv
+
+
+You can add the direnv hook, ``direnv hook bash >>~.bashrc``.
+Only run this once.
+
 
 Plugin Development
-==================
+#######################################################
 
-We're looking to start developing plugins or data modifications sets that
-can be imported and built on the base installation, which remains pure.
+You can develop plugins (or data modifications sets) that
+are imported and built on the base (or core) installation.
+
+
+Supporting Old Versions of Python
+#######################################################
+
+The old requirements can still be tested on modern interpreters.
+Simply install them with this (inside your ``venv`` environment).
+
+::
+
+  pip install -r requirements-old.txt
+
+This won't guarantee compatibility for every version, but it will help.
+We provide a wide range. The oldest version of ``tabulate`` is from 2013.
+
+To use an old interpreter (Python 3.4 does not have the ``typing`` module!
+Only ``collections.abc``.) you may need to use
+a virtual machine or install old SSL libraries or enter a similar messy state.
+My preference is for VirtualBox images, where
+I manually test Windows XP & Ubuntu 14.04.
+
 
 Notes
-=====
+#######################################################
 
 On Windows you should check the box during the Python installer
 to include ``Scripts`` directory in your ``$PATH``.  This can be done
 manually after installation too.
 
+Windows users may also have differing results if they install for all users
+(as an administrator) vs. installing just for themselves. It may change the
+location of installed scripts, and affect the ``$PATH`` variable being
+correctly populated for prior installs.
+
 Linux may need to install ``python-dev`` package to build
 ``python-Levenshtein``.
+I am currently debating making this an optional dependency to avoid
+confusing install failures for people without ``gcc`` or ``python3-dev``.
+
+I'm also currently working on doing phased installs of dependencies based on
+the host Python version, since some of the old versions of pip have trouble
+finding something that works, and again, spit out confusing errors.
 
 Windows users may not be able to install ``python-Levenshtein``.
-
-Mac and Linux developers will do well to install ``direnv``.
 
 Main program works 100%, but ``test`` and ``lint`` may break on older operating
 systems (Ubuntu 14.04, Windows XP).
 
+
 Install PyPi release (from pip)
-===============================
+#######################################################
 
 .. code-block:: bash
 
-  pip install nutra
+  pip install -U nutra
 
 (**Specify:** flag ``-U`` to upgrade, or ``--pre`` for development releases)
 
+
 Using the source code directly
-==============================
+#######################################################
 Clone down, initialize ``nt-sqlite`` submodule, and install requirements:
 
 .. code-block:: bash
@@ -106,7 +165,7 @@ Clone down, initialize ``nt-sqlite`` submodule, and install requirements:
 
   ./nutra -h
 
-Initialize the DBs (nt and usda).
+Initialize the DBs (``nt`` and ``usda``).
 
 .. code-block:: bash
 
@@ -115,13 +174,16 @@ Initialize the DBs (nt and usda).
 
   # Or install and run as package script
   make install
-  nutra init
+  n init
 
 If installed (or inside ``cli``) folder, the program can also run
-with ``python -m ntclient``
+with ``python -m ntclient``.
 
-Building the PyPi release
-#########################
+You may need to set the ``PY_SYS_INTERPRETER`` value for the ``Makefile``
+if trying to install other than with ``/usr/bin/python3``.
+
+Building the PyPi release (sdist)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
@@ -129,36 +191,40 @@ Building the PyPi release
   make build  # python3 setup.py --quiet sdist
   twine upload dist/nutra-X.X.X.tar.gz
 
-Linting & Tests
-===============
 
-Install the dependencies (``make deps``) and then:
+Linting & Tests
+#######################################################
+
+Install the dependencies (``make deps``). Now you can lint & test.
 
 .. code-block:: bash
 
   # source .venv/bin/activate  # uncomment if NOT using direnv
   make format lint test
 
-ArgComplete (tab completion / autocomplete)
-===========================================
 
-After installing nutra, argcomplete package should also be installed.
+ArgComplete (tab completion / autocomplete)
+#######################################################
+
+The ``argcomplete`` package will be installed alongside.
+
 
 Linux, macOS, and Linux Subsystem for Windows
-#############################################
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simply run the following out of a ``bash`` shell. Check their page for more
 specifics on using other shells, e.g. ``zsh``, ``fish``, or ``tsh``.
 
 .. code-block:: bash
 
-  activate-global-python-argcomplete
+  activate-global-python-argcomplete --user
 
-Then you can press tab to fill in or complete subcommands
+Then you can press tab to fill in or complete sub-commands
 and to list argument flags.
 
+
 Windows (Git Bash)
-##################
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This can work with git bash too. I followed the instructions on their README.
 
@@ -183,49 +249,23 @@ And my ``~/.bashrc`` file looks like this.
 **NOTE:** This is a work in progress, we are adding more autocomplete
 functions.
 
+
 Currently Supported Data
-========================
+#######################################################
 
 **USDA Stock database**
 
 - Standard reference database (SR28)  `[7794 foods]`
 
-
 **Relative USDA Extensions**
 
 - Flavonoid, Isoflavonoids, and Proanthocyanidins  `[1352 foods]`
 
+
 Usage
-=====
+#######################################################
 
 Requires internet connection to download initial datasets.
 Run ``nutra init`` for this step.
 
-Run the ``nutra`` script to output usage.
-
-Usage: ``nutra [options] <command>``
-
-
-Commands
-########
-
-::
-
-  usage: nutra [-h] [-v] [-d] [--no-pager]
-               {init,nt,search,sort,anl,day,recipe} ...
-
-  optional arguments:
-    -h, --help            show this help message and exit
-    -v, --version         show program's version number and exit
-    -d, --debug           enable detailed error messages
-    --no-pager            disable paging (print full output)
-
-  nutra subcommands:
-    {init,nt,search,sort,anl,day,recipe}
-      init                setup profiles, USDA and NT database
-      nt                  list out nutrients and their info
-      search              search foods by name, list overview info
-      sort                sort foods by nutrient ID
-      anl                 analyze food(s)
-      day                 analyze a DAY.csv file, RDAs optional
-      recipe              list and analyze recipes
+Run the ``n`` script to output usage.

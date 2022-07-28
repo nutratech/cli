@@ -1,6 +1,6 @@
 """usda.sqlite functions module"""
+from ntclient import NUTR_ID_KCAL
 from ntclient.persistence.sql.usda import sql, sql_headers
-from ntclient.utils import NUTR_ID_KCAL
 
 
 ################################################################################

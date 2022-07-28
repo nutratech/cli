@@ -8,36 +8,29 @@ Created on Sun Nov 11 23:57:03 2018
 import csv
 from collections import OrderedDict
 
-from colorama import Fore, Style
 from tabulate import tabulate
 
-from ntclient import BUFFER_WD
+from ntclient import (
+    BUFFER_WD,
+    CLI_CONFIG,
+    NUTR_ID_CARBS,
+    NUTR_ID_FAT_TOT,
+    NUTR_ID_FIBER,
+    NUTR_ID_KCAL,
+    NUTR_ID_PROTEIN,
+)
 from ntclient.persistence.sql.usda.funcs import (
     sql_analyze_foods,
     sql_food_details,
     sql_nutrients_overview,
     sql_servings,
 )
-from ntclient.utils import (
-    COLOR_CRIT,
-    COLOR_DEFAULT,
-    COLOR_OVER,
-    COLOR_WARN,
-    NUTR_ID_CARBS,
-    NUTR_ID_FAT_TOT,
-    NUTR_ID_FIBER,
-    NUTR_ID_KCAL,
-    NUTR_ID_PROTEIN,
-    THRESH_CRIT,
-    THRESH_OVER,
-    THRESH_WARN,
-)
 
 
 ################################################################################
 # Foods
 ################################################################################
-def foods_analyze(food_ids: set, grams: int = 0) -> tuple:
+def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
     """
     Analyze a list of food_ids against stock RDA values
     TODO: from ntclient.utils.nutprogbar import nutprogbar
@@ -135,12 +128,11 @@ def foods_analyze(food_ids: set, grams: int = 0) -> tuple:
 ################################################################################
 # Day
 ################################################################################
-def day_analyze(day_csv_paths: str, rda_csv_path: str = str()) -> tuple:
+def day_analyze(day_csv_paths: list, rda_csv_path: str = str()) -> tuple:
     """Analyze a day optionally with custom RDAs,
     e.g.  nutra day ~/.nutra/rocky.csv -r ~/.nutra/dog-rdas-18lbs.csv
     TODO: Should be a subset of foods_analyze
     """
-    from ntclient import DEBUG  # pylint: disable=import-outside-toplevel
 
     if rda_csv_path:
         with open(rda_csv_path, encoding="utf-8") as file_path:
@@ -171,7 +163,7 @@ def day_analyze(day_csv_paths: str, rda_csv_path: str = str()) -> tuple:
         for _nutrient in nutrients_lists:
             if _nutrient[0] == nutrient_id:
                 _nutrient[1] = _rda
-                if DEBUG:
+                if CLI_CONFIG.debug:
                     substr = "{0} {1}".format(_rda, _nutrient[2]).ljust(12)
                     print("INJECT RDA: {0} -->  {1}".format(substr, _nutrient[4]))
     nutrients = {x[0]: x for x in nutrients_lists}
@@ -217,11 +209,11 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
     """Formats day analysis for printing to console"""
 
     def print_header(header: str) -> None:
-        print(Fore.CYAN, end="")
+        print(CLI_CONFIG.color_default, end="")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print("--> %s" % header)
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print(Style.RESET_ALL)
+        print(CLI_CONFIG.color_reset_all)
 
     def print_macro_bar(
         _fat: float, _net_carb: float, _pro: float, _kcals_max: float, _buffer: int = 0
@@ -244,21 +236,21 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         p_buf = " " * (n_pro // 2) + "Pro" + " " * (n_pro - n_pro // 2 - 3)
         print(
             "  "
-            + Fore.YELLOW
+            + CLI_CONFIG.color_yellow
             + f_buf
-            + Fore.BLUE
+            + CLI_CONFIG.color_blue
             + c_buf
-            + Fore.RED
+            + CLI_CONFIG.color_red
             + p_buf
-            + Style.RESET_ALL
+            + CLI_CONFIG.color_reset_all
         )
 
         # Bars
         print(" <", end="")
-        print(Fore.YELLOW + "=" * n_fat, end="")
-        print(Fore.BLUE + "=" * n_car, end="")
-        print(Fore.RED + "=" * n_pro, end="")
-        print(Style.RESET_ALL + ">")
+        print(CLI_CONFIG.color_yellow + "=" * n_fat, end="")
+        print(CLI_CONFIG.color_blue + "=" * n_car, end="")
+        print(CLI_CONFIG.color_red + "=" * n_pro, end="")
+        print(CLI_CONFIG.color_reset_all + ">")
 
         # Calorie footers
         k_fat = str(round(fat * 9))
@@ -269,13 +261,13 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         p_buf = " " * (n_pro // 2) + k_pro + " " * (n_pro - n_pro // 2 - len(k_pro))
         print(
             "  "
-            + Fore.YELLOW
+            + CLI_CONFIG.color_yellow
             + f_buf
-            + Fore.BLUE
+            + CLI_CONFIG.color_blue
             + c_buf
-            + Fore.RED
+            + CLI_CONFIG.color_red
             + p_buf
-            + Style.RESET_ALL
+            + CLI_CONFIG.color_reset_all
         )
 
     def print_nute_bar(_n_id: int, amount: float, _nutrients: dict) -> tuple:
@@ -290,14 +282,14 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         attain = amount / rda
         perc = round(100 * attain, 1)
 
-        if attain >= THRESH_OVER:
-            color = COLOR_OVER
-        elif attain <= THRESH_CRIT:
-            color = COLOR_CRIT
-        elif attain <= THRESH_WARN:
-            color = COLOR_WARN
+        if attain >= CLI_CONFIG.thresh_over:
+            color = CLI_CONFIG.color_over
+        elif attain <= CLI_CONFIG.thresh_crit:
+            color = CLI_CONFIG.color_crit
+        elif attain <= CLI_CONFIG.thresh_warn:
+            color = CLI_CONFIG.color_warn
         else:
-            color = COLOR_DEFAULT
+            color = CLI_CONFIG.color_default
 
         # Print
         detail_amount = "{0}/{1} {2}".format(round(amount, 1), rda, unit).ljust(18)
@@ -307,7 +299,7 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         print(" {0}<".format(color), end="")
         print("=" * left_pos + " " * (left_index - left_pos) + ">", end="")
         print(" {0}%\t[{1}]".format(perc, detail_amount), end="")
-        print(Style.RESET_ALL)
+        print(CLI_CONFIG.color_reset_all)
 
         return True, perc
 

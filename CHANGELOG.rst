@@ -1,6 +1,6 @@
-***********
- ChangeLog
-***********
+************
+ Change Log
+************
 
 All notable changes to this project will be documented in this file.
 
@@ -15,7 +15,22 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 Added
 ~~~~~
 
-- Basic functionality of ``import`` and ``export`` sub-commands.
+- Recipes are stored in a ``csv`` format now with ``uuid`` instead of ``int``,
+  and they can be viewed in a convenient ``tree`` output.
+- Calculate functions for body fat, BMR, 1-rep max, & lean body limits.
+- Example recipe ``csv`` files.
+- ``unittest`` compatibility, not sure this will stay.
+  May revert to ``pytest``.
+
+Changed
+~~~~~~~
+
+- Use a ``CliConfig`` class for storing ``DEBUG`` and ``PAGING`` flags.
+- Requirements versions for ``colorama`` and ``python3.4``.
+- Removed ``F401`` warnings, e.g. importing services into ``__init__``.
+- General refactor of ``argparse`` stuff, but still not complete.
+- Start to split apart some of the original ``test_cli`` functions.
+- Enable more verbose ``mypy`` flags.
 
 
 

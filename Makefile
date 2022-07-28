@@ -51,7 +51,7 @@ PIP ?= $(PY_VIRTUAL_INTERPRETER) -m pip
 REQ_OPT := requirements-optional.txt
 REQ_LINT := requirements-lint.txt
 REQ_TEST := requirements-test.txt
-REQ_OLD := requirements-test-win_xp-ubu1604.txt
+REQ_TEST_OLD := requirements-test-old.txt
 
 PIP_OPT_ARGS ?=
 
@@ -62,7 +62,7 @@ _deps:
 	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_OPT)
 	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_LINT)
 	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_TEST) || \
-	echo "TEST REQs failed. Try with '--user' flag, or old version: $(PIP) install -r $(REQ_OLD)"
+	echo "TEST REQs failed. Try with '--user' flag, or old version: $(PIP) install -r $(REQ_TEST_OLD)"
 
 .PHONY: deps
 deps: _venv _deps	## Install requirements
@@ -86,7 +86,7 @@ YAML_LOCS := ntclient/ntsqlite/.*.yml .github/workflows/ .*.yml
 .PHONY: _lint
 _lint:
 	# check formatting: Python
-	pycodestyle --max-line-length=99 --statistics $(LINT_LOCS)
+	pycodestyle --statistics $(LINT_LOCS)
 	autopep8 --recursive --diff --max-line-length 88 --exit-code $(LINT_LOCS)
 	isort --diff --check $(LINT_LOCS)
 	black --check $(LINT_LOCS)
@@ -108,7 +108,7 @@ TEST_HOME := tests/
 MIN_COV := 80
 .PHONY: _test
 _test:
-	coverage run -m pytest -v -s -p no:cacheprovider -o log_cli=true $(TEST_HOME)
+	coverage run -m pytest $(TEST_HOME)
 	coverage report
 
 .PHONY: test
@@ -160,7 +160,14 @@ clean:	## Clean up __pycache__ and leftover bits
 	rm -rf build/
 	rm -rf nutra.egg-info/
 	rm -rf .pytest_cache/ .mypy_cache/
-	find ntclient/ tests/ -name __pycache__ -o -name .coverage -o -name .pytest_cache | xargs rm -rf
+	find ntclient/ tests/ \
+	-name \
+	__pycache__ \
+	-o -name \
+	.coverage \
+	-o -name .mypy_cache \
+	-o -name .pytest_cache \
+	| xargs rm -rf
 
 
 # ---------------------------------------

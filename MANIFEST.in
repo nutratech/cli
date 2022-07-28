@@ -4,4 +4,6 @@ include requirements-*.txt
 include ntclient/ntsqlite/sql/*.sql
 include ntclient/ntsqlite/sql/data/*.csv
 
-global-exclude nt.sqlite3
+recursive-include ntclient/resources/ *.csv
+
+global-exclude *.sqlite3

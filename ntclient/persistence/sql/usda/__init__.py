@@ -19,6 +19,7 @@ def usda_init(yes: bool = False) -> None:
     def download_extract_usda() -> None:
         """Download USDA tarball from BitBucket and extract to storage folder"""
 
+        # TODO: move this into separate module, ignore coverage. Avoid SLOW tests
         if yes or input_agree().lower() == "y":
             # TODO: save with version in filename?
             #  Don't re-download tarball, just extract?
@@ -30,13 +31,14 @@ def usda_init(yes: bool = False) -> None:
 
             # Extract the archive
             with tarfile.open(save_path, mode="r:xz") as usda_sqlite_file:
-                print("\ntar xvf %s.tar.xz" % USDA_DB_NAME)
+                print("\n" + "tar xvf %s.tar.xz" % USDA_DB_NAME)
                 usda_sqlite_file.extractall(NUTRA_HOME)
 
             print("==> done downloading %s" % USDA_DB_NAME)
 
-    # TODO: handle resource moved on Bitbucket
-    #  or version mismatch due to manual overwrite?
+    # TODO: handle resource moved on Bitbucket,
+    #  or version mismatch due to developer mistake /  overwrite?
+    #  And seed mirrors; don't hard code one host here!
     url = (
         "https://bitbucket.org/dasheenster/nutra-utils/downloads/{0}-{1}.tar.xz".format(
             USDA_DB_NAME, __db_target_usda__

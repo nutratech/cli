@@ -1,52 +1,32 @@
 # -*- coding: utf-8 -*-
 """
+Main module which is called by scripts.
+Top-level argument parsing logic; error handling.
+
 Created on Fri Jan 31 16:02:19 2020
 
 @author: shane
-
-This file is part of nutra, a nutrient analysis program.
-    https://github.com/nutratech/cli
-    https://pypi.org/project/nutra/
-
-nutra is an extensible nutrient analysis and composition application.
-Copyright (C) 2018-2022  Shane Jaroch <chown_tee@proton.me>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 import argparse
-import sys
 import time
 from urllib.error import HTTPError, URLError
 
 import argcomplete
-from colorama import init as colorama_init
 
 from ntclient import (
+    CLI_CONFIG,
     __db_target_nt__,
     __db_target_usda__,
+    __email__,
     __title__,
+    __url__,
     __version__,
-    set_flags,
 )
 from ntclient.argparser import build_subcommands
-from ntclient.persistence import persistence_init
 from ntclient.utils.exceptions import SqlException
 
-colorama_init()
 
-
-def build_argparser() -> argparse.ArgumentParser:
+def build_arg_parser() -> argparse.ArgumentParser:
     """Adds all subparsers and parsing logic"""
 
     arg_parser = argparse.ArgumentParser(prog=__title__)
@@ -80,7 +60,7 @@ def main(args: list = None) -> int:
     """
 
     start_time = time.time()
-    arg_parser = build_argparser()
+    arg_parser = build_arg_parser()
     argcomplete.autocomplete(arg_parser)
 
     def parse_args() -> argparse.Namespace:
@@ -92,9 +72,11 @@ def main(args: list = None) -> int:
     def func(parser: argparse.Namespace) -> tuple:
         """Executes a function for a given argument call to the parser"""
         if hasattr(parser, "func"):
-            # More than an empty command, so initialize the storage folder
-            persistence_init()
+            # Print help for nested commands
+            if parser.func.__name__ == "print_help":
+                return 0, parser.func()
 
+            # Collect non-default args
             args_dict = dict(vars(parser))
             for expected_arg in ["func", "debug", "no_pager"]:
                 args_dict.pop(expected_arg)
@@ -111,40 +93,35 @@ def main(args: list = None) -> int:
 
     # Build the parser, set flags
     _parser = parse_args()
-    set_flags(_parser)
-    from ntclient import DEBUG  # pylint: disable=import-outside-toplevel
+    CLI_CONFIG.set_flags(_parser)
 
-    # TODO: bug reporting?
     # Try to run the function
     exit_code = 1
     try:
         exit_code, *_results = func(_parser)
-        return exit_code
     except SqlException as sql_exception:
         print("Issue with an sqlite database: " + repr(sql_exception))
-        if DEBUG:
+        if CLI_CONFIG.debug:
             raise
     except HTTPError as http_error:
         err_msg = "{0}: {1}".format(http_error.code, repr(http_error))
         print("Server response error, try again: " + err_msg)
-        if DEBUG:
+        if CLI_CONFIG.debug:
             raise
     except URLError as url_error:
         print("Connection error, check your internet: " + repr(url_error.reason))
-        if DEBUG:
+        if CLI_CONFIG.debug:
             raise
     except Exception as exception:  # pylint: disable=broad-except
-        print("There was an unforeseen error: " + repr(exception))
-        if DEBUG:
+        print("Unforeseen error, run with -d for more info: " + repr(exception))
+        print("You can open an issue here: %s" % __url__)
+        print("Or send me an email with the debug output: %s" % __email__)
+        if CLI_CONFIG.debug:
             raise
     finally:
-        if DEBUG:
-            exc_time = time.time() - start_time  # type: ignore
+        if CLI_CONFIG.debug:
+            exc_time = time.time() - start_time
             print("\nExecuted in: %s ms" % round(exc_time * 1000, 1))
             print("Exit code: %s" % exit_code)
 
     return exit_code
-
-
-if __name__ == "__main__":
-    sys.exit(main())

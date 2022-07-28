@@ -2,10 +2,12 @@
 import sqlite3
 from collections.abc import Sequence
 
-
 # ------------------------------------------------
 # Entry fetching methods
 # ------------------------------------------------
+from ntclient import CLI_CONFIG
+
+
 def sql_entries(sql_result: sqlite3.Cursor) -> list:
     """Formats and returns a `sql_result()` for console digestion and output"""
     # TODO: return object: metadata, command, status, errors, etc?
@@ -62,11 +64,9 @@ def _prep_query(
     @return: A sqlite3.Cursor object with populated return values.
     """
 
-    from ntclient import DEBUG  # pylint: disable=import-outside-toplevel
-
     cur = con.cursor()
 
-    if DEBUG:
+    if CLI_CONFIG.debug:
         print("%s.sqlite3: %s" % (db_name, query))
         if values:
             # TODO: better debug logging, more "control-findable",

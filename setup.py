@@ -42,11 +42,12 @@ CLASSIFIERS = [
     "Programming Language :: Unix Shell",
 ]
 
-# Read me
+# ReadMe
 with open("README.rst", encoding="utf-8") as file:
     README = file.read()
 
 # Requirements
+# TODO: check PY_SYS_VER, and decide which requirements for e.g. 3.4, 3.6, 3.10, etc...
 with open("requirements.txt", encoding="utf-8") as file:
     REQUIREMENTS = file.read().split()
 
@@ -65,7 +66,7 @@ kwargs = {
     "install_requires": REQUIREMENTS,
     "python_requires": ">=%s" % PY_MIN_STR,
     "zip_safe": False,
-    "packages": find_packages(exclude=["tests"]),
+    "packages": find_packages(exclude=["tests", "ntclient.docs"]),
     "include_package_data": True,
     "platforms": ["linux", "darwin", "win32"],
     "description": "Home and office nutrient tracking software",

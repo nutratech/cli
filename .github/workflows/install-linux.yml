@@ -1,5 +1,5 @@
 ---
-name: test-linux
+name: install-linux
 
 "on":
   push: {}
@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.4.10", "3.6", "3.8", "3.10"]
+        python-version: ["3.4", "3.6", "3.8", "3.10"]
 
     steps:
       - name: Checkout
@@ -39,10 +39,5 @@ jobs:
       - name: Basic Tests / CLI / Integration
         run: |
           n -v
-          nutra -d init -y
-          nutra --no-pager nt
-          nutra --no-pager sort -c 789
-          nutra --no-pager search ultraviolet mushrooms
-          nutra --no-pager anl 9050
+          nutra -d recipe init
           nutra --no-pager recipe
-          nutra day tests/resources/day/human-test.csv

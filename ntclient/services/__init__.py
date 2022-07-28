@@ -5,7 +5,8 @@ from ntclient import NUTRA_HOME
 from ntclient.ntsqlite.sql import build_ntsqlite
 from ntclient.persistence.sql.nt import nt_init
 from ntclient.persistence.sql.usda import usda_init
-from ntclient.services import analyze, recipe, usda
+
+# TODO: rethink the above imports, if this belongs in __init__ or not
 
 
 def init(yes: bool = False) -> tuple:
@@ -37,4 +38,11 @@ def init(yes: bool = False) -> tuple:
     nt_init()
 
     print("\nAll checks have passed!")
+    print(
+        """
+Nutrient tracker is free software. It comes with NO warranty or guarantee.
+You may use it as you please.
+You may make changes, as long as you disclose and publish them.
+    """
+    )
     return 0, True
