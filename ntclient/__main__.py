@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# PYTHON_ARGCOMPLETE_OK
 """
 Main module which is called by scripts.
 Top-level argument parsing logic; error handling.

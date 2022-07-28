@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Calculate service for one rep max, BMR, body fat.
+Calculate service for one rep max, BMR, body fat, lean body limit, etc.
 
 Created on Tue Aug 11 20:53:14 2020
 
@@ -8,7 +8,6 @@ Created on Tue Aug 11 20:53:14 2020
 """
 import argparse
 import math
-from datetime import datetime
 
 from ntclient import Gender
 
@@ -58,7 +57,7 @@ def orm_brzycki(weight: float, reps: float) -> dict:
     one_rm = _one_rm()
 
     def weight_max_reps(target_reps: float) -> float:
-        _un_rounded_result = one_rm / (1 + (target_reps - 1) / 30)
+        _un_rounded_result = one_rm * (37 - target_reps) / 36
         return round(_un_rounded_result, 1)
 
     maxes = {n_reps: weight_max_reps(n_reps) for n_reps in common_n_reps}
@@ -467,18 +466,3 @@ def lbl_casey_butt(height: float, args: argparse.Namespace) -> dict:
         "thigh": round(1.3868 * ankle + 0.1805 * height, 2),
         "calf": round(0.9298 * ankle + 0.1210 * height, 2),
     }
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Misc functions
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def _age(dob: int) -> float:
-    """
-    Calculate age based on birthday.
-
-    @param dob: birth time in UNIX seconds
-    @return: age in years
-    """
-    now = datetime.now().timestamp()
-    years = (now - dob) / (365 * 24 * 3600)
-    return years
