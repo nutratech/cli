@@ -33,7 +33,7 @@ def orm_epley(weight: float, reps: float) -> dict:
         return round(_un_rounded_result, 1)
 
     def weight_max_reps(target_reps: float) -> float:
-        _un_rounded_result = one_rm() / (1 + (target_reps - 1) / 30)
+        _un_rounded_result = one_rm() * 30 / (29 + target_reps)
         return round(_un_rounded_result, 1)
 
     maxes = {n_reps: weight_max_reps(n_reps) for n_reps in common_n_reps}
@@ -43,21 +43,25 @@ def orm_epley(weight: float, reps: float) -> dict:
 def orm_brzycki(weight: float, reps: float) -> dict:
     """
     Returns a dict {n_reps: max_weight, ...}
-        for n_reps: (1, 2, 3, 5, 6, 8, 10, 12, 15)
+        for n_reps: (1, 2, 3, 5, 6, 8, 10, 12, 15, 20)
 
     1 RM = weight * 36 / (37 - reps)
+
+    NOTE: Adjusted formula is below, with quadratic term.
+
+    1 RM = weight * 36 / (37 - reps + 0.005 * reps^2)
 
     Source: https://workoutable.com/one-rep-max-calculator/
     """
 
     def _one_rm() -> float:
-        _un_rounded_result = weight * 36 / (37 - reps)
+        _un_rounded_result = weight * 36 / (37 - reps + 0.005 * reps**2)
         return round(_un_rounded_result, 1)
 
     one_rm = _one_rm()
 
     def weight_max_reps(target_reps: float) -> float:
-        _un_rounded_result = one_rm * (37 - target_reps) / 36
+        _un_rounded_result = one_rm * (37 - target_reps + 0.005 * target_reps**2) / 36
         return round(_un_rounded_result, 1)
 
     maxes = {n_reps: weight_max_reps(n_reps) for n_reps in common_n_reps}
@@ -67,7 +71,7 @@ def orm_brzycki(weight: float, reps: float) -> dict:
 def orm_dos_remedios(weight: float, reps: int) -> dict:
     """
     Returns dict {n_reps: max_weight, ...}
-        for n_reps: (1, 2, 3, 5, 6, 8, 10, 12, 15)
+        for n_reps: (1, 2, 3, 5, 6, 8, 10, 12, 15, 20)
 
     Or an {"errMsg": "INVALID_RANGE", ...}
 
@@ -79,12 +83,23 @@ def orm_dos_remedios(weight: float, reps: int) -> dict:
         1: 1,
         2: 0.92,
         3: 0.9,
+        4: 0.89,  # NOTE: I added this
         5: 0.87,
         6: 0.82,
+        7: 0.781,  # NOTE: I added this
         8: 0.75,
+        9: 0.72375,  # NOTE: I added this
         10: 0.7,
+        11: 0.674286,  # NOTE: I added this
         12: 0.65,
+        13: 0.628571,  # NOTE: I added this
+        14: 0.611429,  # NOTE: I added this
         15: 0.6,
+        16: 0.588,  # NOTE: I added this
+        17: 0.5775,  # NOTE: I added this
+        18: 0.568,  # NOTE: I added this
+        19: 0.559,  # NOTE: I added this
+        20: 0.55,  # NOTE: I added this, 20 reps is NOT in the original equation.
     }
 
     def _one_rm() -> float:
@@ -92,17 +107,11 @@ def orm_dos_remedios(weight: float, reps: int) -> dict:
         _un_rounded_result = weight / _multiplier
         return round(_un_rounded_result, 1)
 
-    try:
-        one_rm = _one_rm()
-    except KeyError:
-        # _logger.debug(traceback.format_exc())
-        valid_reps = list(_common_n_reps.keys())
-        return {
-            "errMsg": "INVALID_RANGE — "
-            + "requires: reps in %s, got %s" % (valid_reps, reps),
-        }
+    # Compute the 1-rep max
+    one_rm = _one_rm()
 
     def max_weight(target_reps: int) -> float:
+        """Used to calculate max weight based on actual reps, e.g. 5 or 12"""
         _multiplier = _common_n_reps[target_reps]
         _un_rounded_result = one_rm * _multiplier
         return round(_un_rounded_result, 1)

@@ -7,3 +7,4 @@ include ntclient/ntsqlite/sql/data/*.csv
 recursive-include ntclient/resources/ *.csv
 
 global-exclude *.sqlite3
+global-exclude *.wls
