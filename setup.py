@@ -4,8 +4,6 @@ Created on Sat Oct 13 16:30:30 2018
 
 @author: shane
 """
-
-import glob
 import os
 import platform
 
@@ -57,32 +55,25 @@ if PLATFORM_SYSTEM != "Windows" or int(os.getenv("NUTRA_OS_FORCE_OPT_REQS", str(
         optional_reqs = file.read().split()
     REQUIREMENTS.extend(optional_reqs)
 
-# Prepare setup() inputs (OS dependent)
-kwargs = {
-    "name": __title__,
-    "author": __author__,
-    "author_email": __email__,
-    "classifiers": CLASSIFIERS,
-    "install_requires": REQUIREMENTS,
-    "python_requires": ">=%s" % PY_MIN_STR,
-    "zip_safe": False,
-    "packages": find_packages(exclude=["tests", "ntclient.docs"]),
-    "include_package_data": True,
-    "platforms": ["linux", "darwin", "win32"],
-    "description": "Home and office nutrient tracking software",
-    "long_description": README,
-    "long_description_content_type": "text/x-rst",
-    "url": "https://github.com/nutratech/cli",
-    "license": "GPL v3",
-    "version": __version__,
-}
-
-if PLATFORM_SYSTEM == "Windows":
-    kwargs["entry_points"] = {
-        "console_scripts": ["nutra=ntclient.__main__:main", "n=ntclient.__main__:main"]
-    }
-else:
-    kwargs["scripts"] = glob.glob("scripts/*")
-
 # Setup method
-setup(**kwargs)
+setup(
+    name=__title__,
+    author=__author__,
+    author_email=__email__,
+    classifiers=CLASSIFIERS,
+    install_requires=REQUIREMENTS,
+    python_requires=">=%s" % PY_MIN_STR,
+    zip_safe=False,
+    packages=find_packages(exclude=["tests", "ntclient.docs"]),
+    include_package_data=True,
+    entry_points={
+        "console_scripts": ["nutra=ntclient.__main__:main", "n=ntclient.__main__:main"]
+    },
+    platforms=["linux", "darwin", "win32"],
+    description="Home and office nutrient tracking software",
+    long_description=README,
+    long_description_content_type="text/x-rst",
+    url="https://github.com/nutratech/cli",
+    license="GPL v3",
+    version=__version__,
+)

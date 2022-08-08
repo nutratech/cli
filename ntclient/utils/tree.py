@@ -1,5 +1,4 @@
-#!/usr/bin/env python3
-"""Python 3 reimplementation of the linux 'tree' utility"""
+"""Python 3 re-implementation of the Linux 'tree' utility"""
 
 import os
 import sys
@@ -70,7 +69,7 @@ def print_dir(_dir: str, pre: str = str()) -> tuple:
     Prints the whole tree
 
     TODO: integrate with data sources to display more than just filenames
-    TODO: filter hidden files, non-CSV files, and hide *.csv extension from files
+    TODO: hide non-CSV files, and don't show *.csv extension (just file name)
     """
     n_dirs = 0
     n_files = 0
@@ -82,7 +81,7 @@ def print_dir(_dir: str, pre: str = str()) -> tuple:
     dir_len = len(os.listdir(_dir)) - 1
     for i, file in enumerate(sorted(os.listdir(_dir), key=str.lower)):
         path = os.path.join(_dir, file)
-        if file[0] == "." and not SHOW_HIDDEN:
+        if file.startswith(".") and not SHOW_HIDDEN:
             continue
         if os.path.isdir(path):
             print(pre + strs[2 if i == dir_len else 1] + colorize(path))
@@ -131,7 +130,3 @@ def main_tree(_args: list = None) -> int:
         )
     )
     return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main_tree())

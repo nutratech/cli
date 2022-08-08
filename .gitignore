@@ -1,6 +1,7 @@
 # macOS/backup files
 .~*
 ._*
+~$*
 .DS_Store
 *.swp
 
@@ -10,6 +11,11 @@
 __sha__.py
 *.sqlite
 .nutra*
+
+
+# Temporary
+docs*
+
 
 ####################
 ## Python Ignores ##

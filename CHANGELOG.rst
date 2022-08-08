@@ -21,6 +21,7 @@ Added
 - Example recipe ``csv`` files.
 - ``unittest`` compatibility, not sure this will stay.
   May revert to ``pytest``.
+- Dedicated test file for calculate service.
 
 Changed
 ~~~~~~~

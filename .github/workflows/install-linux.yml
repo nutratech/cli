@@ -4,6 +4,9 @@ name: install-linux
 "on":
   push: {}
 
+permissions:
+  contents: read
+
 jobs:
   python:
     runs-on: ubuntu-18.04

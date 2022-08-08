@@ -29,14 +29,14 @@ Details
   * - Category
     -
     -
-  * - Test / Linux
-    - .. image:: https://github.com/nutratech/cli/actions/workflows/test-linux.yml/badge.svg
-        :target: https://github.com/nutratech/cli/actions/workflows/test-linux.yml
+  * - Install / Linux
+    - .. image:: https://github.com/nutratech/cli/actions/workflows/install-linux.yml/badge.svg
+        :target: https://github.com/nutratech/cli/actions/workflows/install-linux.yml
         :alt: Test status unknown (Linux)
     -
-  * - Test / Windows
-    - .. image:: https://github.com/nutratech/cli/actions/workflows/test-win32.yml/badge.svg
-        :target: https://github.com/nutratech/cli/actions/workflows/test-win32.yml
+  * - Install / Windows
+    - .. image:: https://github.com/nutratech/cli/actions/workflows/install-win32.yml/badge.svg
+        :target: https://github.com/nutratech/cli/actions/workflows/install-win32.yml
         :alt: Test status unknown (Windows)
     -
   * - Other checks
