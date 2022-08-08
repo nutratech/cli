@@ -28,15 +28,14 @@ def orm_epley(weight: float, reps: float) -> dict:
     Source: https://workoutable.com/one-rep-max-calculator/
     """
 
-    def one_rm() -> float:
-        _un_rounded_result = weight * (1 + (reps - 1) / 30)
+    # Compute the 1-rep max
+    one_rm = round(weight * (1 + (reps - 1) / 30), 1)
+
+    def max_weight(target_reps: float) -> float:
+        _un_rounded_result = one_rm * 30 / (29 + target_reps)
         return round(_un_rounded_result, 1)
 
-    def weight_max_reps(target_reps: float) -> float:
-        _un_rounded_result = one_rm() * 30 / (29 + target_reps)
-        return round(_un_rounded_result, 1)
-
-    maxes = {n_reps: weight_max_reps(n_reps) for n_reps in common_n_reps}
+    maxes = {n_reps: max_weight(n_reps) for n_reps in common_n_reps}
     return maxes
 
 
@@ -54,17 +53,14 @@ def orm_brzycki(weight: float, reps: float) -> dict:
     Source: https://workoutable.com/one-rep-max-calculator/
     """
 
-    def _one_rm() -> float:
-        _un_rounded_result = weight * 36 / (37 - reps + 0.005 * reps**2)
-        return round(_un_rounded_result, 1)
+    # Compute the 1-rep max
+    one_rm = round(weight * 36 / (37 - reps + 0.005 * reps**2), 1)
 
-    one_rm = _one_rm()
-
-    def weight_max_reps(target_reps: float) -> float:
+    def max_weight(target_reps: float) -> float:
         _un_rounded_result = one_rm * (37 - target_reps + 0.005 * target_reps**2) / 36
         return round(_un_rounded_result, 1)
 
-    maxes = {n_reps: weight_max_reps(n_reps) for n_reps in common_n_reps}
+    maxes = {n_reps: max_weight(n_reps) for n_reps in common_n_reps}
     return maxes
 
 
@@ -79,7 +75,7 @@ def orm_dos_remedios(weight: float, reps: int) -> dict:
         https://www.peterrobertscoaching.com/blog/the-best-way-to-calculate-1-rep-max
     """
 
-    _common_n_reps = {
+    _max_rep_ratios = {
         1: 1,
         2: 0.92,
         3: 0.9,
@@ -102,21 +98,14 @@ def orm_dos_remedios(weight: float, reps: int) -> dict:
         20: 0.55,  # NOTE: I added this, 20 reps is NOT in the original equation.
     }
 
-    def _one_rm() -> float:
-        _multiplier = _common_n_reps[reps]
-        _un_rounded_result = weight / _multiplier
-        return round(_un_rounded_result, 1)
-
     # Compute the 1-rep max
-    one_rm = _one_rm()
+    one_rm = round(weight / _max_rep_ratios[reps], 1)
 
     def max_weight(target_reps: int) -> float:
         """Used to calculate max weight based on actual reps, e.g. 5 or 12"""
-        _multiplier = _common_n_reps[target_reps]
-        _un_rounded_result = one_rm * _multiplier
-        return round(_un_rounded_result, 1)
+        return round(one_rm * _max_rep_ratios[target_reps], 1)
 
-    return {n_reps: max_weight(n_reps) for n_reps in _common_n_reps}
+    return {n_reps: max_weight(n_reps) for n_reps in _max_rep_ratios}
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
