@@ -14,34 +14,15 @@ import ntclient.services.calculate as calc
 @pytest.mark.parametrize("_eq", ["epley", "brzycki", "dos_remedios"])
 @pytest.mark.parametrize(
     "weight,reps",
-    [
-        (50.0, 1),
-        (50.0, 2),
-        (50.0, 3),
-        (50.0, 5),
-        (50.0, 6),
-        (50.0, 8),
-        (50.0, 10),
-        (50.0, 12),
-        (50.0, 15),
-        (50.0, 20),
-    ],
+    [(50.0, x) for x in (1, 2, 3, 5, 6, 8, 10, 12, 15, 20)],
 )
 def test_000_orm_same_in_same_out(_eq: str, weight: float, reps: int) -> None:
     """Test one rep max: Epley"""
-    if _eq == "epley":
-        result = calc.orm_epley(weight, reps)
+    result = {
+        "epley": calc.orm_epley(weight, reps),
+        "brzycki": calc.orm_brzycki(weight, reps),
+        "dos_remedios": calc.orm_dos_remedios(weight, reps),
+    }
 
-    elif _eq == "brzycki":
-        result = calc.orm_brzycki(weight, reps)
-
-    else:  # _eq == "dos_remedios"
-        result = calc.orm_dos_remedios(weight, reps)
-
-    try:
-        # Check results
-        assert result[reps] == weight
-    except KeyError:
-        # dose Remedios does not work for 20 reps currently
-        assert _eq == "dos_remedios"
-        assert reps == 20
+    # Check results
+    assert result[_eq][reps] == weight

@@ -9,19 +9,20 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 
 
 
-[Unreleased]
+[0.2.6] - 2022-08-08
 ########################################################################
 
 Added
 ~~~~~
 
 - Recipes are stored in a ``csv`` format now with ``uuid`` instead of ``int``,
-  and they can be viewed in a convenient ``tree`` output.
+  and they can be viewed in a convenient ``tree`` output
+  (**NOTE:** recipes is still a WIP).
 - Calculate functions for body fat, BMR, 1-rep max, & lean body limits.
 - Example recipe ``csv`` files.
 - ``unittest`` compatibility, not sure this will stay.
   May revert to ``pytest``.
-- Dedicated test file for calculate service.
+- Dedicated test file for ``calculate.py`` service.
 
 Changed
 ~~~~~~~
@@ -33,9 +34,15 @@ Changed
 - Start to split apart some of the original ``test_cli`` functions.
 - Enable more verbose ``mypy`` flags.
 
+Fixed
+~~~~~
+
+- Faulty algebra in the ``orm_brzycki`` equation.
+- Missing rep ranges for ``dos_remedios`` equation.
 
 
-[0.2.4] - 2022-07-20
+
+[0.2.5] - 2022-07-20
 ########################################################################
 
 Added
@@ -50,6 +57,16 @@ Changed
 
 - Specify version **range** for package dependencies, test old Linux / Python.
 - Clean up SQL drivers and Python functions. Use non-plural tables.
+
+
+
+[0.2.4] - 2022-07-12
+########################################################################
+
+Fixed
+~~~~~
+
+- Error when doing a pip install: ``NTSQLITE_DESTINATION`` is not defined.
 
 
 

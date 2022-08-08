@@ -14,20 +14,12 @@ import shutil
 import sys
 from enum import Enum
 
-try:
-    from colorama import Fore, Style
-    from colorama import init as colorama_init
-
-    COLORAMA_CAPABLE = True
-    colorama_init()
-except ImportError:
-    COLORAMA_CAPABLE = False
-
 from ntclient.ntsqlite.sql import NT_DB_NAME
+from ntclient.utils import colors
 
 # Package info
 __title__ = "nutra"
-__version__ = "0.2.6.dev5"
+__version__ = "0.2.6"
 __author__ = "Shane Jaroch"
 __email__ = "chown_tee@proton.me"
 __license__ = "GPL v3"
@@ -96,31 +88,18 @@ class RdaColors(Enum):
     THRESH_CRIT = 0.4
     THRESH_OVER = 1.9
 
-    if COLORAMA_CAPABLE:
-        COLOR_WARN = Fore.YELLOW
-        COLOR_CRIT = Style.DIM + Fore.RED
-        COLOR_OVER = Style.DIM + Fore.MAGENTA
+    COLOR_WARN = colors.COLOR_WARN
+    COLOR_CRIT = colors.COLOR_CRIT
+    COLOR_OVER = colors.COLOR_OVER
 
-        COLOR_DEFAULT = Fore.CYAN
+    COLOR_DEFAULT = colors.COLOR_DEFAULT
 
-        COLOR_RESET_ALL = Style.RESET_ALL
+    STYLE_RESET_ALL = colors.STYLE_RESET_ALL
 
-        # Used in macro bars
-        COLOR_YELLOW = Fore.YELLOW
-        COLOR_BLUE = Fore.BLUE
-        COLOR_RED = Fore.RED
-    else:
-        COLOR_WARN = str()  # type: ignore
-        COLOR_CRIT = str()  # type: ignore
-        COLOR_OVER = str()  # type: ignore
-
-        COLOR_DEFAULT = str()  # type: ignore
-
-        COLOR_RESET_ALL = str()  # type: ignore
-
-        COLOR_YELLOW = str()  # type: ignore
-        COLOR_BLUE = str()  # type: ignore
-        COLOR_RED = str()  # type: ignore
+    # Used in macro bars
+    COLOR_YELLOW = colors.COLOR_YELLOW
+    COLOR_BLUE = colors.COLOR_BLUE
+    COLOR_RED = colors.COLOR_RED
 
 
 class _CliConfig:
@@ -140,7 +119,8 @@ class _CliConfig:
         self.color_over = RdaColors.COLOR_OVER.value
         self.color_default = RdaColors.COLOR_DEFAULT.value
 
-        self.color_reset_all = RdaColors.COLOR_RESET_ALL.value
+        self.style_reset_all = RdaColors.STYLE_RESET_ALL.value
+
         self.color_yellow = RdaColors.COLOR_YELLOW.value
         self.color_red = RdaColors.COLOR_RED.value
         self.color_blue = RdaColors.COLOR_BLUE.value

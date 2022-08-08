@@ -110,6 +110,13 @@ def calc_1rm(args: argparse.Namespace) -> tuple:
     reps = int(args.reps)
     print("Reps:   %s" % reps)
 
+    if weight < 0:
+        print("ERROR: weight must be greater than zero")
+        return 1, None
+    if reps < 1 or reps > 20:
+        print("ERROR: reps must be between 1 and 20")
+        return 1, None
+
     _epley = calc.orm_epley(weight, reps)
     _brzycki = calc.orm_brzycki(weight, reps)
     _dos_remedios = calc.orm_dos_remedios(weight, reps)
@@ -122,18 +129,13 @@ def calc_1rm(args: argparse.Namespace) -> tuple:
     for _rep in _epley.keys():
         row = [_rep]
         for _calc, _values in result.items():
-            try:
-                # Round down for now
-                row.append(int(_values[_rep]))
-            except KeyError:
-                row.append(None)
+            # Round down for now
+            row.append(int(_values[_rep]))
         _all.append(row)
 
     # Print results
     print()
     print("Results for: epley, brzycki, and dos_remedios")
-    if "errMsg" in _dos_remedios:
-        print("WARN: Dos Remedios failed: %s" % _dos_remedios["errMsg"])
     print()
     _table = tabulate(_all, headers=["n", "epl", "brz", "rmds"])
     print(_table)

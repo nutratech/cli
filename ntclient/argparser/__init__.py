@@ -187,7 +187,7 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """BMR, 1 rep-max, and other calculators"""
 
     calc_parser = subparsers.add_parser(
-        "calc", help="find you 1 rep max, body fat, BMR"
+        "calc", help="calculate 1-rep max, body fat, BMR, etc."
     )
 
     calc_subparsers = calc_parser.add_subparsers(title="recipe subcommands")

@@ -213,7 +213,7 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print("--> %s" % header)
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print(CLI_CONFIG.color_reset_all)
+        print(CLI_CONFIG.style_reset_all)
 
     def print_macro_bar(
         _fat: float, _net_carb: float, _pro: float, _kcals_max: float, _buffer: int = 0
@@ -242,7 +242,7 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
             + c_buf
             + CLI_CONFIG.color_red
             + p_buf
-            + CLI_CONFIG.color_reset_all
+            + CLI_CONFIG.style_reset_all
         )
 
         # Bars
@@ -250,7 +250,7 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         print(CLI_CONFIG.color_yellow + "=" * n_fat, end="")
         print(CLI_CONFIG.color_blue + "=" * n_car, end="")
         print(CLI_CONFIG.color_red + "=" * n_pro, end="")
-        print(CLI_CONFIG.color_reset_all + ">")
+        print(CLI_CONFIG.style_reset_all + ">")
 
         # Calorie footers
         k_fat = str(round(fat * 9))
@@ -267,7 +267,7 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
             + c_buf
             + CLI_CONFIG.color_red
             + p_buf
-            + CLI_CONFIG.color_reset_all
+            + CLI_CONFIG.style_reset_all
         )
 
     def print_nute_bar(_n_id: int, amount: float, _nutrients: dict) -> tuple:
@@ -299,7 +299,7 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         print(" {0}<".format(color), end="")
         print("=" * left_pos + " " * (left_index - left_pos) + ">", end="")
         print(" {0}%\t[{1}]".format(perc, detail_amount), end="")
-        print(CLI_CONFIG.color_reset_all)
+        print(CLI_CONFIG.style_reset_all)
 
         return True, perc
 

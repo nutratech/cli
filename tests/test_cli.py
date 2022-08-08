@@ -209,12 +209,15 @@ class TestCli(unittest.TestCase):
         code, _ = args.func(args)
         assert code == 0
 
-        # Invalid range for dos_remedios (11 instead of 12)
-        args = arg_parser.parse_args(args=["calc", "1rm", "225", "11"])
+        # Reps > 20 (or reps < 1)
+        args = arg_parser.parse_args(args=["calc", "1rm", "225", "25"])
         code, result = args.func(args)
-        assert code == 0
-        assert set(result.keys()) == {"epley", "brzycki", "dos_remedios"}
-        assert "errMsg" in result["dos_remedios"]
+        assert code == 1
+
+        # Weight < 0
+        args = arg_parser.parse_args(args=["calc", "1rm", "-10", "10"])
+        code, result = args.func(args)
+        assert code == 1
 
         # BMR
         # -----------------------------------
