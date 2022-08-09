@@ -14,45 +14,35 @@ try:
     # Made it this far, so run the init function (which is needed on Windows)
     colorama_init()
 
-    # Styles
-    STYLE_BRIGHT = Style.BRIGHT
-    STYLE_DIM = Style.DIM
-    STYLE_RESET_ALL = Style.RESET_ALL
-
-    # Colors
-    COLOR_WARN = Fore.YELLOW
-    COLOR_CRIT = Style.DIM + Fore.RED
-    COLOR_OVER = Style.DIM + Fore.MAGENTA
-
-    COLOR_DEFAULT = Fore.CYAN
-
-    # Used in macro bars
-    COLOR_YELLOW = Fore.YELLOW
-    COLOR_BLUE = Fore.BLUE
-    COLOR_RED = Fore.RED
-
-    # Used by `tree.py` utility
-    COLOR_GREEN = Fore.GREEN
-    COLOR_CYAN = Fore.CYAN
+    COLORAMA_CAPABLE = True
 
 except ImportError:
-    # These will all just be empty strings if colorama isn't installed
+    COLORAMA_CAPABLE = False
 
-    # Styles
-    STYLE_BRIGHT = str()
-    STYLE_DIM = str()
-    STYLE_RESET_ALL = str()
 
-    # Colors
-    COLOR_WARN = str()
-    COLOR_CRIT = str()
-    COLOR_OVER = str()
+def safe_color(_input_str: str) -> str:
+    """Return the colorama value if it exists, otherwise an empty string"""
+    return _input_str if COLORAMA_CAPABLE else str()
 
-    COLOR_DEFAULT = str()
 
-    COLOR_YELLOW = str()
-    COLOR_BLUE = str()
-    COLOR_RED = str()
+# NOTE: These will all just be empty strings if colorama isn't installed
+# Styles
+STYLE_BRIGHT = safe_color(Style.BRIGHT)
+STYLE_DIM = safe_color(Style.DIM)
+STYLE_RESET_ALL = safe_color(Style.RESET_ALL)
 
-    COLOR_GREEN = str()
-    COLOR_CYAN = str()
+# Colors
+COLOR_WARN = safe_color(Fore.YELLOW)
+COLOR_CRIT = safe_color(Style.DIM + Fore.RED)
+COLOR_OVER = safe_color(Style.DIM + Fore.MAGENTA)
+
+COLOR_DEFAULT = safe_color(Fore.CYAN)
+
+# Used in macro bars
+COLOR_YELLOW = safe_color(Fore.YELLOW)
+COLOR_BLUE = safe_color(Fore.BLUE)
+COLOR_RED = safe_color(Fore.RED)
+
+# Used by `tree.py` utility
+COLOR_GREEN = safe_color(Fore.GREEN)
+COLOR_CYAN = safe_color(Fore.CYAN)
