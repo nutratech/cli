@@ -102,6 +102,7 @@ class RdaColors(Enum):
     COLOR_RED = colors.COLOR_RED
 
 
+# pylint: disable=too-few-public-methods,too-many-instance-attributes
 class _CliConfig:
     """Mutable global store for configuration values"""
 

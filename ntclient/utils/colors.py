@@ -7,42 +7,64 @@ Created on Mon Aug  8 14:35:43 2022
 Allows the safe avoidance of ImportError on non-colorama capable systems.
 """
 
+# pylint: disable=invalid-name
+
+
+# pylint: disable=too-few-public-methods
+class _STYLE:
+    def __init__(self) -> None:
+        self.BRIGHT = str()
+        self.DIM = str()
+        self.RESET_ALL = str()
+
+
+# pylint: disable=too-few-public-methods,too-many-instance-attributes
+class _FORE:
+    def __init__(self) -> None:
+        self.WARN = str()
+        self.CRIT = str()
+        self.OVER = str()
+        self.DEFAULT = str()
+
+        self.YELLOW = str()
+        self.BLUE = str()
+        self.RED = str()
+
+        self.GREEN = str()
+        self.CYAN = str()
+
+
+_Style = _STYLE()
+_Fore = _FORE()
+
 try:
     from colorama import Fore, Style
-    from colorama import init as colorama_init
 
-    # Made it this far, so run the init function (which is needed on Windows)
-    colorama_init()
-
-    COLORAMA_CAPABLE = True
+    # from colorama import init as colorama_init
+    # # Made it this far, so run the init function (which is needed on Windows)
+    # colorama_init()
 
 except ImportError:
-    COLORAMA_CAPABLE = False
-
-
-def safe_color(_input_str: str) -> str:
-    """Return the colorama value if it exists, otherwise an empty string"""
-    return _input_str if COLORAMA_CAPABLE else str()
+    Fore, Style = _Fore, _Style  # type: ignore
 
 
 # NOTE: These will all just be empty strings if colorama isn't installed
 # Styles
-STYLE_BRIGHT = safe_color(Style.BRIGHT)
-STYLE_DIM = safe_color(Style.DIM)
-STYLE_RESET_ALL = safe_color(Style.RESET_ALL)
+STYLE_BRIGHT = Style.BRIGHT
+STYLE_DIM = Style.DIM
+STYLE_RESET_ALL = Style.RESET_ALL
 
-# Colors
-COLOR_WARN = safe_color(Fore.YELLOW)
-COLOR_CRIT = safe_color(Style.DIM + Fore.RED)
-COLOR_OVER = safe_color(Style.DIM + Fore.MAGENTA)
-
-COLOR_DEFAULT = safe_color(Fore.CYAN)
+# Colors for Progress / RDA bar
+COLOR_WARN = Fore.YELLOW
+COLOR_CRIT = Style.DIM + Fore.RED
+COLOR_OVER = Style.DIM + Fore.MAGENTA
+COLOR_DEFAULT = Fore.CYAN
 
 # Used in macro bars
-COLOR_YELLOW = safe_color(Fore.YELLOW)
-COLOR_BLUE = safe_color(Fore.BLUE)
-COLOR_RED = safe_color(Fore.RED)
+COLOR_YELLOW = Fore.YELLOW
+COLOR_BLUE = Fore.BLUE
+COLOR_RED = Fore.RED
 
 # Used by `tree.py` utility
-COLOR_GREEN = safe_color(Fore.GREEN)
-COLOR_CYAN = safe_color(Fore.CYAN)
+COLOR_GREEN = Fore.GREEN
+COLOR_CYAN = Fore.CYAN
