@@ -29,6 +29,7 @@ class _FORE:
         self.YELLOW = str()
         self.BLUE = str()
         self.RED = str()
+        self.MAGENTA = str()
 
         self.GREEN = str()
         self.CYAN = str()
@@ -39,10 +40,10 @@ _Fore = _FORE()
 
 try:
     from colorama import Fore, Style
+    from colorama import init as colorama_init
 
-    # from colorama import init as colorama_init
-    # # Made it this far, so run the init function (which is needed on Windows)
-    # colorama_init()
+    # Made it this far, so run the init function (which is needed on Windows)
+    colorama_init()
 
 except ImportError:
     Fore, Style = _Fore, _Style  # type: ignore
