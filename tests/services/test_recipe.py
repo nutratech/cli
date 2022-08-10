@@ -41,7 +41,7 @@ class TestRecipe(unittest.TestCase):
             r.recipe_overview("-12345-FAKE-PATH-")
 
     def test_recipe_overview_might_succeed_for_maybe_existing_id(self):
-        """Tries check for existing ID, but only can if the user initialized"""
+        """Tries 'check for existing ID', but only can if the user initialized"""
         exit_code, _ = r.recipe_overview(
             os.path.join(RECIPE_STOCK, "dinner", "burrito-bowl.csv")
         )
