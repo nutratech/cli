@@ -82,8 +82,6 @@ format:
 
 
 LINT_LOCS := ntclient/ tests/ setup.py
-YAML_LOCS := ntclient/ntsqlite/.*.yml .github/workflows/ .*.yml
-# NOTE: yamllint 	ntclient/ntsqlite/.travis.yml ? (submodule)
 # NOTE: doc8 		ntclient/ntsqlite/README.rst  ? (submodule)
 .PHONY: _lint
 _lint:
@@ -94,8 +92,6 @@ _lint:
 	black --check $(LINT_LOCS)
 	# lint RST (last param is search term, NOT ignore)
 	doc8 --quiet *.rst ntclient/ntsqlite/*.rst
-	# lint YAML
-	yamllint $(YAML_LOCS)
 	# lint Python
 	bandit -q -c .banditrc -r $(LINT_LOCS)
 	mypy $(LINT_LOCS)
