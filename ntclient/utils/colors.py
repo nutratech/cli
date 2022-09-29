@@ -5,6 +5,7 @@ Created on Mon Aug  8 14:35:43 2022
 @author: shane
 
 Allows the safe avoidance of ImportError on non-colorama capable systems.
+Also provides compatibility with old versions of colorama.
 """
 
 # pylint: disable=invalid-name
