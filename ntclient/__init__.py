@@ -19,7 +19,7 @@ from ntclient.utils import colors
 
 # Package info
 __title__ = "nutra"
-__version__ = "0.2.6"
+__version__ = "0.2.7.dev0"
 __author__ = "Shane Jaroch"
 __email__ = "chown_tee@proton.me"
 __license__ = "GPL v3"
@@ -102,6 +102,7 @@ class RdaColors(Enum):
     COLOR_RED = colors.COLOR_RED
 
 
+# pylint: disable=too-few-public-methods,too-many-instance-attributes
 class _CliConfig:
     """Mutable global store for configuration values"""
 

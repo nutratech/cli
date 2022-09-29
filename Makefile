@@ -31,6 +31,7 @@ _venv:
 	[ "$(PYTHON)" = "$(PWD)/.venv/bin/python" ] || [ "$(PYTHON)" = "$(PWD)/.venv/Scripts/python" ]
 
 
+
 # ---------------------------------------
 # Install requirements
 # ---------------------------------------
@@ -52,6 +53,7 @@ REQ_OPT := requirements-optional.txt
 REQ_LINT := requirements-lint.txt
 REQ_TEST := requirements-test.txt
 REQ_TEST_OLD := requirements-test-old.txt
+
 
 PIP_OPT_ARGS ?=
 
@@ -80,8 +82,6 @@ format:
 
 
 LINT_LOCS := ntclient/ tests/ setup.py
-YAML_LOCS := ntclient/ntsqlite/.*.yml .github/workflows/ .*.yml
-# NOTE: yamllint 	ntclient/ntsqlite/.travis.yml ? (submodule)
 # NOTE: doc8 		ntclient/ntsqlite/README.rst  ? (submodule)
 .PHONY: _lint
 _lint:
@@ -92,8 +92,6 @@ _lint:
 	black --check $(LINT_LOCS)
 	# lint RST (last param is search term, NOT ignore)
 	doc8 --quiet *.rst ntclient/ntsqlite/*.rst
-	# lint YAML
-	yamllint $(YAML_LOCS)
 	# lint Python
 	bandit -q -c .banditrc -r $(LINT_LOCS)
 	mypy $(LINT_LOCS)
@@ -115,6 +113,7 @@ _test:
 test: _venv _test	## Run CLI unittests
 
 
+
 # ---------------------------------------
 # SQLite submodule: nt-sqlite
 # ---------------------------------------
@@ -126,6 +125,7 @@ ntsqlite/build:
 	$(PY_SYS_INTERPRETER) ntclient/ntsqlite/sql/__init__.py
 
 # TODO: nt-sqlite/test
+
 
 
 # ---------------------------------------
@@ -150,6 +150,7 @@ install:	## pip install nutra
 	nutra -v
 
 
+
 # ---------------------------------------
 # Clean
 # ---------------------------------------
@@ -160,6 +161,7 @@ clean:	## Clean up __pycache__ and leftover bits
 	rm -rf build/
 	rm -rf nutra.egg-info/
 	rm -rf .pytest_cache/ .mypy_cache/
+	# Recursively find & remove
 	find ntclient/ tests/ \
 	-name \
 	__pycache__ \
@@ -168,6 +170,7 @@ clean:	## Clean up __pycache__ and leftover bits
 	-o -name .mypy_cache \
 	-o -name .pytest_cache \
 	| xargs rm -rf
+
 
 
 # ---------------------------------------

@@ -9,4 +9,3 @@ types-colorama>=0.4.15
 types-psycopg2>=2.9.18
 types-setuptools>=57.4.0
 types-tabulate>=0.8.11
-yamllint>=1.27

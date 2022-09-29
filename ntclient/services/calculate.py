@@ -15,6 +15,7 @@ from ntclient import Gender
 # 1 rep max
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+# The only ones displayed in the result table
 common_n_reps = (1, 2, 3, 5, 6, 8, 10, 12, 15, 20)
 
 
@@ -28,16 +29,20 @@ def orm_epley(weight: float, reps: float) -> dict:
     Source: https://workoutable.com/one-rep-max-calculator/
     """
 
-    def one_rm() -> float:
-        _un_rounded_result = weight * (1 + (reps - 1) / 30)
-        return round(_un_rounded_result, 1)
+    # Compute the 1-rep max
+    one_rm = round(
+        weight * (1 + (reps - 1) / 30),
+        1,
+    )
 
-    def weight_max_reps(target_reps: float) -> float:
-        _un_rounded_result = one_rm() * 30 / (29 + target_reps)
-        return round(_un_rounded_result, 1)
+    def max_weight(target_reps: float) -> float:
+        """Used to calculate max weight for a given rep count, e.g. 205x3 or 135x15"""
+        return round(
+            one_rm * 30 / (29 + target_reps),
+            1,
+        )
 
-    maxes = {n_reps: weight_max_reps(n_reps) for n_reps in common_n_reps}
-    return maxes
+    return {n_reps: max_weight(n_reps) for n_reps in common_n_reps}
 
 
 def orm_brzycki(weight: float, reps: float) -> dict:
@@ -48,24 +53,27 @@ def orm_brzycki(weight: float, reps: float) -> dict:
     1 RM = weight * 36 / (37 - reps)
 
     NOTE: Adjusted formula is below, with quadratic term.
+      This makes it more accurate in the 12-20 rep range.
 
-    1 RM = weight * 36 / (37 - reps + 0.005 * reps^2)
+    1 RM = weight * 36 / (36.995 - reps + 0.005 * reps^2)
 
     Source: https://workoutable.com/one-rep-max-calculator/
     """
 
-    def _one_rm() -> float:
-        _un_rounded_result = weight * 36 / (37 - reps + 0.005 * reps**2)
-        return round(_un_rounded_result, 1)
+    # Compute the 1-rep max
+    one_rm = round(
+        weight * 36 / (36.995 - reps + 0.005 * reps**2),
+        1,
+    )
 
-    one_rm = _one_rm()
+    def max_weight(target_reps: float) -> float:
+        """Used to calculate max weight for a given rep count, e.g. 205x3 or 135x15"""
+        return round(
+            one_rm * (36.995 - target_reps + 0.005 * target_reps**2) / 36,
+            1,
+        )
 
-    def weight_max_reps(target_reps: float) -> float:
-        _un_rounded_result = one_rm * (37 - target_reps + 0.005 * target_reps**2) / 36
-        return round(_un_rounded_result, 1)
-
-    maxes = {n_reps: weight_max_reps(n_reps) for n_reps in common_n_reps}
-    return maxes
+    return {n_reps: max_weight(n_reps) for n_reps in common_n_reps}
 
 
 def orm_dos_remedios(weight: float, reps: int) -> dict:
@@ -73,13 +81,14 @@ def orm_dos_remedios(weight: float, reps: int) -> dict:
     Returns dict {n_reps: max_weight, ...}
         for n_reps: (1, 2, 3, 5, 6, 8, 10, 12, 15, 20)
 
-    Or an {"errMsg": "INVALID_RANGE", ...}
+    This is a manual data set, curated by dos Remedios;
+    the added values are provided by Mathematica's spline interpolation.
 
     Source:
         https://www.peterrobertscoaching.com/blog/the-best-way-to-calculate-1-rep-max
     """
 
-    _common_n_reps = {
+    _max_rep_ratios = {
         1: 1,
         2: 0.92,
         3: 0.9,
@@ -102,21 +111,21 @@ def orm_dos_remedios(weight: float, reps: int) -> dict:
         20: 0.55,  # NOTE: I added this, 20 reps is NOT in the original equation.
     }
 
-    def _one_rm() -> float:
-        _multiplier = _common_n_reps[reps]
-        _un_rounded_result = weight / _multiplier
-        return round(_un_rounded_result, 1)
-
     # Compute the 1-rep max
-    one_rm = _one_rm()
+    # NOTE: this should be guaranteed by arg-parse to be an integer, and 0 < n <= 20
+    one_rm = round(
+        weight / _max_rep_ratios[reps],
+        1,
+    )
 
     def max_weight(target_reps: int) -> float:
-        """Used to calculate max weight based on actual reps, e.g. 5 or 12"""
-        _multiplier = _common_n_reps[target_reps]
-        _un_rounded_result = one_rm * _multiplier
-        return round(_un_rounded_result, 1)
+        """Used to calculate max weight for a given rep count, e.g. 205x3 or 135x15"""
+        return round(
+            one_rm * _max_rep_ratios[target_reps],
+            1,
+        )
 
-    return {n_reps: max_weight(n_reps) for n_reps in _common_n_reps}
+    return {n_reps: max_weight(n_reps) for n_reps in common_n_reps}
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

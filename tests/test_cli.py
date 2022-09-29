@@ -162,7 +162,11 @@ class TestCli(unittest.TestCase):
         assert len(servings_rows[0]) == 1
 
     def test_410_nt_argparser_funcs(self):
-        """Tests nt functions in argparser.funcs (to varying degrees each)"""
+        """
+        Tests nt functions in argparser.funcs (to varying degrees each)
+
+        TODO: split this up... separate argparser tests; then test missing service lines
+        """
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Day
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -258,7 +262,6 @@ class TestCli(unittest.TestCase):
         assert result["sevenSite"] == 9.93
 
         # Female test
-        # TODO: better values, and don't require hip above (it's 0)
         args = arg_parser.parse_args(
             args="calc bf -F -a 29 -ht 178 -w 70 -hip 100 -n 35 "
             "15 23 19 14 11 10 9".split()
@@ -272,8 +275,25 @@ class TestCli(unittest.TestCase):
         args = arg_parser.parse_args(args="calc lbl 179 0.1 17.2 21.5".split())
         code, result = args.func(args)
         assert code == 0
-        # NOTE: wip
-        print(result)
+        assert result["berkhan"] == {
+            "condition": "Contest shape (5-6%)",
+            "weight": "169.8 ~ 178.6 lbs",
+        }
+        assert result["helms"] == {
+            "condition": "10.0% body fat",
+            "weight": "172.7 ~ 192.3 lbs",
+        }
+        assert result["casey"] == {
+            "condition": "10.0% body fat",
+            "weight": "196.3 lbs",
+            "lbm": "176.7 lbs",
+            "chest": 46.39,
+            "arm": 16.86,
+            "forearm": 13.49,
+            "neck": 16.45,
+            "thigh": 24.46,
+            "calf": 16.4,
+        }
 
     def test_415_invalid_path_day_throws_error(self):
         """Ensures invalid path throws exception in `day` subcommand"""
