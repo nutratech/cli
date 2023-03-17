@@ -2,7 +2,6 @@
 
 import os
 import sys
-from typing import List, Union
 
 from ntclient.utils import colors
 
@@ -94,13 +93,13 @@ def print_dir(_dir: str, pre: str = str()) -> tuple:
     return (n_dirs, n_files, n_size)
 
 
-def main_tree(_args: Union[List, None] = None) -> int:
+def main_tree(_args: list = None) -> int:  # type: ignore
     """Handle input arguments, print off tree"""
     n_dirs = 0
     n_files = 0
 
     if _args is None:
-        _args = sys.argv
+        _args = sys.argv  # type: ignore
 
     if len(_args) == 1:
         # Used for development
