@@ -76,7 +76,6 @@ deps: _venv _deps	## Install requirements
 .PHONY: format
 format:
 	isort $(LINT_LOCS)
-	autopep8 --recursive --in-place --max-line-length 88 $(LINT_LOCS)
 	black $(LINT_LOCS)
 
 
@@ -86,7 +85,6 @@ LINT_LOCS := ntclient/ tests/ setup.py
 _lint:
 	# check formatting: Python
 	pycodestyle --statistics $(LINT_LOCS)
-	autopep8 --recursive --diff --max-line-length 88 --exit-code $(LINT_LOCS)
 	isort --diff --check $(LINT_LOCS)
 	black --check $(LINT_LOCS)
 	# lint RST (last param is search term, NOT ignore)

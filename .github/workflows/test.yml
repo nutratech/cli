@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   test:
-    runs-on: [self-hosted, dev-east]
+    runs-on: [ubuntu-latest]
 
     steps:
       - name: Checkout
@@ -20,15 +20,23 @@ jobs:
       - name: Cloc
         run: make extras/cloc
 
+      - name: Initialize (venv)
+        run: make init
+
+      # python3 -m pip install -r requirements.txt
+      # python3 -m pip install -r requirements-test.txt
+      # python3 -m pip install coveralls
       - name: Install requirements
         run: |
-          /usr/bin/python3 -m pip install -r requirements.txt
-          /usr/bin/python3 -m pip install -r requirements-test.txt
+          python3 -m pip install coveralls
+          source .venv/bin/activate
+          make deps
+
 
       - name: Test
-        run: PATH=~/.local/bin:$PATH make _test
+        run: source .venv/bin/activate && make test
 
       - name: Submit coverage report / coveralls
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: PATH=~/.local/bin:$PATH coveralls --service=github
+        run: coveralls --service=github
