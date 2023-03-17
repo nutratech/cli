@@ -10,7 +10,6 @@ Created on Fri Jan 31 16:02:19 2020
 """
 import argparse
 import time
-from typing import List, Union
 from urllib.error import HTTPError, URLError
 
 import argcomplete
@@ -54,7 +53,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     return arg_parser
 
 
-def main(args: Union[List, None] = None) -> int:
+def main(args: list = None) -> int:  # type: ignore
     """
     Main method for CLI
 
@@ -68,7 +67,7 @@ def main(args: Union[List, None] = None) -> int:
     def parse_args() -> argparse.Namespace:
         """Returns parsed args"""
         if args is None:
-            return arg_parser.parse_args()
+            return arg_parser.parse_args()  # type: ignore
         return arg_parser.parse_args(args=args)
 
     def func(parser: argparse.Namespace) -> tuple:

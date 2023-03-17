@@ -177,12 +177,4 @@ clean:	## Clean up __pycache__ and leftover bits
 CLOC_ARGS ?=
 .PHONY: extras/cloc
 extras/cloc:	## Count lines of source code
-	- cloc \
-	--exclude-dir=\
-	.venv,venv,\
-	.mypy_cache,.pytest_cache,\
-	.idea,\
-	build,dist \
-	--exclude-ext=svg \
-	$(CLOC_ARGS) \
-	.
+	- cloc HEAD
