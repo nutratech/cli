@@ -426,7 +426,7 @@ class TestCli(unittest.TestCase):
             pytest.xfail("PermissionError, are you using Microsoft Windows?")
 
         # mocks input, could also pass `-y` flag or set yes=True
-        usda.input = lambda x: "y"
+        usda.input = lambda x: "y"  # pylint: disable=redefined-builtin
 
         code, successful = init()
         assert code == 0

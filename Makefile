@@ -15,9 +15,8 @@ _help:
 .PHONY: init
 init:	## Set up a Python virtual environment
 	git submodule update --init
-	if [ ! -d .venv ]; then \
-		$(PY_SYS_INTERPRETER) -m venv .venv; \
-	fi
+	$(PY_SYS_INTERPRETER) -m venv --clear .venv
+	$(PY_SYS_INTERPRETER) -m venv --upgrade-deps .venv
 	- direnv allow
 	@echo -e "\r\nNOTE: activate venv, and run 'make deps'\r\n"
 	@echo -e "HINT: run 'source .venv/bin/activate'"
