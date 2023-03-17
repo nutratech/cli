@@ -1,8 +1,7 @@
 ---
 name: test
 
-"on":
-  push: {}
+"on": push
 
 permissions:
   contents: read
@@ -17,22 +16,25 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Cloc
-        run: make extras/cloc
+      # NOTE: disabled for now, GitHub hosted doesn't ship with it
+      # - name: Count lines of code
+      #   run: make extras/cloc
 
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      # Install requirements
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       - name: Initialize (venv)
         run: make init
 
-      # python3 -m pip install -r requirements.txt
-      # python3 -m pip install -r requirements-test.txt
-      # python3 -m pip install coveralls
       - name: Install requirements
         run: |
           python3 -m pip install coveralls
           source .venv/bin/activate
           make deps
 
-
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      # Test
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       - name: Test
         run: source .venv/bin/activate && make test
 
