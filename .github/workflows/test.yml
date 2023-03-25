@@ -23,20 +23,22 @@ jobs:
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       # Install requirements
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      - name: Initialize (venv)
-        run: make init
+      # NOTE: disabled for now, GitHub hosted is already an isolated env
+      # - name: Initialize (venv)
+      #   run: make init
 
       - name: Install requirements
-        run: |
-          python3 -m pip install coveralls
-          source .venv/bin/activate
-          make deps
+        run: >
+          python3 -m pip install
+          coveralls
+          -r requirements.txt
+          -r requirements-test.txt
 
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       # Test
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       - name: Test
-        run: source .venv/bin/activate && make test
+        run: make test
 
       - name: Submit coverage report / coveralls
         env:
