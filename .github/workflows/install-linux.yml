@@ -3,7 +3,8 @@ name: install-linux
 
 "on":
   push:
-    - "**"
+    branches:
+      - "**"
 
 permissions:
   contents: read
