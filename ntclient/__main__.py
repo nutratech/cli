@@ -100,20 +100,20 @@ def main(args: list = None) -> int:  # type: ignore
     exit_code = 1
     try:
         exit_code, *_results = func(_parser)
-    except SqlException as sql_exception:
+    except SqlException as sql_exception:  # pragma: no cover
         print("Issue with an sqlite database: " + repr(sql_exception))
         if CLI_CONFIG.debug:
             raise
-    except HTTPError as http_error:
+    except HTTPError as http_error:  # pragma: no cover
         err_msg = "{0}: {1}".format(http_error.code, repr(http_error))
         print("Server response error, try again: " + err_msg)
         if CLI_CONFIG.debug:
             raise
-    except URLError as url_error:
+    except URLError as url_error:  # pragma: no cover
         print("Connection error, check your internet: " + repr(url_error.reason))
         if CLI_CONFIG.debug:
             raise
-    except Exception as exception:  # pylint: disable=broad-except
+    except Exception as exception:  # pylint: disable=broad-except  # pragma: no cover
         print("Unforeseen error, run with -d for more info: " + repr(exception))
         print("You can open an issue here: %s" % __url__)
         print("Or send me an email with the debug output: %s" % __email__)

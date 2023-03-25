@@ -47,7 +47,7 @@ PY_MIN_STR = ".".join(str(x) for x in PY_MIN_VER)
 PY_SYS_STR = ".".join(str(x) for x in PY_SYS_VER)
 if PY_SYS_VER < PY_MIN_VER:
     # TODO: make this testable with: `class CliConfig`?
-    raise RuntimeError(
+    raise RuntimeError(  # pragma: no cover
         "ERROR: %s requires Python %s or later to run" % (__title__, PY_MIN_STR),
         "HINT:  You're running Python %s" % PY_SYS_STR,
     )
@@ -205,7 +205,9 @@ def activity_factor_from_index(activity_factor: int) -> float:
         if activity_factor in enum_entry.value:
             return float(enum_entry.value[activity_factor])
     # TODO: custom exception. And handle in main file?
-    raise ValueError("No such ActivityFactor for value: %s" % activity_factor)
+    raise ValueError(  # pragma: no cover
+        "No such ActivityFactor for value: %s" % activity_factor
+    )
 
 
 ################################################################################
