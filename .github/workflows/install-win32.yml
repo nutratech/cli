@@ -12,10 +12,10 @@ jobs:
     runs-on: [windows-latest]
 
     steps:
-      - name: Configure Line Endings / git / LF
-        run: |
-          git config --global core.autocrlf input
-          # git config --global core.eol lf
+      # - name: Configure Line Endings / git / LF
+      #   run: |
+      #     git config --global core.autocrlf input
+      #     git config --global core.eol lf
 
       - name: Checkout
         uses: actions/checkout@v3
