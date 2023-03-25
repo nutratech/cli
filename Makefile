@@ -18,7 +18,7 @@ init:	## Set up a Python virtual environment
 	$(PY_SYS_INTERPRETER) -m venv --clear .venv
 	$(PY_SYS_INTERPRETER) -m venv --upgrade-deps .venv
 	- direnv allow
-	@echo -e "\r\nNOTE: run 'source .venv/bin/activate', and 'make deps'
+	@echo -e "\r\nHINT: run 'source .venv/bin/activate', and 'make deps'"
 
 
 PYTHON ?= $(shell which python)
