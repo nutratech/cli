@@ -1,0 +1,46 @@
+---
+name: install-win32
+
+"on":
+  push:
+    branches:
+      # TODO: only run on master, it's slow (or just make unrequired check?)
+      - "**"
+
+jobs:
+  windows-latest:
+    runs-on: [windows-latest]
+
+    steps:
+      - name: Configure Line Endings / git / LF
+        run: |
+          git config --global core.autocrlf input
+          git config --global core.eol lf
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Reload Cache / pip
+        uses: actions/cache@v3
+        with:
+          path: ~\AppData\Local\pip\Cache
+          # NOTE: only cares about base requirements.txt
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install
+        run: make install
+
+      - name: Basic Tests / CLI / Integration
+        run: |
+          n -v
+          nutra -d init -y
+          nutra --no-pager nt
+          nutra --no-pager sort -c 789
+          nutra --no-pager search ultraviolet mushrooms
+          nutra --no-pager anl 9050
+          nutra --no-pager recipe
+          nutra day tests/resources/day/human-test.csv

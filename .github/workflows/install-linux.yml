@@ -38,7 +38,10 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-${{ matrix.python-version }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          # NOTE: only cares about base requirements.txt
+          # yamllint disable rule:line-length
+          key: ${{ runner.os }}-${{ matrix.python-version }}-pip-${{ hashFiles('**/requirements.txt') }}
+          # yamllint enable rule:line-length
           restore-keys: |
             ${{ runner.os }}-${{ matrix.python-version }}-pip-
 
