@@ -23,13 +23,15 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Set up Python ${{ matrix.python-version }} & Restore Cache
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: "pip" # caching pip dependencies
-          cache-dependency-path: "**/requirements*.txt"
-          update-environment: false
+      # NOTE: fails on Python 3.6 and 3.4 with the pip error,
+      #   ERROR: unknown command "cache" - maybe you meant "check"
+      # - name: Set up Python ${{ matrix.python-version }} & Restore Cache
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version: ${{ matrix.python-version }}
+      #     cache: "pip" # caching pip dependencies
+      #     cache-dependency-path: "**/requirements*.txt"
+      #     update-environment: false
 
       - name: Install CLI
         env:
