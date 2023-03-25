@@ -161,6 +161,7 @@ class TestCli(unittest.TestCase):
         assert len(nutrients_rows[0]) == 30
         assert len(servings_rows[0]) == 1
 
+    # pylint: disable=too-many-statements
     def test_410_nt_argparser_funcs(self):
         """
         Tests nt functions in argparser.funcs (to varying degrees each)

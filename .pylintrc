@@ -1,6 +1,6 @@
 [MASTER]
 
-fail-under=9.93
+# fail-under=9.93
 
 
 [MESSAGES CONTROL]

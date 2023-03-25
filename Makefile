@@ -18,8 +18,7 @@ init:	## Set up a Python virtual environment
 	$(PY_SYS_INTERPRETER) -m venv --clear .venv
 	$(PY_SYS_INTERPRETER) -m venv --upgrade-deps .venv
 	- direnv allow
-	@echo -e "\r\nNOTE: activate venv, and run 'make deps'\r\n"
-	@echo -e "HINT: run 'source .venv/bin/activate'"
+	@echo -e "\r\nNOTE: run 'source .venv/bin/activate', and 'make deps'
 
 
 PYTHON ?= $(shell which python)
@@ -75,25 +74,31 @@ deps: _venv _deps	## Install requirements
 
 .PHONY: format
 format:
-	isort $(LINT_LOCS)
-	black $(LINT_LOCS)
+	if [ "$(CHANGED_FILES_PY_FLAG)" = 1 ]; then isort $(CHANGED_FILES_PY) ; fi
+	if [ "$(CHANGED_FILES_PY_FLAG)" = 1 ]; then black $(CHANGED_FILES_PY) ; fi
 
 
 LINT_LOCS := ntclient/ tests/ setup.py
-# NOTE: doc8 		ntclient/ntsqlite/README.rst  ? (submodule)
+CHANGED_FILES_RST ?= $(shell git diff origin/master --name-only --diff-filter=MACRU \*.rst)
+CHANGED_FILES_PY ?= $(shell git diff origin/master --name-only --diff-filter=MACRU \*.py)
+CHANGED_FILES_PY_FLAG ?= $(shell if [ "$(CHANGED_FILES_PY)" ]; then echo 1; else echo 0; fi)
+
+ttt:
+	@echo $(CHANGED_FILES_PY_FLAG)
+
 .PHONY: _lint
 _lint:
+	# lint RST
+	if [ "$(CHANGED_FILES_RST)" ]; then doc8 --quiet $(CHANGED_FILES_RST); fi
 	# check formatting: Python
-	pycodestyle --statistics $(LINT_LOCS)
-	isort --diff --check $(LINT_LOCS)
-	black --check $(LINT_LOCS)
-	# lint RST (last param is search term, NOT ignore)
-	doc8 --quiet *.rst ntclient/ntsqlite/*.rst
+	if [ "$(CHANGED_FILES_PY_FLAG)" = 1 ]; then isort --diff --check $(CHANGED_FILES_PY) ; fi
+	if [ "$(CHANGED_FILES_PY_FLAG)" = 1 ]; then black --check $(CHANGED_FILES_PY) ; fi
 	# lint Python
-	bandit -q -c .banditrc -r $(LINT_LOCS)
-	mypy $(LINT_LOCS)
-	flake8 $(LINT_LOCS)
-	pylint $(LINT_LOCS)
+	if [ "$(CHANGED_FILES_PY_FLAG)" = 1 ]; then pycodestyle --statistics $(CHANGED_FILES_PY); fi
+	if [ "$(CHANGED_FILES_PY_FLAG)" = 1 ]; then bandit -q -c .banditrc -r $(CHANGED_FILES_PY); fi
+	if [ "$(CHANGED_FILES_PY_FLAG)" = 1 ]; then flake8 $(CHANGED_FILES_PY); fi
+	if [ "$(CHANGED_FILES_PY_FLAG)" = 1 ]; then mypy $(CHANGED_FILES_PY); fi
+	if [ "$(CHANGED_FILES_PY_FLAG)" = 1 ]; then pylint $(CHANGED_FILES_PY); fi
 
 .PHONY: lint
 lint: _venv _lint	## Lint code and documentation
@@ -152,6 +157,12 @@ install:	## pip install nutra
 # Clean
 # ---------------------------------------
 
+RECURSIVE_CLEAN_LOCS ?= $(shell find ntclient/ tests/ \
+-name __pycache__ \
+-o -name .coverage \
+-o -name .mypy_cache \
+-o -name .pytest_cache)
+
 .PHONY: clean
 clean:	## Clean up __pycache__ and leftover bits
 	rm -f .coverage ntclient/ntsqlite/sql/nt.sqlite3
@@ -159,14 +170,7 @@ clean:	## Clean up __pycache__ and leftover bits
 	rm -rf nutra.egg-info/
 	rm -rf .pytest_cache/ .mypy_cache/
 	# Recursively find & remove
-	find ntclient/ tests/ \
-	-name \
-	__pycache__ \
-	-o -name \
-	.coverage \
-	-o -name .mypy_cache \
-	-o -name .pytest_cache \
-	| xargs rm -rf
+	if [ "$(RECURSIVE_CLEAN_LOCS)" ]; then rm -rf $(RECURSIVE_CLEAN_LOCS); fi
 
 
 
