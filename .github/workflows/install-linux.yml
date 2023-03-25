@@ -33,6 +33,15 @@ jobs:
           # cache: "pip" # caching pip dependencies
           # cache-dependency-path: "**/requirements*.txt"
 
+      # NOTE: see above NOTE, we are still using deprecated cache restore
+      - name: Reload Cache / pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-${{ matrix.python-version }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.python-version }}-pip-
+
       - name: Install CLI
         env:
           PY_SYS_INTERPRETER: python3
