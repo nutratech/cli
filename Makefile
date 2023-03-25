@@ -83,9 +83,6 @@ CHANGED_FILES_RST ?= $(shell git diff origin/master --name-only --diff-filter=MA
 CHANGED_FILES_PY ?= $(shell git diff origin/master --name-only --diff-filter=MACRU \*.py)
 CHANGED_FILES_PY_FLAG ?= $(shell if [ "$(CHANGED_FILES_PY)" ]; then echo 1; else echo 0; fi)
 
-ttt:
-	@echo $(CHANGED_FILES_PY_FLAG)
-
 .PHONY: _lint
 _lint:
 	# lint RST
