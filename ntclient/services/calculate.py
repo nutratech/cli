@@ -15,8 +15,11 @@ from ntclient.utils import Gender
 # 1 rep max
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# The only ones displayed in the result table
-common_n_reps = (1, 2, 3, 5, 6, 8, 10, 12, 15, 20)
+# The rep values used in the calculation
+COMMON_N_REPS_MIN = 1
+COMMON_N_REPS_MAX = 20
+COMMON_N_REPS = range(COMMON_N_REPS_MIN, COMMON_N_REPS_MAX)
+# common_n_reps = (1, 2, 3, 5, 6, 8, 10, 12, 15, 20)
 
 
 def orm_epley(weight: float, reps: float) -> dict:
@@ -42,7 +45,7 @@ def orm_epley(weight: float, reps: float) -> dict:
             1,
         )
 
-    return {n_reps: max_weight(n_reps) for n_reps in common_n_reps}
+    return {n_reps: max_weight(n_reps) for n_reps in COMMON_N_REPS}
 
 
 def orm_brzycki(weight: float, reps: float) -> dict:
@@ -73,7 +76,7 @@ def orm_brzycki(weight: float, reps: float) -> dict:
             1,
         )
 
-    return {n_reps: max_weight(n_reps) for n_reps in common_n_reps}
+    return {n_reps: max_weight(n_reps) for n_reps in COMMON_N_REPS}
 
 
 def orm_dos_remedios(weight: float, reps: int) -> dict:
@@ -125,7 +128,7 @@ def orm_dos_remedios(weight: float, reps: int) -> dict:
             1,
         )
 
-    return {n_reps: max_weight(n_reps) for n_reps in common_n_reps}
+    return {n_reps: max_weight(n_reps) for n_reps in COMMON_N_REPS}
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

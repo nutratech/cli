@@ -11,6 +11,7 @@ import argparse
 import os
 import traceback
 
+import asciichartpy as asciichartpy
 from tabulate import tabulate
 
 import ntclient.services.analyze
@@ -120,6 +121,10 @@ def calc_1rm(args: argparse.Namespace) -> tuple:
     _epley = calc.orm_epley(weight, reps)
     _brzycki = calc.orm_brzycki(weight, reps)
     _dos_remedios = calc.orm_dos_remedios(weight, reps)
+    _average = {
+        n: (_epley[n] + _brzycki[n] + _dos_remedios[n]) / 3
+        for n in sorted(_epley.keys())
+    }
 
     result = {"epley": _epley, "brzycki": _brzycki, "dos_remedios": _dos_remedios}
 
@@ -139,6 +144,11 @@ def calc_1rm(args: argparse.Namespace) -> tuple:
     print()
     _table = tabulate(_all, headers=["n", "epl", "brz", "rmds"])
     print(_table)
+
+    # Print graph
+    # TODO: make this a configurable height?
+    _plot = asciichartpy.plot(sorted(_average.values(), reverse=True), {"height": 20})
+    print(_plot)
 
     return 0, result
 
