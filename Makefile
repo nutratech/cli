@@ -59,7 +59,7 @@ deps: _venv	## Install requirements
 	$(PIP) install --user $(PIP_OPT_ARGS) -r requirements.txt
 	- $(PIP) install --user $(PIP_OPT_ARGS) -r $(REQ_OPT)
 	- $(PIP) install --user $(PIP_OPT_ARGS) -r $(REQ_LINT)
-	- $(PIP) install --user $(PIP_OPT_ARGS) -r $(REQ_TEST) || \
+	$(PIP) install --user $(PIP_OPT_ARGS) -r $(REQ_TEST) || \
 	    $(PIP) install --user $(PIP_OPT_ARGS) -r $(REQ_TEST_OLD) || \
 	    echo "TEST REQs failed. Are you on a very old computer?"
 
