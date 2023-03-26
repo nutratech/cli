@@ -12,15 +12,15 @@ _help:
 # ---------------------------------------
 # init & venv
 # ---------------------------------------
+
 .PHONY: init
 init:	## Set up a Python virtual environment
 	git submodule update --init
 	$(PY_SYS_INTERPRETER) -m venv --clear .venv
-	- if [ -z "$$CI" ]; then $(PY_SYS_INTERPRETER) -m venv --upgrade-deps .venv; fi
+	- if [ -z "$(CI)" ]; then $(PY_SYS_INTERPRETER) -m venv --upgrade-deps .venv; fi
 	- direnv allow || echo -e "\r\nHINT: run 'source .venv/bin/activate', and 'make deps'"
 
 # include .env
-
 SKIP_VENV ?=
 PYTHON ?= $(shell which python)
 PWD ?= $(shell pwd)
