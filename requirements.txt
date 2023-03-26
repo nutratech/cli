@@ -1,4 +1,4 @@
-argcomplete~=1.8
+argcomplete<=1.8.2
 asciichart==0.1
 colorama>=0.3.6,<=0.4.1
 fuzzywuzzy>=0.3.0
