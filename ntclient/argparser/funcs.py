@@ -126,7 +126,7 @@ def calc_1rm(args: argparse.Namespace) -> tuple:
     # TODO: fourth column: average or `avg` column too.
     # Prepare table rows, to display all 3 results in one table
     _all = []
-    for _rep in _epley.keys():
+    for _rep in sorted(_epley.keys()):  # NOTE: dicts not sorted prior to 3.7
         row = [_rep]
         for _calc, _values in result.items():
             # Round down for now
