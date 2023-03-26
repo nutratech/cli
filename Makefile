@@ -55,12 +55,13 @@ PIP_OPT_ARGS ?=
 
 .PHONY: deps
 deps: _venv	## Install requirements
-	$(PIP) install wheel
-	$(PIP) install $(PIP_OPT_ARGS) -r requirements.txt
-	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_OPT)
-	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_LINT)
-	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_TEST) || \
-	echo "TEST REQs failed. Try with '--user' flag, or old version: $(PIP) install -r $(REQ_TEST_OLD)"
+	$(PIP) install --user wheel
+	$(PIP) install --user $(PIP_OPT_ARGS) -r requirements.txt
+	- $(PIP) install --user $(PIP_OPT_ARGS) -r $(REQ_OPT)
+	- $(PIP) install --user $(PIP_OPT_ARGS) -r $(REQ_LINT)
+	- $(PIP) install --user $(PIP_OPT_ARGS) -r $(REQ_TEST) || \
+	    $(PIP) install --user $(PIP_OPT_ARGS) -r $(REQ_TEST_OLD) || \
+	    echo "TEST REQs failed. Are you on a very old computer?"
 
 
 # ---------------------------------------
