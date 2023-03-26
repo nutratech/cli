@@ -51,17 +51,17 @@ REQ_LINT := requirements-lint.txt
 REQ_TEST := requirements-test.txt
 REQ_TEST_OLD := requirements-test-old.txt
 
-PIP_OPT_ARGS ?=
+PIP_OPT_ARGS ?= $(shell if [ "$(SKIP_VENV)" ]; then echo "--user";)
 
 .PHONY: deps
 deps: _venv	## Install requirements
-	$(PIP) install --user wheel
-	$(PIP) install --user $(PIP_OPT_ARGS) -r requirements.txt
-	- $(PIP) install --user $(PIP_OPT_ARGS) -r $(REQ_OPT)
-	- $(PIP) install --user $(PIP_OPT_ARGS) -r $(REQ_LINT)
-	$(PIP) install --user $(PIP_OPT_ARGS) -r $(REQ_TEST) || \
-	    $(PIP) install --user $(PIP_OPT_ARGS) -r $(REQ_TEST_OLD) || \
-	    echo "TEST REQs failed. Are you on a very old computer?"
+	$(PIP) install wheel
+	$(PIP) install $(PIP_OPT_ARGS) -r requirements.txt
+	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_OPT)
+	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_LINT)
+	$(PIP) install $(PIP_OPT_ARGS) -r $(REQ_TEST) || \
+	    $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_TEST_OLD) || \
+	    echo "TEST REQs failed. Are you on a very old computer? Try with '--user' flag."
 
 
 # ---------------------------------------
