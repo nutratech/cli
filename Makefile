@@ -51,7 +51,7 @@ REQ_LINT := requirements-lint.txt
 REQ_TEST := requirements-test.txt
 REQ_TEST_OLD := requirements-test-old.txt
 
-PIP_OPT_ARGS ?= $(shell if [ "$(SKIP_VENV)" ]; then echo "--user";)
+PIP_OPT_ARGS ?= $(shell if [ "$(SKIP_VENV)" ]; then echo "--user"; fi)
 
 .PHONY: deps
 deps: _venv	## Install requirements
