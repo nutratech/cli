@@ -44,9 +44,7 @@ ifeq ($(PY_SYS_INTERPRETER),)
 	endif
 endif
 
-PY_VIRTUAL_INTERPRETER ?= python
-
-PIP ?= $(PY_VIRTUAL_INTERPRETER) -m pip
+PIP ?= $(PYTHON) -m pip
 
 REQ_OPT := requirements-optional.txt
 REQ_LINT := requirements-lint.txt
