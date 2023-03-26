@@ -10,6 +10,9 @@ jobs:
   test:
     runs-on: [ubuntu-latest]
 
+    env:
+      SKIP_VENV: 1
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -38,7 +41,7 @@ jobs:
       # Test
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       - name: Test
-        run: make _test
+        run: make test
 
       - name: Submit coverage report / coveralls
         env:
