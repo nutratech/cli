@@ -19,13 +19,15 @@ init:	## Set up a Python virtual environment
 	- if [ -z "$$CI" ]; then $(PY_SYS_INTERPRETER) -m venv --upgrade-deps .venv; fi
 	- direnv allow || echo -e "\r\nHINT: run 'source .venv/bin/activate', and 'make deps'"
 
+# include .env
 
+SKIP_VENV ?=
 PYTHON ?= $(shell which python)
 PWD ?= $(shell pwd)
 .PHONY: _venv
 _venv:
 	# Test to enforce venv usage across important make targets
-	[ "$(PYTHON)" = "$(PWD)/.venv/bin/python" ] || [ "$(PYTHON)" = "$(PWD)/.venv/Scripts/python" ]
+	[ "$(SKIP_VENV)" ] || [ "$(PYTHON)" = "$(PWD)/.venv/bin/python" ] || [ "$(PYTHON)" = "$(PWD)/.venv/Scripts/python" ]
 
 
 
@@ -51,11 +53,10 @@ REQ_LINT := requirements-lint.txt
 REQ_TEST := requirements-test.txt
 REQ_TEST_OLD := requirements-test-old.txt
 
-
 PIP_OPT_ARGS ?=
 
-.PHONY: _deps
-_deps:
+.PHONY: deps
+deps: _venv	## Install requirements
 	$(PIP) install wheel
 	$(PIP) install $(PIP_OPT_ARGS) -r requirements.txt
 	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_OPT)
@@ -63,16 +64,13 @@ _deps:
 	- $(PIP) install $(PIP_OPT_ARGS) -r $(REQ_TEST) || \
 	echo "TEST REQs failed. Try with '--user' flag, or old version: $(PIP) install -r $(REQ_TEST_OLD)"
 
-.PHONY: deps
-deps: _venv _deps	## Install requirements
-
 
 # ---------------------------------------
 # Format, lint, test
 # ---------------------------------------
 
 .PHONY: format
-format:
+format: _venv	## Format with isort & black
 	if [ "$(CHANGED_FILES_PY_FLAG)" = 1 ]; then isort $(CHANGED_FILES_PY) ; fi
 	if [ "$(CHANGED_FILES_PY_FLAG)" = 1 ]; then black $(CHANGED_FILES_PY) ; fi
 
@@ -82,8 +80,8 @@ CHANGED_FILES_RST ?= $(shell git diff origin/master --name-only --diff-filter=MA
 CHANGED_FILES_PY ?= $(shell git diff origin/master --name-only --diff-filter=MACRU \*.py)
 CHANGED_FILES_PY_FLAG ?= $(shell if [ "$(CHANGED_FILES_PY)" ]; then echo 1; else echo 0; fi)
 
-.PHONY: _lint
-_lint:
+.PHONY: lint
+lint: _venv	## Lint code and documentation
 	# lint RST
 	if [ "$(CHANGED_FILES_RST)" ]; then doc8 --quiet $(CHANGED_FILES_RST); fi
 	# check formatting: Python
@@ -96,19 +94,14 @@ _lint:
 	if [ "$(CHANGED_FILES_PY_FLAG)" = 1 ]; then mypy $(CHANGED_FILES_PY); fi
 	if [ "$(CHANGED_FILES_PY_FLAG)" = 1 ]; then pylint $(CHANGED_FILES_PY); fi
 
-.PHONY: lint
-lint: _venv _lint	## Lint code and documentation
-
 
 TEST_HOME := tests/
 MIN_COV := 80
-.PHONY: _test
-_test:
+.PHONY: test
+.PHONY: test
+test: _venv	## Run CLI unittests
 	coverage run -m pytest $(TEST_HOME)
 	coverage report
-
-.PHONY: test
-test: _venv _test	## Run CLI unittests
 
 
 
@@ -140,7 +133,7 @@ build: _build clean
 
 
 .PHONY: install
-install:	## pip install nutra
+install:	## pip install .
 	$(PY_SYS_INTERPRETER) -m pip install wheel
 	$(PY_SYS_INTERPRETER) -m pip install . || $(PY_SYS_INTERPRETER) -m pip install --user .
 	$(PY_SYS_INTERPRETER) -m pip show nutra
