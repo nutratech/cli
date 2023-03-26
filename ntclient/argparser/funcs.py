@@ -235,6 +235,8 @@ def calc_body_fat(args: argparse.Namespace) -> tuple:
     }
     """
 
+    print("HINT: re-run with '-h' to show usage.")
+    print(os.linesep + "INPUTS" + os.linesep + "------")
     gender = Gender.FEMALE if args.female_gender else Gender.MALE
     print("Gender: %s" % gender)
     try:
