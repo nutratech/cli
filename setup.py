@@ -4,6 +4,7 @@ Created on Sat Oct 13 16:30:30 2018
 
 @author: shane
 """
+import glob
 import os
 import platform
 
@@ -66,6 +67,9 @@ setup(
     zip_safe=False,
     packages=find_packages(exclude=["tests", "ntclient.docs"]),
     include_package_data=True,
+    # Linux / macOS argcomplete compatible scripts
+    scripts=glob.glob("scripts/*"),
+    # Windows compatible nutra.exe
     entry_points={
         "console_scripts": ["nutra=ntclient.__main__:main", "n=ntclient.__main__:main"]
     },
