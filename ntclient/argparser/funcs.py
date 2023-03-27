@@ -16,8 +16,8 @@ from tabulate import tabulate
 import ntclient.services.analyze
 import ntclient.services.recipe.utils
 import ntclient.services.usda
-from ntclient import CLI_CONFIG, Gender, activity_factor_from_index
 from ntclient.services import calculate as calc
+from ntclient.utils import CLI_CONFIG, Gender, activity_factor_from_index
 
 
 def init(args: argparse.Namespace) -> tuple:

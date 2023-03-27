@@ -14,7 +14,6 @@ import unittest
 import pytest
 
 from ntclient import (
-    CLI_CONFIG,
     NTSQLITE_BUILDPATH,
     NUTRA_HOME,
     USDA_DB_NAME,
@@ -32,6 +31,7 @@ from ntclient.persistence.sql.usda import sql as _usda_sql
 from ntclient.persistence.sql.usda import usda_ver
 from ntclient.services import init, usda
 from ntclient.services.recipe import RECIPE_HOME
+from ntclient.utils import CLI_CONFIG
 from ntclient.utils.exceptions import SqlInvalidVersionError
 
 TEST_HOME = os.path.dirname(os.path.abspath(__file__))

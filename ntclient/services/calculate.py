@@ -9,7 +9,7 @@ Created on Tue Aug 11 20:53:14 2020
 import argparse
 import math
 
-from ntclient import Gender
+from ntclient.utils import Gender
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 1 rep max

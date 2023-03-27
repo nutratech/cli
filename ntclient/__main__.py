@@ -15,7 +15,6 @@ from urllib.error import HTTPError, URLError
 import argcomplete
 
 from ntclient import (
-    CLI_CONFIG,
     __db_target_nt__,
     __db_target_usda__,
     __email__,
@@ -24,6 +23,7 @@ from ntclient import (
     __version__,
 )
 from ntclient.argparser import build_subcommands
+from ntclient.utils import CLI_CONFIG
 from ntclient.utils.exceptions import SqlException
 
 
