@@ -39,15 +39,16 @@ class _FORE:
 _Style = _STYLE()
 _Fore = _FORE()
 
-try:
-    from colorama import Fore, Style
-    from colorama import init as colorama_init
+# try:
+from colorama import Fore, Style
+# noinspection PyUnresolvedReferences
+from colorama import init as colorama_init
 
-    # Made it this far, so run the init function (which is needed on Windows)
-    colorama_init()
+# Made it this far, so run the init function (which is needed on Windows)
+colorama_init()
 
-except ImportError:
-    Fore, Style = _Fore, _Style  # type: ignore
+# except ImportError:
+#     Fore, Style = _Fore, _Style  # type: ignore
 
 
 # NOTE: These will all just be empty strings if colorama isn't installed
