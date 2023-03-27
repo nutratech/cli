@@ -9,6 +9,28 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 
 
 
+[0.2.7] - (Unreleased)
+########################################################################
+
+Changed
+~~~~~~~
+
+- Added backs scripts to work with Windows and Unix and older ``argcomplete``
+- Tweaked dependency versions to work with most older stuff (wip still testing)
+
+Fixed
+~~~~~
+
+- A couple spots where unsorted dictionaries were causing bugs on older python
+- Enhanced some developer experience things (Makefile, GitHub CI/workflows)
+
+Removed
+~~~~~~~
+
+- PyPI builds exclude ``tests/`` and unneeded ``requirements-*.txt files``
+
+
+
 [0.2.6] - 2022-08-08
 ########################################################################
 
