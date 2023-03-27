@@ -65,7 +65,7 @@ setup(
     install_requires=REQUIREMENTS,
     python_requires=">=%s" % PY_MIN_STR,
     zip_safe=False,
-    packages=find_packages(exclude=["tests", "ntclient.docs"]),
+    packages=find_packages(exclude=["tests*"]),
     include_package_data=True,
     # Linux / macOS argcomplete compatible script "n"
     scripts=glob.glob("scripts/*"),
