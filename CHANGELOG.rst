@@ -15,12 +15,12 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 Changed
 ~~~~~~~
 
-- Added backs scripts to work with Windows and Unix and older ``argcomplete``
 - Tweaked dependency versions to work with most older stuff (wip still testing)
 
 Fixed
 ~~~~~
 
+- Added backs scripts to fix ``argcomplete`` in different edge cases
 - A couple spots where unsorted dictionaries were causing bugs on older python
 - Enhanced some developer experience things (Makefile, GitHub CI/workflows)
 
