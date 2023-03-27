@@ -67,12 +67,10 @@ setup(
     zip_safe=False,
     packages=find_packages(exclude=["tests", "ntclient.docs"]),
     include_package_data=True,
-    # Linux / macOS argcomplete compatible scripts
+    # Linux / macOS argcomplete compatible script "n"
     scripts=glob.glob("scripts/*"),
     # Windows compatible nutra.exe
-    entry_points={
-        "console_scripts": ["nutra=ntclient.__main__:main", "n=ntclient.__main__:main"]
-    },
+    entry_points={"console_scripts": ["nutra=ntclient.__main__:main"]},
     platforms=["linux", "darwin", "win32"],
     description="Home and office nutrient tracking software",
     long_description=README,
