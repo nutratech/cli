@@ -20,6 +20,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Fetch master (for incremental diff, lint filter mask)
+        run: git fetch origin master
+
       - name: Reload Cache / pip
         uses: actions/setup-python@v4
         with:

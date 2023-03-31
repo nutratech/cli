@@ -61,7 +61,7 @@ setup(
     author_email=__email__,
     classifiers=CLASSIFIERS,
     install_requires=REQUIREMENTS,
-    extras_require={'extras': REQUIREMENTS_EXTRA},
+    extras_require={"extras": REQUIREMENTS_EXTRA},
     python_requires=">=%s" % PY_MIN_STR,
     zip_safe=False,
     packages=find_packages(exclude=["tests*"]),
