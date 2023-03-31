@@ -50,11 +50,7 @@ with open("README.rst", encoding="utf-8") as file:
 with open("requirements.txt", encoding="utf-8") as file:
     REQUIREMENTS = file.read().split()
 
-if PLATFORM_SYSTEM != "Windows" or int(os.getenv("NUTRA_OS_FORCE_OPT_REQS", str(0))):
-    # python-Levenshtein builds natively on Unix; Windows needs vcvarsall.bat or vc++10
-    with open("requirements-optional.txt", encoding="utf-8") as file:
-        optional_reqs = file.read().split()
-    REQUIREMENTS.extend(optional_reqs)
+# if PLATFORM_SYSTEM != "Windows" or int(os.getenv("NUTRA_OS_FORCE_OPT_REQS", str(0))):
 
 # Setup method
 setup(
@@ -79,3 +75,17 @@ setup(
     license="GPL v3",
     version=__version__,
 )
+
+# Install optional requirements
+try:
+    with open("requirements-optional.txt", encoding="utf-8") as file:
+        optional_reqs = file.read().split()
+    setup(install_requires=optional_reqs)
+except Exception:
+    print(
+        "WARN: Failed to install optional requirements.\n"
+        "In the case of python-Levenshtein, this may mean you are :\n"
+        "- Lacking the Build Tools for Visual Studio [on Windows]\n"
+        "- Lacking the Xcode command line tools      [on macOS]\n"
+        "- Running an old or broken gcc              [on Linux]"
+    )
