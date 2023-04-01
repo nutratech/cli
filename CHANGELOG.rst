@@ -22,6 +22,7 @@ Changed
 
 - Tweaked dependency versions to work with most older stuff (wip still testing)
 - ``n`` vs. ``nutra`` different strategies to work on both Windows/Unix
+- Install Levenshtein speedup with ``pip install --pre nutra[extras]``
 
 Fixed
 ~~~~~

@@ -129,10 +129,14 @@ Windows users may also have differing results if they install for all users
 location of installed scripts, and affect the ``$PATH`` variable being
 correctly populated for prior installs.
 
+Install the Levenshtein speedup with this. If it fails remove the ``[extras]``.
+
+.. code-block:: bash
+
+  pip install nutra[extras]
+
 Linux may need to install ``python-dev`` package to build
 ``python-Levenshtein``.
-I am currently debating making this an optional dependency to avoid
-confusing install failures for people without ``gcc`` or ``python3-dev``.
 
 Windows users may not be able to install ``python-Levenshtein``.
 
