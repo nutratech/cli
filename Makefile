@@ -102,12 +102,9 @@ mypy:
 	if [ "${CHANGED_FILES_PY_FLAG}" ]; then mypy ${CHANGED_FILES_PY}; fi
 
 
-TEST_HOME := tests/
-MIN_COV := 80
-.PHONY: test
 .PHONY: test
 test: _venv	## Run CLI unittests
-	coverage run -m pytest ${TEST_HOME}
+	coverage run
 	coverage report
 	- grep fail_under setup.cfg
 
@@ -175,7 +172,6 @@ clean:	## Clean up __pycache__ and leftover bits
 # Extras
 # ---------------------------------------
 
-CLOC_ARGS ?=
 .PHONY: extras/cloc
 extras/cloc:	## Count lines of source code
 	- cloc HEAD
