@@ -5,7 +5,8 @@ SHELL=/bin/bash
 # NOTE: must put a <TAB> character and two pound "\t##" to show up in this list.  Keep it brief! IGNORE_ME
 .PHONY: _help
 _help:
-	@grep -h "##" $(MAKEFILE_LIST) | grep -v IGNORE_ME | sed -e 's/##//' | column -t -s $$'\t'
+	@printf "\nUsage: make <command>, valid commands:\n\n"
+	@grep "##" $(MAKEFILE_LIST) | grep -v IGNORE_ME | sed -e 's/##//' | column -t -s $$'\t'
 
 
 
