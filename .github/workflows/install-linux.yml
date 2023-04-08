@@ -11,11 +11,11 @@ permissions:
 
 jobs:
   python:
-    runs-on: [self-hosted, dev]
+    runs-on: [ubuntu-20.04]
 
     strategy:
       matrix:
-        python-version: ["3.4", "3.6", "3.8", "3.10", "3.11"]
+        python-version: ["3.5", "3.8", "3.10"]
 
     steps:
       - name: Checkout
