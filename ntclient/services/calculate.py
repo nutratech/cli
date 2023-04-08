@@ -9,7 +9,7 @@ Created on Tue Aug 11 20:53:14 2020
 import argparse
 import math
 
-from ntclient import Gender
+from ntclient.utils import Gender
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 1 rep max
@@ -431,7 +431,7 @@ def lbl_eric_helms(height: float, args: argparse.Namespace) -> dict:
 
     try:
         desired_bf = float(args.desired_bf) * 100
-    except (KeyError, TypeError):
+    except (KeyError, TypeError):  # pragma: no cover
         return {"errMsg": "Eric Helms failed, requires: height, desired_bf."}
 
     _min = round(4851.00 * height * 0.01 * height * 0.01 / (100.0 - desired_bf), 1)
@@ -460,7 +460,7 @@ def lbl_casey_butt(height: float, args: argparse.Namespace) -> dict:
 
         wrist = float(args.wrist) / 2.54  # convert cm --> inches
         ankle = float(args.ankle) / 2.54  # convert cm --> inches
-    except (KeyError, TypeError):
+    except (KeyError, TypeError):  # pragma: no cover
         return {
             "errMsg": "Casey Butt failed, requires: height, desired_bf, wrist, & ankle."
         }

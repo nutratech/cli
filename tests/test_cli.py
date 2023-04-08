@@ -14,7 +14,6 @@ import unittest
 import pytest
 
 from ntclient import (
-    CLI_CONFIG,
     NTSQLITE_BUILDPATH,
     NUTRA_HOME,
     USDA_DB_NAME,
@@ -32,6 +31,7 @@ from ntclient.persistence.sql.usda import sql as _usda_sql
 from ntclient.persistence.sql.usda import usda_ver
 from ntclient.services import init, usda
 from ntclient.services.recipe import RECIPE_HOME
+from ntclient.utils import CLI_CONFIG
 from ntclient.utils.exceptions import SqlInvalidVersionError
 
 TEST_HOME = os.path.dirname(os.path.abspath(__file__))
@@ -161,6 +161,7 @@ class TestCli(unittest.TestCase):
         assert len(nutrients_rows[0]) == 30
         assert len(servings_rows[0]) == 1
 
+    # pylint: disable=too-many-statements
     def test_410_nt_argparser_funcs(self):
         """
         Tests nt functions in argparser.funcs (to varying degrees each)
@@ -426,7 +427,7 @@ class TestCli(unittest.TestCase):
             pytest.xfail("PermissionError, are you using Microsoft Windows?")
 
         # mocks input, could also pass `-y` flag or set yes=True
-        usda.input = lambda x: "y"
+        usda.input = lambda x: "y"  # pylint: disable=redefined-builtin
 
         code, successful = init()
         assert code == 0

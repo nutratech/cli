@@ -1,4 +1,5 @@
 """usda.sqlite functions module"""
+
 from ntclient import NUTR_ID_KCAL
 from ntclient.persistence.sql.usda import sql, sql_headers
 
@@ -14,7 +15,7 @@ def sql_fdgrp() -> dict:
     return {x[0]: x for x in result}
 
 
-def sql_food_details(_food_ids: set = None) -> list:
+def sql_food_details(_food_ids: set = None) -> list:  # type: ignore
     """Readable human details for foods"""
 
     if not _food_ids:

@@ -9,6 +9,35 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 
 
 
+[0.2.8] - Unreleased
+########################################################################
+
+
+
+[0.2.7] - 2023-03-27
+########################################################################
+
+Changed
+~~~~~~~
+
+- Tweaked dependency versions to work with most older stuff (wip still testing)
+- ``n`` vs. ``nutra`` different strategies to work on both Windows/Unix
+- Install Levenshtein speedup with ``pip install --pre nutra[extras]``
+
+Fixed
+~~~~~
+
+- Added backs scripts to fix ``argcomplete`` in different edge cases
+- A couple spots where unsorted dictionaries were causing bugs on older python
+- Enhanced some developer experience things (Makefile, GitHub CI/workflows)
+
+Removed
+~~~~~~~
+
+- PyPI builds exclude ``tests/`` and unneeded ``requirements-*.txt files``
+
+
+
 [0.2.6] - 2022-08-08
 ########################################################################
 

@@ -4,6 +4,7 @@ Created on Sat Oct 13 16:30:30 2018
 
 @author: shane
 """
+import glob
 import os
 import platform
 
@@ -49,11 +50,9 @@ with open("README.rst", encoding="utf-8") as file:
 with open("requirements.txt", encoding="utf-8") as file:
     REQUIREMENTS = file.read().split()
 
-if PLATFORM_SYSTEM != "Windows" or int(os.getenv("NUTRA_OS_FORCE_OPT_REQS", str(0))):
-    # python-Levenshtein builds natively on Unix; Windows needs vcvarsall.bat or vc++10
-    with open("requirements-optional.txt", encoding="utf-8") as file:
-        optional_reqs = file.read().split()
-    REQUIREMENTS.extend(optional_reqs)
+
+with open("requirements-optional.txt", encoding="utf-8") as file:
+    REQUIREMENTS_EXTRA = file.read().split()
 
 # Setup method
 setup(
@@ -62,13 +61,15 @@ setup(
     author_email=__email__,
     classifiers=CLASSIFIERS,
     install_requires=REQUIREMENTS,
+    extras_require={"extras": REQUIREMENTS_EXTRA},
     python_requires=">=%s" % PY_MIN_STR,
     zip_safe=False,
-    packages=find_packages(exclude=["tests", "ntclient.docs"]),
+    packages=find_packages(exclude=["tests*"]),
     include_package_data=True,
-    entry_points={
-        "console_scripts": ["nutra=ntclient.__main__:main", "n=ntclient.__main__:main"]
-    },
+    # Linux / macOS argcomplete compatible script "n"
+    scripts=glob.glob("scripts/*"),
+    # Windows compatible nutra.exe
+    entry_points={"console_scripts": ["nutra=ntclient.__main__:main"]},
     platforms=["linux", "darwin", "win32"],
     description="Home and office nutrient tracking software",
     long_description=README,

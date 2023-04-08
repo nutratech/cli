@@ -15,7 +15,7 @@ from ntclient.utils import tree
 
 
 def csv_files() -> list:
-    """Returns full filenames for everything under RECIPE_HOME'"""
+    """Returns full filenames for everything under RECIPE_HOME"""
     return glob.glob(RECIPE_HOME + "/**/*.csv", recursive=True)
 
 

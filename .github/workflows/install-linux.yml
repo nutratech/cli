@@ -2,18 +2,20 @@
 name: install-linux
 
 "on":
-  push: {}
+  push:
+    branches:
+      - "**"
 
 permissions:
   contents: read
 
 jobs:
   python:
-    runs-on: ubuntu-18.04
+    runs-on: [ubuntu-20.04]
 
     strategy:
       matrix:
-        python-version: ["3.4", "3.6", "3.8", "3.10"]
+        python-version: ["3.5", "3.8", "3.10"]
 
     steps:
       - name: Checkout
@@ -21,16 +23,25 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }} & Restore Cache
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+          # update-environment: false
+          # NOTE: fails on Python 3.6 and 3.4 with the pip error,
+          #   ERROR: unknown command "cache" - maybe you meant "check"
+          # cache: "pip" # caching pip dependencies
+          # cache-dependency-path: "**/requirements*.txt"
 
+      # NOTE: see above NOTE, we are still using deprecated cache restore
       - name: Reload Cache / pip
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-${{ matrix.python-version }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          # NOTE: only cares about base requirements.txt
+          # yamllint disable rule:line-length
+          key: ${{ runner.os }}-${{ matrix.python-version }}-pip-${{ hashFiles('**/requirements.txt') }}
+          # yamllint enable rule:line-length
           restore-keys: |
             ${{ runner.os }}-${{ matrix.python-version }}-pip-
 
@@ -42,5 +53,5 @@ jobs:
       - name: Basic Tests / CLI / Integration
         run: |
           n -v
-          nutra -d recipe init
+          nutra -d recipe init -f
           nutra --no-pager recipe

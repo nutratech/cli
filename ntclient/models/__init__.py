@@ -7,7 +7,7 @@ Classes, structures for storing, displaying, and editing data.
 """
 import csv
 
-from ntclient import CLI_CONFIG
+from ntclient.utils import CLI_CONFIG
 
 
 class Recipe:

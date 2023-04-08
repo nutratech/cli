@@ -10,7 +10,6 @@ import pydoc
 from tabulate import tabulate
 
 from ntclient import (
-    CLI_CONFIG,
     DEFAULT_RESULT_LIMIT,
     DEFAULT_SEARCH_H_BUFFER,
     DEFAULT_SORT_H_BUFFER,
@@ -25,6 +24,7 @@ from ntclient.persistence.sql.usda.funcs import (
     sql_nutrients_overview,
     sql_sort_helper1,
 )
+from ntclient.utils import CLI_CONFIG
 
 
 def list_nutrients() -> tuple:

@@ -93,13 +93,13 @@ def print_dir(_dir: str, pre: str = str()) -> tuple:
     return (n_dirs, n_files, n_size)
 
 
-def main_tree(_args: list = None) -> int:
+def main_tree(_args: list = None) -> int:  # type: ignore
     """Handle input arguments, print off tree"""
     n_dirs = 0
     n_files = 0
 
-    if not _args:
-        _args = sys.argv
+    if _args is None:
+        _args = sys.argv  # type: ignore
 
     if len(_args) == 1:
         # Used for development

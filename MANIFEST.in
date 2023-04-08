@@ -1,5 +1,6 @@
 include requirements.txt
-include requirements-*.txt
+include requirements-old.txt
+include requirements-optional.txt
 
 include ntclient/ntsqlite/sql/*.sql
 include ntclient/ntsqlite/sql/data/*.csv

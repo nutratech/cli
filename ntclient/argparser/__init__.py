@@ -190,7 +190,7 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
         "calc", help="calculate 1-rep max, body fat, BMR, etc."
     )
 
-    calc_subparsers = calc_parser.add_subparsers(title="recipe subcommands")
+    calc_subparsers = calc_parser.add_subparsers(title="calc subcommands")
     calc_parser.set_defaults(func=calc_parser.print_help)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -257,43 +257,43 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
         "chest",
         type=int,
         nargs="?",
-        help="pectoral (mm) -[3-Site skin caliper measurement]",
+        help="pectoral (mm) -- [3-Site skin caliper measurement]",
     )
     calc_bf_parser.add_argument(
         "abd",
         type=int,
         nargs="?",
-        help="abdominal (mm) [3-Site skin caliper measurement]",
+        help="abdominal (mm) - [3-Site skin caliper measurement]",
     )
     calc_bf_parser.add_argument(
         "thigh",
         type=int,
         nargs="?",
-        help="thigh (mm) --- [3-Site skin caliper measurement]",
+        help="thigh (mm) ----- [3-Site skin caliper measurement]",
     )
     calc_bf_parser.add_argument(
         "tricep",
         type=int,
         nargs="?",
-        help="triceps (mm) - [7-Site skin caliper measurement]",
+        help="triceps (mm) ---- [7-Site skin caliper measurement]",
     )
     calc_bf_parser.add_argument(
         "sub",
         type=int,
         nargs="?",
-        help="sub (mm) ----- [7-Site skin caliper measurement]",
+        help="sub (mm) -------- [7-Site skin caliper measurement]",
     )
     calc_bf_parser.add_argument(
         "sup",
         type=int,
         nargs="?",
-        help="sup (mm) ----- [7-Site skin caliper measurement]",
+        help="sup (mm) -------- [7-Site skin caliper measurement]",
     )
     calc_bf_parser.add_argument(
         "mid",
         type=int,
         nargs="?",
-        help="mid (mm) ----- [7-Site skin caliper measurement]",
+        help="mid (mm) -------- [7-Site skin caliper measurement]",
     )
     calc_bf_parser.set_defaults(func=parser_funcs.calc_body_fat)
 

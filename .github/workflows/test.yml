@@ -1,15 +1,14 @@
 ---
 name: test
 
-"on":
-  push: {}
+"on": push
 
 permissions:
   contents: read
 
 jobs:
   test:
-    runs-on: [self-hosted, dev-east]
+    runs-on: [self-hosted, dev]
 
     steps:
       - name: Checkout
@@ -17,18 +16,30 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Cloc
+      - name: Count lines of code
         run: make extras/cloc
 
-      - name: Install requirements
-        run: |
-          /usr/bin/python3 -m pip install -r requirements.txt
-          /usr/bin/python3 -m pip install -r requirements-test.txt
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      # Install requirements
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      - name: Initialize (venv)
+        run: make init
 
+      - name: Install requirements
+        run: >
+          source .venv/bin/activate &&
+          python -m pip install
+          coveralls
+          -r requirements.txt
+          -r requirements-test.txt
+
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      # Test
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       - name: Test
-        run: PATH=~/.local/bin:$PATH make _test
+        run: source .venv/bin/activate && make test
 
       - name: Submit coverage report / coveralls
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: PATH=~/.local/bin:$PATH coveralls --service=github
+        run: /usr/bin/python3 -m coveralls --service=github

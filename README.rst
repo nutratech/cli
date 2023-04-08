@@ -1,13 +1,13 @@
-**************
- nutratracker
-**************
+********************
+ nutratracker (cli)
+********************
 
 Command line tools for interacting with government food database,
 and analyzing your health trends. The ``SR28`` database includes data
 for ~8500 foods and ~180 nutrients. Customizable with extensions
 and mapping rules built on top.
 
-**Requires**
+**Requires:**
 
 - Python 3.4.0 or later (``lzma``, ``ssl`` & ``sqlite3`` modules)
   [Win XP / Ubuntu 14.04].
@@ -83,7 +83,7 @@ extension.
     direnv
 
 
-You can add the direnv hook, ``direnv hook bash >>~.bashrc``.
+You can add the ``direnv`` hook, ``direnv hook bash >>~/.bashrc``.
 Only run this once.
 
 
@@ -92,6 +92,8 @@ Plugin Development
 
 You can develop plugins (or data modifications sets) that
 are imported and built on the base (or core) installation.
+
+These currently can take the form of custom recipes, foods, and RDA injection.
 
 
 Supporting Old Versions of Python
@@ -107,18 +109,19 @@ Simply install them with this (inside your ``venv`` environment).
 This won't guarantee compatibility for every version, but it will help.
 We provide a wide range. The oldest version of ``tabulate`` is from 2013.
 
-To use an old interpreter (Python 3.4 does not have the ``typing`` module!
-Only ``collections.abc``.) you may need to use
-a virtual machine or install old SSL libraries or enter a similar messy state.
-My preference is for VirtualBox images, where
-I manually test Windows XP & Ubuntu 14.04.
+There is automated testing on GitHub, but to use an old interpreter
+(Python 3.4 does not have the ``typing`` module! Only ``collections.abc``),
+you may need to use a virtual machine or install old SSL libraries or enter a
+similar messy state.
+My preference is for VirtualBox images, where I manually test *Windows XP*
+& *Ubuntu 14.04*.
 
 
 Notes
 #######################################################
 
 On Windows you should check the box during the Python installer
-to include ``Scripts`` directory in your ``$PATH``.  This can be done
+to include ``Scripts`` directory in your ``%PATH%``.  This can be done
 manually after installation too.
 
 Windows users may also have differing results if they install for all users
@@ -126,19 +129,19 @@ Windows users may also have differing results if they install for all users
 location of installed scripts, and affect the ``$PATH`` variable being
 correctly populated for prior installs.
 
+Install the Levenshtein speedup with this. If it fails remove the ``[extras]``.
+
+.. code-block:: bash
+
+  pip install nutra[extras]
+
 Linux may need to install ``python-dev`` package to build
 ``python-Levenshtein``.
-I am currently debating making this an optional dependency to avoid
-confusing install failures for people without ``gcc`` or ``python3-dev``.
-
-I'm also currently working on doing phased installs of dependencies based on
-the host Python version, since some of the old versions of pip have trouble
-finding something that works, and again, spit out confusing errors.
 
 Windows users may not be able to install ``python-Levenshtein``.
 
 Main program works 100%, but ``test`` and ``lint`` may break on older operating
-systems (Ubuntu 14.04, Windows XP).
+systems (*Ubuntu 14.04*, *Windows XP*).
 
 
 Install PyPi release (from pip)
@@ -153,6 +156,7 @@ Install PyPi release (from pip)
 
 Using the source code directly
 #######################################################
+
 Clone down, initialize ``nt-sqlite`` submodule, and install requirements:
 
 .. code-block:: bash
@@ -165,6 +169,7 @@ Clone down, initialize ``nt-sqlite`` submodule, and install requirements:
 
   ./nutra -h
 
+
 Initialize the DBs (``nt`` and ``usda``).
 
 .. code-block:: bash
@@ -175,6 +180,7 @@ Initialize the DBs (``nt`` and ``usda``).
   # Or install and run as package script
   make install
   n init
+
 
 If installed (or inside ``cli``) folder, the program can also run
 with ``python -m ntclient``.
@@ -235,6 +241,7 @@ I've run the command to seed the autocomplete script.
   mkdir -p $HOME/.bash_completion.d
   activate-global-python-argcomplete --user
 
+
 And my ``~/.bashrc`` file looks like this.
 
 .. code-block:: bash
@@ -246,8 +253,9 @@ And my ``~/.bashrc`` file looks like this.
       source ~/.bash_completion.d/python-argcomplete
   fi
 
-**NOTE:** This is a work in progress, we are adding more autocomplete
-functions.
+
+**NOTE:** Standard autocomplete is fully functional, we are adding customized
+completions
 
 
 Currently Supported Data
@@ -255,11 +263,11 @@ Currently Supported Data
 
 **USDA Stock database**
 
-- Standard reference database (SR28)  `[7794 foods]`
+- Standard reference database (SR28)  **[7794 foods]**
 
-**Relative USDA Extensions**
+**USDA Extensions (Relational)**
 
-- Flavonoid, Isoflavonoids, and Proanthocyanidins  `[1352 foods]`
+- Flavonoid, Isoflavonoids, and Proanthocyanidins  **[1352 foods]**
 
 
 Usage
@@ -268,4 +276,4 @@ Usage
 Requires internet connection to download initial datasets.
 Run ``nutra init`` for this step.
 
-Run the ``n`` script to output usage.
+Run ``n`` or ``nutra`` to output usage (``-h`` flag is optional and defaulted).

@@ -32,7 +32,7 @@ def usda_init(yes: bool = False) -> None:
             # Extract the archive
             with tarfile.open(save_path, mode="r:xz") as usda_sqlite_file:
                 print("\n" + "tar xvf %s.tar.xz" % USDA_DB_NAME)
-                usda_sqlite_file.extractall(NUTRA_HOME)
+                usda_sqlite_file.extractall(NUTRA_HOME)  # nosec: B202
 
             print("==> done downloading %s" % USDA_DB_NAME)
 

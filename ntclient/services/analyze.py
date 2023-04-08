@@ -12,7 +12,6 @@ from tabulate import tabulate
 
 from ntclient import (
     BUFFER_WD,
-    CLI_CONFIG,
     NUTR_ID_CARBS,
     NUTR_ID_FAT_TOT,
     NUTR_ID_FIBER,
@@ -25,6 +24,7 @@ from ntclient.persistence.sql.usda.funcs import (
     sql_nutrients_overview,
     sql_servings,
 )
+from ntclient.utils import CLI_CONFIG
 
 
 ################################################################################

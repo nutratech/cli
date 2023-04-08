@@ -1,1 +1,5 @@
+# Line ending configuration
+* text eol=lf
+
+# GitHub Linguist (language detection overrides)
 *.wls linguist-language=Mathematica

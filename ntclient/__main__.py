@@ -15,7 +15,6 @@ from urllib.error import HTTPError, URLError
 import argcomplete
 
 from ntclient import (
-    CLI_CONFIG,
     __db_target_nt__,
     __db_target_usda__,
     __email__,
@@ -24,6 +23,7 @@ from ntclient import (
     __version__,
 )
 from ntclient.argparser import build_subcommands
+from ntclient.utils import CLI_CONFIG
 from ntclient.utils.exceptions import SqlException
 
 
@@ -53,7 +53,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     return arg_parser
 
 
-def main(args: list = None) -> int:
+def main(args: list = None) -> int:  # type: ignore
     """
     Main method for CLI
 
@@ -67,7 +67,7 @@ def main(args: list = None) -> int:
     def parse_args() -> argparse.Namespace:
         """Returns parsed args"""
         if args is None:
-            return arg_parser.parse_args()
+            return arg_parser.parse_args()  # type: ignore
         return arg_parser.parse_args(args=args)
 
     def func(parser: argparse.Namespace) -> tuple:
@@ -100,20 +100,20 @@ def main(args: list = None) -> int:
     exit_code = 1
     try:
         exit_code, *_results = func(_parser)
-    except SqlException as sql_exception:
+    except SqlException as sql_exception:  # pragma: no cover
         print("Issue with an sqlite database: " + repr(sql_exception))
         if CLI_CONFIG.debug:
             raise
-    except HTTPError as http_error:
+    except HTTPError as http_error:  # pragma: no cover
         err_msg = "{0}: {1}".format(http_error.code, repr(http_error))
         print("Server response error, try again: " + err_msg)
         if CLI_CONFIG.debug:
             raise
-    except URLError as url_error:
+    except URLError as url_error:  # pragma: no cover
         print("Connection error, check your internet: " + repr(url_error.reason))
         if CLI_CONFIG.debug:
             raise
-    except Exception as exception:  # pylint: disable=broad-except
+    except Exception as exception:  # pylint: disable=broad-except  # pragma: no cover
         print("Unforeseen error, run with -d for more info: " + repr(exception))
         print("You can open an issue here: %s" % __url__)
         print("Or send me an email with the debug output: %s" % __email__)

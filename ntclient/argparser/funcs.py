@@ -16,8 +16,8 @@ from tabulate import tabulate
 import ntclient.services.analyze
 import ntclient.services.recipe.utils
 import ntclient.services.usda
-from ntclient import CLI_CONFIG, Gender, activity_factor_from_index
 from ntclient.services import calculate as calc
+from ntclient.utils import CLI_CONFIG, Gender, activity_factor_from_index
 
 
 def init(args: argparse.Namespace) -> tuple:
@@ -126,7 +126,7 @@ def calc_1rm(args: argparse.Namespace) -> tuple:
     # TODO: fourth column: average or `avg` column too.
     # Prepare table rows, to display all 3 results in one table
     _all = []
-    for _rep in _epley.keys():
+    for _rep in sorted(_epley.keys()):  # NOTE: dicts not sorted prior to 3.7
         row = [_rep]
         for _calc, _values in result.items():
             # Round down for now
@@ -235,6 +235,8 @@ def calc_body_fat(args: argparse.Namespace) -> tuple:
     }
     """
 
+    print("HINT: re-run with '-h' to show usage.")
+    print(os.linesep + "INPUTS" + os.linesep + "------")
     gender = Gender.FEMALE if args.female_gender else Gender.MALE
     print("Gender: %s" % gender)
     try:

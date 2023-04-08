@@ -2,10 +2,11 @@
 import sqlite3
 from collections.abc import Sequence
 
+from ntclient.utils import CLI_CONFIG
+
 # ------------------------------------------------
 # Entry fetching methods
 # ------------------------------------------------
-from ntclient import CLI_CONFIG
 
 
 def sql_entries(sql_result: sqlite3.Cursor) -> list:
