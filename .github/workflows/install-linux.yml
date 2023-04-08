@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   python:
-    runs-on: [ubuntu-18.04]
+    runs-on: [self-hosted, dev]
 
     strategy:
       matrix:
