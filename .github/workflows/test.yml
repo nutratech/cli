@@ -45,4 +45,4 @@ jobs:
       - name: Submit coverage report / coveralls
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: coveralls --service=github
+        run: /usr/bin/python3 -m coveralls --service=github
