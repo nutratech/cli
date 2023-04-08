@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   test:
-    runs-on: [ubuntu-latest]
+    runs-on: [self-hosted, dev]
 
     env:
       SKIP_VENV: 1
@@ -19,19 +19,18 @@ jobs:
         with:
           submodules: recursive
 
-      # NOTE: disabled for now, GitHub hosted doesn't ship with it
-      # - name: Count lines of code
-      #   run: make extras/cloc
+      - name: Count lines of code
+        run: make extras/cloc
 
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       # Install requirements
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      # NOTE: disabled for now, GitHub hosted is already an isolated env
-      # - name: Initialize (venv)
-      #   run: make init
+      - name: Initialize (venv)
+        run: make init
 
       - name: Install requirements
         run: >
+          source .venv/bin/activate &&
           python3 -m pip install
           coveralls
           -r requirements.txt
@@ -41,7 +40,7 @@ jobs:
       # Test
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       - name: Test
-        run: make test
+        run: source .venv/bin/activate && make test
 
       - name: Submit coverage report / coveralls
         env:
