@@ -403,7 +403,7 @@ def bf_7site(gender: Gender, args: argparse.Namespace) -> float:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Lean body limits (young men)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def lbl_berkhan(height: float) -> dict:
+def lbl_berkhan(height: float) -> tuple:
     """
     Calculate Martin Berkhan's lean body limit for young men.
 
@@ -415,10 +415,15 @@ def lbl_berkhan(height: float) -> dict:
 
     _min = round((height - 102) * 2.205, 1)
     _max = round((height - 98) * 2.205, 1)
-    return {"condition": "Contest shape (5-6%)", "weight": "%s ~ %s lbs" % (_min, _max)}
+    return (
+        # condition
+        "Contest shape (5-6%)",
+        # weight
+        "%s ~ %s lbs" % (_min, _max),
+    )
 
 
-def lbl_eric_helms(height: float, args: argparse.Namespace) -> dict:
+def lbl_eric_helms(height: float, args: argparse.Namespace) -> tuple:
     """
     Calculate Eric Helm's lean body limit for young men.
 
@@ -432,17 +437,26 @@ def lbl_eric_helms(height: float, args: argparse.Namespace) -> dict:
     try:
         desired_bf = float(args.desired_bf) * 100
     except (KeyError, TypeError):  # pragma: no cover
-        return {"errMsg": "Eric Helms failed, requires: height, desired_bf."}
+        # FIXME: define a `warning()` method with bold yellow text. Omit empty columns?
+        print("WARN: Eric Helms failed, requires: height, desired_bf.")
+        return (
+            # condition (blank)
+            str(),
+            # failure message (goes in "weight" column)
+            "Eric Helms failed!",
+        )
 
     _min = round(4851.00 * height * 0.01 * height * 0.01 / (100.0 - desired_bf), 1)
     _max = round(5402.25 * height * 0.01 * height * 0.01 / (100.0 - desired_bf), 1)
-    return {
-        "condition": "%s%% body fat" % desired_bf,
-        "weight": "%s ~ %s lbs" % (_min, _max),
-    }
+    return (
+        # condition
+        "%s%% body fat" % desired_bf,
+        # weight
+        "%s ~ %s lbs" % (_min, _max),
+    )
 
 
-def lbl_casey_butt(height: float, args: argparse.Namespace) -> dict:
+def lbl_casey_butt(height: float, args: argparse.Namespace) -> tuple:
     """
     Calculate Casey Butt's lean body limit for young men. Includes muscle measurements.
     Some may find these controversial.
@@ -461,9 +475,13 @@ def lbl_casey_butt(height: float, args: argparse.Namespace) -> dict:
         wrist = float(args.wrist) / 2.54  # convert cm --> inches
         ankle = float(args.ankle) / 2.54  # convert cm --> inches
     except (KeyError, TypeError):  # pragma: no cover
-        return {
-            "errMsg": "Casey Butt failed, requires: height, desired_bf, wrist, & ankle."
-        }
+        print("WARN: Casey Butt failed, requires: height, desired_bf, wrist, & ankle.")
+        return (
+            # condition (blank)
+            str(),
+            # failure message (goes in "weight" column)
+            "Casey Butt failed!",
+        )
 
     lbm = round(
         height ** (3 / 2)
@@ -473,14 +491,23 @@ def lbl_casey_butt(height: float, args: argparse.Namespace) -> dict:
     )
     weight = round(lbm / (1 - desired_bf), 1)
 
-    return {
-        "condition": "%s%% body fat" % (desired_bf * 100),
-        "weight": "%s lbs" % weight,
-        "lbm": "%s lbs" % lbm,
-        "chest": round(1.6817 * wrist + 1.3759 * ankle + 0.3314 * height, 2),
-        "arm": round(1.2033 * wrist + 0.1236 * height, 2),
-        "forearm": round(0.9626 * wrist + 0.0989 * height, 2),
-        "neck": round(1.1424 * wrist + 0.1236 * height, 2),
-        "thigh": round(1.3868 * ankle + 0.1805 * height, 2),
-        "calf": round(0.9298 * ankle + 0.1210 * height, 2),
-    }
+    return (
+        # condition
+        "%s%% body fat" % (desired_bf * 100),
+        # weight
+        "%s lbs" % weight,
+        # lbm
+        "%s lbs" % lbm,
+        # chest
+        round(1.625 * wrist + 1.3682 * ankle + 0.3562 * height, 2),
+        # arm
+        round(1.1709 * wrist + 0.1350 * height, 2),
+        # forearm
+        round(0.950 * wrist + 0.1041 * height, 2),
+        # neck
+        round(1.1875 * wrist + 0.1301 * height, 2),
+        # thigh
+        round(1.4737 * ankle + 0.1918 * height, 2),
+        # calf
+        round(0.9812 * ankle + 0.1250 * height, 2),
+    )

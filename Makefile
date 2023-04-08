@@ -20,7 +20,7 @@ init:	## Set up a Python virtual environment
 	rm -rf .venv
 	${PY_SYS_INTERPRETER} -m venv .venv
 	- if [ -z "${CI}" ]; then ${PY_SYS_INTERPRETER} -m venv --upgrade-deps .venv; fi
-	- direnv allow
+	direnv allow
 
 # include .env
 SKIP_VENV ?=

@@ -316,15 +316,14 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
         "calf",
     ]
     rows = []
-    for _calc, _result in result.items():
-        _values = list(_result.values())
+    for _calc in ["berkhan", "helms", "casey"]:
         row = [_calc]
-        row.extend(_values)
+        row.extend(result[_calc])
         while len(row) < len(headers):
             row.append(str())
         rows.append(row)
 
-    _table = tabulate(rows, headers=headers, tablefmt="pretty")
+    _table = tabulate(rows, headers=headers, tablefmt="simple")
     print(_table)
 
     return 0, result

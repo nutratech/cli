@@ -308,7 +308,7 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
         "desired_bf",
         type=float,
         nargs="?",
-        help="e.g. 0.12 -[eric_helms & casey_butt]",
+        help="e.g.  0.12 [eric_helms & casey_butt]",
     )
     calc_lbl_parser.add_argument(
         "wrist", type=float, nargs="?", help="wrist (cm) [casey_butt]"

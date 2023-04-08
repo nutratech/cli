@@ -8,8 +8,12 @@ name: install-win32
       - "**"
 
 jobs:
-  windows-latest:
+  python:
     runs-on: [windows-latest]
+
+    strategy:
+      matrix:
+        python-version: ["3.4"]
 
     steps:
       - name: Checkout
@@ -17,16 +21,24 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          # update-environment: false
+
       - name: Reload Cache / pip
         uses: actions/cache@v3
         with:
           path: ~\AppData\Local\pip\Cache
           # NOTE: only cares about base requirements.txt
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          # yamllint disable rule:line-length
+          key: ${{ runner.os }}-${{ matrix.python-version }}-pip-${{ hashFiles('**/requirements.txt') }}
+          # yamllint enable rule:line-length
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-${{ matrix.python-version }}-pip-
 
-      - name: Install
+      - name: Install CLI
         run: make install
 
       - name: Basic Tests / CLI / Integration

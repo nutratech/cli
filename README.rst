@@ -9,14 +9,15 @@ and mapping rules built on top.
 
 **Requires:**
 
-- Python 3.4.0 or later (``lzma``, ``ssl`` & ``sqlite3`` modules)
-  [Win XP / Ubuntu 14.04].
+- Python 3.4.3 or later (``lzma``, ``ssl`` & ``sqlite3`` modules)
+  [WinXP, Ubuntu14.04, or later].
 - Packages: see ``setup.py``, and ``requirements.txt`` files.
 - Internet connection, to download food database & package dependencies.
 
 See ``nt`` database:   https://github.com/nutratech/nt-sqlite
 
 See ``usda`` database: https://github.com/nutratech/usda-sqlite
+
 
 
 Details
@@ -69,52 +70,41 @@ Details
     -
 
 
+
 Linux / macOS requirements (for development)
 #######################################################
 
-You will need to install ``make`` and ``gcc`` to build the ``Levenshtein``
-extension.
+You will need ``make`` and ``gcc`` to build the ``Levenshtein`` extension.
 
-::
+.. code-block:: bash
 
-  sudo apt install \
-    make gcc \
-    python3-dev python3-venv \
-    direnv
+  sudo apt install make gcc direnv python3-dev python3-venv
 
-
-You can add the ``direnv`` hook, ``direnv hook bash >>~/.bashrc``.
-Only run this once.
+  # on macOS
+  brew install make gcc direnv python@3.10
 
 
-Plugin Development
-#######################################################
+Using ``direnv``
+~~~~~~~~~~~~~~~~
 
-You can develop plugins (or data modifications sets) that
-are imported and built on the base (or core) installation.
+Install with,
 
-These currently can take the form of custom recipes, foods, and RDA injection.
+.. code-block:: bash
 
+    sudo apt install direnv || brew install direnv
 
-Supporting Old Versions of Python
-#######################################################
+    # Need to add hook, too
+    # See: https://direnv.net/docs/hook.html
+    DEFAULT_SHELL=$(basename $SHELL)
+    SHELL_RC_FILE=~/.${DEFAULT_SHELL}rc
+    HOOK='eval "$(direnv hook '$DEFAULT_SHELL')"'
 
-The old requirements can still be tested on modern interpreters.
-Simply install them with this (inside your ``venv`` environment).
+    # Install the hook, if not already
+    grep "$HOOK" $SHELL_RC_FILE || echo "$HOOK" >>$SHELL_RC_FILE
+    source $SHELL_RC_FILE
 
-::
+This is what the ``.envrc`` file is for. It automatically activates ``venv``.
 
-  pip install -r requirements-old.txt
-
-This won't guarantee compatibility for every version, but it will help.
-We provide a wide range. The oldest version of ``tabulate`` is from 2013.
-
-There is automated testing on GitHub, but to use an old interpreter
-(Python 3.4 does not have the ``typing`` module! Only ``collections.abc``),
-you may need to use a virtual machine or install old SSL libraries or enter a
-similar messy state.
-My preference is for VirtualBox images, where I manually test *Windows XP*
-& *Ubuntu 14.04*.
 
 
 Notes
@@ -124,24 +114,22 @@ On Windows you should check the box during the Python installer
 to include ``Scripts`` directory in your ``%PATH%``.  This can be done
 manually after installation too.
 
-Windows users may also have differing results if they install for all users
-(as an administrator) vs. installing just for themselves. It may change the
-location of installed scripts, and affect the ``$PATH`` variable being
-correctly populated for prior installs.
+Main program works 100% on older OSes, but ``test`` and ``lint`` may break.
 
-Install the Levenshtein speedup with this. If it fails remove the ``[extras]``.
+
+Levenshtein speedup [extras]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Install the Levenshtein speedup with this.
 
 .. code-block:: bash
 
   pip install nutra[extras]
 
-Linux may need to install ``python-dev`` package to build
-``python-Levenshtein``.
+Linux may need to install ``python-dev`` package as well as ``gcc``.
 
-Windows users may not be able to install ``python-Levenshtein``.
+Windows may fail if missing the ``Visual Studio`` build tools are missing.
 
-Main program works 100%, but ``test`` and ``lint`` may break on older operating
-systems (*Ubuntu 14.04*, *Windows XP*).
 
 
 Install PyPi release (from pip)
@@ -154,6 +142,7 @@ Install PyPi release (from pip)
 (**Specify:** flag ``-U`` to upgrade, or ``--pre`` for development releases)
 
 
+
 Using the source code directly
 #######################################################
 
@@ -163,8 +152,7 @@ Clone down, initialize ``nt-sqlite`` submodule, and install requirements:
 
   git clone https://github.com/nutratech/cli.git
   cd cli
-  make init
-  # source .venv/bin/activate  # uncomment if NOT using direnv
+  make init || source .venv/bin/activate
   make deps
 
   ./nutra -h
@@ -188,14 +176,15 @@ with ``python -m ntclient``.
 You may need to set the ``PY_SYS_INTERPRETER`` value for the ``Makefile``
 if trying to install other than with ``/usr/bin/python3``.
 
+
 Building the PyPi release (sdist)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
-  # source .venv/bin/activate  # uncomment if NOT using direnv
   make build  # python3 setup.py --quiet sdist
   twine upload dist/nutra-X.X.X.tar.gz
+
 
 
 Linting & Tests
@@ -207,6 +196,7 @@ Install the dependencies (``make deps``). Now you can lint & test.
 
   # source .venv/bin/activate  # uncomment if NOT using direnv
   make format lint test
+
 
 
 ArgComplete (tab completion / autocomplete)
@@ -253,9 +243,11 @@ And my ``~/.bashrc`` file looks like this.
       source ~/.bash_completion.d/python-argcomplete
   fi
 
+On older versions it may be ``python-argcomplete.sh`` instead.
 
 **NOTE:** Standard autocomplete is fully functional, we are adding customized
-completions
+completions.
+
 
 
 Currently Supported Data
@@ -268,6 +260,7 @@ Currently Supported Data
 **USDA Extensions (Relational)**
 
 - Flavonoid, Isoflavonoids, and Proanthocyanidins  **[1352 foods]**
+
 
 
 Usage
