@@ -67,13 +67,13 @@ provided table:
    - Fiber, total dietary (291)
 
 4. Minerals:
-   - Ash (207)
-   - Calcium, Ca (301)
+   - Electrolytes:
+     - Potassium, K (306)
+     - Sodium, Na (307)
+     - Magnesium, Mg (304)
+     - Calcium, Ca (301)
    - Iron, Fe (303)
-   - Magnesium, Mg (304)
    - Phosphorus, P (305)
-   - Potassium, K (306)
-   - Sodium, Na (307)
    - Zinc, Zn (309)
    - Copper, Cu (312)
    - Fluoride, F (313)
@@ -128,7 +128,8 @@ provided table:
      - Campesterol (639)
      - Beta-sitosterol (641)
    - Phytochemicals (e.g., flavonoids, isoflavones) and their subcategories
+   - Ash (207)
 
-Please note that the list above is not exhaustive and may not include all possible
-nutrient categories and sub-categories.
+Please note that this list may not include all possible nutrient categories and
+sub-categories, and there may be other ways to categorize them as well.
 """
