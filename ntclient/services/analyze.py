@@ -37,6 +37,14 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
     TODO: support -t (tabular/non-visual) output flag
     """
 
+    def print_header(header: str) -> None:
+        """Print a header for this method"""
+        print()
+        print("=========================")
+        print(header)
+        print()
+        print("=========================")
+
     ################################################################################
     # Get analysis
     ################################################################################
@@ -71,7 +79,7 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
             + "==> {0} ({1})\n".format(food_name, food_id)
             + "======================================\n"
         )
-        print("\n=========================\nSERVINGS\n=========================\n")
+        print_header("SERVINGS")
 
         ################################################################################
         # Serving table
@@ -87,11 +95,11 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
             ((x[7], x[8]) for x in food_des.values() if x[0] == food_id and x[7]), None
         )
         if refuse:
-            print("\n=========================\nREFUSE\n=========================\n")
+            print_header("REFUSE")
             print(refuse[0])
             print("    ({0}%, by mass)".format(refuse[1]))
 
-        print("\n=========================\nNUTRITION\n=========================\n")
+        print_header("NUTRITION")
 
         ################################################################################
         # Nutrient table
