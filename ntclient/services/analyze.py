@@ -102,7 +102,7 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
         print_header("NUTRITION")
 
         ################################################################################
-        # Nutrient table
+        # Nutrient tree-view
         ################################################################################
         headers = ["id", "nutrient", "rda", "amount", "units"]
         nutrient_rows = []
@@ -123,9 +123,9 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
 
             nutrient_rows.append(row)
 
-        ################################################################################
-        # Print table
-        ################################################################################
+        ############
+        # Print view
+        # TODO: nested, color-coded tree view
         table = tabulate(nutrient_rows, headers=headers, tablefmt="presto")
         print(table)
         nutrients_rows.append(nutrient_rows)
