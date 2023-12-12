@@ -142,7 +142,7 @@ def calc_1rm(args: argparse.Namespace) -> tuple:
 
     # Print the n=1 average for all three calculations
     _avg_1rm = round(sum(_all[0][1:]) / len(_all[0][1:]), 1)
-    print(f"1RM:    {_avg_1rm}")
+    print("1RM:    %s" % _avg_1rm)
     print()
 
     _table = tabulate(_all, headers=["n", "epl", "brz", "rmds"])
