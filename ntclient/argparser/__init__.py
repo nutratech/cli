@@ -109,7 +109,9 @@ def build_sort_subcommand(subparsers: argparse._SubParsersAction) -> None:
 def build_analyze_subcommand(subparsers: argparse._SubParsersAction) -> None:
     """Analyzes (foods only for now)"""
 
-    analyze_parser = subparsers.add_parser("anl", help="analyze food(s)")
+    analyze_parser = subparsers.add_parser(
+        "anl", help="analyze food(s), recipe(s), or day(s)"
+    )
 
     analyze_parser.add_argument(
         "-g",
