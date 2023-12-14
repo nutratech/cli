@@ -91,7 +91,7 @@ class TestCli(unittest.TestCase):
 
     def test_300_argparser_debug_no_paging(self):
         """Verifies the debug and no_paging flags are set"""
-        args = arg_parser.parse_args(args=["-d", "--no-pager"])
+        args = arg_parser.parse_args(args=["--debug", "--no-pager"])
         CLI_CONFIG.set_flags(args)
 
         assert args.debug is True
@@ -247,7 +247,7 @@ class TestCli(unittest.TestCase):
         assert result["navy"] == 10.64
 
         # Invalid (failed Navy)
-        args = arg_parser.parse_args(args="-d calc bf -w 80 -n 40".split())
+        args = arg_parser.parse_args(args="--debug calc bf -w 80 -n 40".split())
         CLI_CONFIG.set_flags(args)
         code, result = args.func(args)
         assert code in {0, 1}  # Might be a failed code one day, but returns 0 for now
@@ -323,8 +323,8 @@ class TestCli(unittest.TestCase):
             nt_main(args=["-h"])
         assert system_exit.value.code == 0
 
-        # -d
-        code = nt_main(args=["-d"])
+        # --debug
+        code = nt_main(args=["--debug"])
         assert code == 0
 
         # __main__: if args_dict
@@ -342,7 +342,7 @@ class TestCli(unittest.TestCase):
         # TODO: replace with non-biometric test
         # from ntclient.services import biometrics
         #
-        # args = arg_parser.parse_args(args=["-d", "bio", "log", "add", "12,12"])
+        # args = arg_parser.parse_args(args=["--debug", "bio", "log", "add", "12,12"])
         # biometrics.input = (
         #     lambda x: "y"
         # )  # mocks input, could also pass `-y` flag or set yes=True
@@ -395,7 +395,7 @@ class TestCli(unittest.TestCase):
         )
 
         with pytest.raises(SqlInvalidVersionError) as sql_invalid_version_error:
-            nt_main(["-d", "nt"])
+            nt_main(["--debug", "nt"])
         assert sql_invalid_version_error is not None
 
     @unittest.skip(reason="Long-running test, want to replace with more 'unit' style")

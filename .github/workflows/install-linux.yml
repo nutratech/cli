@@ -53,5 +53,5 @@ jobs:
       - name: Basic Tests / CLI / Integration
         run: |
           n --version
-          nutra -d recipe init -f
+          nutra --debug recipe init -f
           nutra --no-pager recipe

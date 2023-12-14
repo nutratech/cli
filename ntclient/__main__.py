@@ -39,7 +39,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     )
 
     arg_parser.add_argument(
-        "-d", "--debug", action="store_true", help="enable detailed error messages"
+        "--debug", action="store_true", help="enable detailed error messages"
     )
     arg_parser.add_argument(
         "--no-pager", action="store_true", help="disable paging (print full output)"
@@ -113,7 +113,7 @@ def main(args: list = None) -> int:  # type: ignore
         if CLI_CONFIG.debug:
             raise
     except Exception as exception:  # pylint: disable=broad-except  # pragma: no cover
-        print("Unforeseen error, run with -d for more info: " + repr(exception))
+        print("Unforeseen error, run with --debug for more info: " + repr(exception))
         print("You can open an issue here: %s" % __url__)
         print("Or send me an email with the debug output: %s" % __email__)
         if CLI_CONFIG.debug:

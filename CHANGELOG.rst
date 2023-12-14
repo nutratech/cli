@@ -12,6 +12,18 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 [0.2.8] - Unreleased
 ########################################################################
 
+Added
+~~~~~
+
+- ``Nutrient`` class, and partially completed ``nnest`` nested list.
+- Print statement for average of 1-rep maxes (for 3 different formulas)
+- ``print_header()`` function inside of ``services/analyze.py``
+
+Removed
+~~~~~~~
+
+- ``-d`` and ``-v`` shortcuts for ``--debug`` and ``--version``
+
 
 
 [0.2.7] - 2023-03-27
