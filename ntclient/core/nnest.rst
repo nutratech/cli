@@ -1,8 +1,8 @@
 from ChatGPT:
 
 
-Here are the grouped categories and sub-categories of related nutrients based on the
-provided table:
+Here are the grouped categories and sub-categories of related nutrients based
+on the provided table:
 
 1. Protein:
 
