@@ -32,7 +32,6 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
     arg_parser = argparse.ArgumentParser(prog=__title__)
     arg_parser.add_argument(
-        "-v",
         "--version",
         action="version",
         version="{0} cli version {1} ".format(__title__, __version__)
