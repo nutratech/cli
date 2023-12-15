@@ -18,7 +18,7 @@ from ntclient.utils import Gender
 # The rep values used in the calculation
 COMMON_N_REPS_MIN = 1
 COMMON_N_REPS_MAX = 20
-COMMON_N_REPS = range(COMMON_N_REPS_MIN, COMMON_N_REPS_MAX)
+COMMON_N_REPS = range(COMMON_N_REPS_MIN, COMMON_N_REPS_MAX + 1)
 # common_n_reps = (1, 2, 3, 5, 6, 8, 10, 12, 15, 20)
 
 
