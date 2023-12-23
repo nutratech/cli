@@ -3,6 +3,10 @@
 Created on Sat Aug 29 19:43:55 2020
 
 @author: shane
+
+@todo
+Think about all the use cases for the "nested" nutrient tree.  Analyzing a recipe,
+a food, meal. How to display the data, or filter, reverse search, sort, etc.
 """
 
 
