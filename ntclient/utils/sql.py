@@ -13,7 +13,7 @@ def handle_runtime_exception(args: list, exception: Exception) -> None:
     """
     Handles exceptions raised during runtime.
     """
-    print("Exception: %s" % exception)
+    print("ERROR: Exception: %s" % exception)
+    bug_insert(args, exception)
     if CLI_CONFIG.debug:
-        bug_insert(args, exception)
         raise exception

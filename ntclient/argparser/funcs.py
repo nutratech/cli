@@ -14,6 +14,7 @@ import traceback
 from tabulate import tabulate
 
 import ntclient.services.analyze
+import ntclient.services.bugs
 import ntclient.services.recipe.utils
 import ntclient.services.usda
 from ntclient.services import calculate as calc
