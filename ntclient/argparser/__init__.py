@@ -23,6 +23,7 @@ def build_subcommands(subparsers: argparse._SubParsersAction) -> None:
     build_day_subcommand(subparsers)
     build_recipe_subcommand(subparsers)
     build_calc_subcommand(subparsers)
+    build_subcommand_bug(subparsers)
 
 
 ################################################################################
@@ -319,3 +320,10 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
         "ankle", type=float, nargs="?", help="ankle (cm) [casey_butt]"
     )
     calc_lbl_parser.set_defaults(func=parser_funcs.calc_lbm_limits)
+
+
+def build_subcommand_bug(subparsers: argparse._SubParsersAction) -> None:
+    """Report bugs"""
+
+    bug_parser = subparsers.add_parser("bug", help="report bugs")
+    bug_parser.set_defaults(func=parser_funcs.bugs_report)

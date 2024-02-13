@@ -150,3 +150,12 @@ def activity_factor_from_index(activity_factor: int) -> float:
     raise ValueError(  # pragma: no cover
         "No such ActivityFactor for value: %s" % activity_factor
     )
+
+
+def handle_runtime_exception(exception: Exception) -> None:
+    """
+    Handles exceptions raised during runtime.
+    """
+    print("Exception: %s" % exception)
+    if CLI_CONFIG.debug:
+        raise exception

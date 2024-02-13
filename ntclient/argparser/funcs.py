@@ -335,3 +335,9 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
     print(_table)
 
     return 0, result
+
+
+def bugs_report() -> tuple:
+    """Report a bug"""
+    n_submissions = ntclient.services.bugs.submit()
+    return 0, n_submissions
