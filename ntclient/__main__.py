@@ -23,8 +23,9 @@ from ntclient import (
     __version__,
 )
 from ntclient.argparser import build_subcommands
-from ntclient.utils import CLI_CONFIG, handle_runtime_exception
+from ntclient.utils import CLI_CONFIG
 from ntclient.utils.exceptions import SqlException
+from ntclient.utils.sql import handle_runtime_exception
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -101,19 +102,19 @@ def main(args: list = None) -> int:  # type: ignore
         exit_code, *_results = func(_parser)
     except SqlException as sql_exception:  # pragma: no cover
         print("Issue with an sqlite database: " + repr(sql_exception))
-        handle_runtime_exception(sql_exception)
+        handle_runtime_exception(args, sql_exception)
     except HTTPError as http_error:  # pragma: no cover
         err_msg = "{0}: {1}".format(http_error.code, repr(http_error))
         print("Server response error, try again: " + err_msg)
-        handle_runtime_exception(http_error)
+        handle_runtime_exception(args, http_error)
     except URLError as url_error:  # pragma: no cover
         print("Connection error, check your internet: " + repr(url_error.reason))
-        handle_runtime_exception(url_error)
+        handle_runtime_exception(args, url_error)
     except Exception as exception:  # pylint: disable=broad-except  # pragma: no cover
         print("Unforeseen error, run with --debug for more info: " + repr(exception))
         print("You can open an issue here: %s" % __url__)
         print("Or send me an email with the debug output: %s" % __email__)
-        handle_runtime_exception(exception)
+        handle_runtime_exception(args, exception)
     finally:
         if CLI_CONFIG.debug:
             exc_time = time.time() - start_time
