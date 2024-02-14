@@ -9,7 +9,7 @@ import os
 import sqlite3
 import traceback
 
-import ntclient.services.api.funcs
+import ntclient.services.api
 from ntclient.persistence.sql.nt import sql as sql_nt
 
 
@@ -46,12 +46,14 @@ INSERT INTO bug
 
 def submit() -> int:
     """Submit bug reports to developer, return n_submitted."""
-    n_submitted = 0
     sql_bugs = sql_nt("SELECT * FROM bug WHERE submitted = 0")
+    api_client = ntclient.services.api.ApiClient()
+
+    n_submitted = 0
     print(f"submitting {len(sql_bugs)} bug reports...")
     for bug in sql_bugs:
         # print(", ".join(str(x) for x in bug))
-        ntclient.services.api.funcs.post_bug(bug)
+        api_client.post_bug(bug)
         n_submitted += 1
     # 1 / 0  # force exception
     # raise Exception("submitting bug reports failed")
