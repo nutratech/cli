@@ -44,17 +44,25 @@ INSERT INTO bug
             raise
 
 
-def submit() -> int:
+def list_bugs() -> list:
+    """List all bugs."""
+    sql_bugs = sql_nt("SELECT * FROM bug WHERE submitted = 0")
+    return sql_bugs
+
+
+def submit_bugs() -> int:
     """Submit bug reports to developer, return n_submitted."""
     sql_bugs = sql_nt("SELECT * FROM bug WHERE submitted = 0")
     api_client = ntclient.services.api.ApiClient()
 
     n_submitted = 0
     print(f"submitting {len(sql_bugs)} bug reports...")
+    print("_" * len(sql_bugs))
     for bug in sql_bugs:
-        # print(", ".join(str(x) for x in bug))
+        print(".", end="", flush=True)
         api_client.post_bug(bug)
         n_submitted += 1
+    print()
     # 1 / 0  # force exception
     # raise Exception("submitting bug reports failed")
 

@@ -338,7 +338,25 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
     return 0, result
 
 
-def bugs_report() -> tuple:
-    """Report a bug"""
-    n_submissions = ntclient.services.bugs.submit()
+def bugs_list(args: argparse.Namespace) -> tuple:
+    """List bug reports that have een saved"""
+    _bugs_list = ntclient.services.bugs.list_bugs()
+
+    print(f"You have {len(_bugs_list)} unique bugs to report/submit!  Good job.")
+    print()
+
+    for bug in _bugs_list:
+        # Skip submitted bugs by default
+        if bug[-1] != 0 and not args.all:
+            continue
+        # Print all (except noisy stacktrace)
+        print(", ".join(str(x) for x in bug if "\n" not in str(x)))
+
+    return 0, _bugs_list
+
+
+# pylint: disable=unused-argument
+def bugs_report(args: argparse.Namespace) -> tuple:
+    """Report bugs"""
+    n_submissions = ntclient.services.bugs.submit_bugs()
     return 0, n_submissions

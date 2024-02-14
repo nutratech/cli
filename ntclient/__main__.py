@@ -114,6 +114,8 @@ def main(args: list = None) -> int:  # type: ignore
         print("Unforeseen error, run with --debug for more info: " + repr(exception))
         print("You can open an issue here: %s" % __url__)
         print("Or send me an email with the debug output: %s" % __email__)
+        print("Or, run the bug report command.")
+        print()
         handle_runtime_exception(args, exception)
     finally:
         if CLI_CONFIG.debug:

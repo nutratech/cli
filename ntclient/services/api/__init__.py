@@ -49,5 +49,4 @@ class ApiClient:
     # TODO: move this outside class; support with host iteration helper method
     def post_bug(self, bug: tuple) -> None:
         """Post a bug report to the developer."""
-        print("posting bug report...")
         self.post("bug", dict(bug))

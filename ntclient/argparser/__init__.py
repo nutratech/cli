@@ -323,7 +323,19 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
 
 
 def build_subcommand_bug(subparsers: argparse._SubParsersAction) -> None:
-    """Report bugs"""
+    """List and report bugs"""
 
     bug_parser = subparsers.add_parser("bug", help="report bugs")
-    bug_parser.set_defaults(func=parser_funcs.bugs_report)
+    bug_subparser = bug_parser.add_subparsers(title="bug subcommands")
+    bug_parser.add_argument(
+        "--all", action="store_true", help="include already submitted bugs, too"
+    )
+    bug_parser.set_defaults(func=parser_funcs.bugs_list)
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Report (bug)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    bug_report_parser = bug_subparser.add_parser(
+        "report", help="submit/report all bugs"
+    )
+    bug_report_parser.set_defaults(func=parser_funcs.bugs_report)
