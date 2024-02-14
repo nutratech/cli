@@ -46,7 +46,7 @@ INSERT INTO bug
 
 def list_bugs() -> list:
     """List all bugs."""
-    sql_bugs = sql_nt("SELECT * FROM bug WHERE submitted = 0")
+    sql_bugs = sql_nt("SELECT * FROM bug")
     return sql_bugs
 
 
@@ -58,12 +58,19 @@ def submit_bugs() -> int:
     n_submitted = 0
     print(f"submitting {len(sql_bugs)} bug reports...")
     print("_" * len(sql_bugs))
+
     for bug in sql_bugs:
+        _res = api_client.post_bug(bug)
+
+        # Differentially store unique vs. duplicate bugs (someone else submitted)
+        if _res.status_code == 201:
+            sql_nt("UPDATE bug SET submitted = 1 WHERE id = %s", bug.id)
+        elif _res.status_code in {200, 204}:
+            sql_nt("UPDATE bug SET submitted = 2 WHERE id = %s", bug.id)
+
         print(".", end="", flush=True)
-        api_client.post_bug(bug)
         n_submitted += 1
+
     print()
-    # 1 / 0  # force exception
-    # raise Exception("submitting bug reports failed")
 
     return n_submitted

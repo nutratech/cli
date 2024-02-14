@@ -5,6 +5,8 @@ Created on Tue Feb 13 14:28:20 2024
 
 @author: shane
 """
+import sqlite3
+
 import requests
 
 URL_API = "https://api.nutra.tk"
@@ -27,26 +29,26 @@ class ApiClient:
     ):
         self.host = host
 
-    def get(self, path: str) -> dict:
+    def get(self, path: str) -> requests.Response:
         """Get data from the API."""
-        req = requests.get(
+        _res = requests.get(
             f"{self.host}/{path}",
             timeout=(REQUEST_CONNECT_TIMEOUT, REQUEST_READ_TIMEOUT),
         )
-        req.raise_for_status()
-        return dict(req.json())
+        _res.raise_for_status()
+        return _res
 
-    def post(self, path: str, data: dict) -> dict:
+    def post(self, path: str, data: dict) -> requests.Response:
         """Post data to the API."""
-        req = requests.post(
+        _res = requests.post(
             f"{self.host}/{path}",
             json=data,
             timeout=(REQUEST_CONNECT_TIMEOUT, REQUEST_READ_TIMEOUT),
         )
-        req.raise_for_status()
-        return dict(req.json())
+        _res.raise_for_status()
+        return _res
 
     # TODO: move this outside class; support with host iteration helper method
-    def post_bug(self, bug: tuple) -> None:
+    def post_bug(self, bug: sqlite3.Row) -> requests.Response:
         """Post a bug report to the developer."""
-        self.post("bug", dict(bug))
+        return self.post("bug", dict(bug))
