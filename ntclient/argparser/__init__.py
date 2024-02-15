@@ -328,7 +328,7 @@ def build_subcommand_bug(subparsers: argparse._SubParsersAction) -> None:
     bug_parser = subparsers.add_parser("bug", help="report bugs")
     bug_subparser = bug_parser.add_subparsers(title="bug subcommands")
     bug_parser.add_argument(
-        "--all", action="store_true", help="include already submitted bugs, too"
+        "--show", action="store_true", help="show list of unsubmitted bugs"
     )
     bug_parser.set_defaults(func=parser_funcs.bugs_list)
 

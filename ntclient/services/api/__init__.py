@@ -9,15 +9,14 @@ import sqlite3
 
 import requests
 
-URL_API = "https://api.nutra.tk"
+REQUEST_READ_TIMEOUT = 18
+REQUEST_CONNECT_TIMEOUT = 5
+
 # TODO: try all of these; cache (save in prefs.json) the one which works first
 URLS_API = (
     "https://api.nutra.tk",
-    "https://216.218.216.163/api",  # prod
-    "https://216.218.228.93/api",  # dev
+    "http://216.218.216.163",  # prod
 )
-REQUEST_READ_TIMEOUT = 18
-REQUEST_CONNECT_TIMEOUT = 5
 
 
 class ApiClient:
@@ -25,7 +24,7 @@ class ApiClient:
 
     def __init__(
         self,
-        host: str = URL_API,
+        host: str = URLS_API[0],
     ):
         self.host = host
 

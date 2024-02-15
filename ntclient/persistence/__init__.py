@@ -8,3 +8,12 @@ Created on Sat Mar 23 13:09:07 2019
 
 @author: shane
 """
+import os
+
+from ntclient import NUTRA_HOME
+
+# TODO: create and maintain prefs.json file?  See if there's a library for that, lol
+
+PREFS_JSON = os.path.join(NUTRA_HOME, "prefs.json")
+
+# if

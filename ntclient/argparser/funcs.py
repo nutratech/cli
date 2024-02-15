@@ -341,20 +341,24 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
 def bugs_list(args: argparse.Namespace) -> tuple:
     """List bug reports that have een saved"""
     _bugs_list = ntclient.services.bugs.list_bugs()
+    n_bugs_total = len(_bugs_list)
+    n_bugs_unsubmitted = len([x for x in _bugs_list if not bool(x[-1])])
 
-    print(f"You have: {len(_bugs_list)} total bugs amassed in your journey.")
-    print(
-        f"Of these, {len([x for x in _bugs_list if not bool(x[-1])])} "
-        f"require submission/reporting."
-    )
+    print(f"You have: {n_bugs_total} total bugs amassed in your journey.")
+    print(f"Of these, {n_bugs_unsubmitted} require submission/reporting.")
     print()
 
     for bug in _bugs_list:
-        # Skip submitted bugs by default
-        if bool(bug[-1]) and not args.all:
+        if not args.show:
             continue
-        # Print all (except noisy stacktrace)
+        # Skip submitted bugs by default
+        if bool(bug[-1]) and not args.debug:
+            continue
+        # Print all bug properties (except noisy stacktrace)
         print(", ".join(str(x) for x in bug if "\n" not in str(x)))
+
+    if n_bugs_unsubmitted > 0:
+        print("NOTE: You have bugs awaiting submission.  Please run the report command")
 
     return 0, _bugs_list
 
