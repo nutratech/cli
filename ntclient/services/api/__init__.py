@@ -19,14 +19,33 @@ URLS_API = (
 )
 
 
+def cache_mirrors() -> str:
+    """Cache mirrors"""
+    for mirror in URLS_API:
+        try:
+            _res = requests.get(
+                mirror,
+                timeout=(REQUEST_CONNECT_TIMEOUT, REQUEST_READ_TIMEOUT),
+                verify=mirror.startswith("https://"),
+            )
+
+            _res.raise_for_status()
+            # TODO: save in persistence config.ini
+            print(f"INFO: mirror SUCCESS '{mirror}'")
+            return mirror
+        except requests.exceptions.ConnectionError:
+            print(f"WARN: mirror FAILURE '{mirror}'")
+
+    return str()
+
+
 class ApiClient:
     """Client for connecting to the remote server/API."""
 
-    def __init__(
-        self,
-        host: str = URLS_API[0],
-    ):
-        self.host = host
+    def __init__(self) -> None:
+        self.host = cache_mirrors()
+        if not self.host:
+            raise ConnectionError("Cannot find suitable API host!")
 
     def get(self, path: str) -> requests.Response:
         """Get data from the API."""

@@ -8,12 +8,17 @@ Created on Sat Mar 23 13:09:07 2019
 
 @author: shane
 """
+import configparser
 import os
 
 from ntclient import NUTRA_HOME
 
 # TODO: create and maintain prefs.json file?  See if there's a library for that, lol
 
-PREFS_JSON = os.path.join(NUTRA_HOME, "prefs.json")
+PREFS_FILE = os.path.join(NUTRA_HOME, "prefs.ini")
 
-# if
+if not os.path.exists(PREFS_FILE):
+    print("INFO: Generating prefs.ini file")
+    config = configparser.ConfigParser()
+    with open(PREFS_FILE, "w", encoding="utf-8") as _prefs_file:
+        config.write(_prefs_file)

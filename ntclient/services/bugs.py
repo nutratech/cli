@@ -11,7 +11,6 @@ import traceback
 
 import ntclient.services.api
 from ntclient.persistence.sql.nt import sql as sql_nt
-from ntclient.services.api.mirrorcache import cache_mirrors
 
 
 def insert(args: list, exception: Exception) -> None:
@@ -53,11 +52,6 @@ def list_bugs() -> list:
 
 def submit_bugs() -> int:
     """Submit bug reports to developer, return n_submitted."""
-    # Probe mirrors, cache best working one
-    is_mirror_alive = cache_mirrors()
-    if not is_mirror_alive:
-        print("ERROR: we couldn't find an active mirror, can't submit bugs.")
-        return -1
 
     # Gather bugs for submission
     sql_bugs = sql_nt("SELECT * FROM bug WHERE submitted = 0")
