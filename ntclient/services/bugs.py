@@ -11,6 +11,7 @@ import traceback
 
 import ntclient.services.api
 from ntclient.persistence.sql.nt import sql as sql_nt
+from ntclient.utils import CLI_CONFIG
 
 
 def insert(args: list, exception: Exception) -> None:
@@ -63,11 +64,13 @@ def submit_bugs() -> int:
 
     for bug in sql_bugs:
         _res = api_client.post_bug(bug)
+        if CLI_CONFIG.debug:
+            print(_res.json())
 
-        # Differentially store unique vs. duplicate bugs (someone else submitted)
+        # Distinguish bug which are unique vs. duplicates (someone else submitted)
         if _res.status_code == 201:
             sql_nt("UPDATE bug SET submitted = 1 WHERE id = %s", bug.id)
-        elif _res.status_code in {200, 204}:
+        elif _res.status_code == 204:
             sql_nt("UPDATE bug SET submitted = 2 WHERE id = %s", bug.id)
 
         print(".", end="", flush=True)
