@@ -27,9 +27,9 @@ from ntclient.persistence.sql.usda.funcs import (
 from ntclient.utils import CLI_CONFIG
 
 
-################################################################################
+##############################################################################
 # Foods
-################################################################################
+##############################################################################
 def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
     """
     Analyze a list of food_ids against stock RDA values
@@ -45,9 +45,9 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
         print()
         print("=========================")
 
-    ################################################################################
+    ##########################################################################
     # Get analysis
-    ################################################################################
+    ##########################################################################
     raw_analyses = sql_analyze_foods(food_ids)
     analyses = {}
     for analysis in raw_analyses:
@@ -67,9 +67,9 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
     nutrients = sql_nutrients_overview()
     rdas = {x[0]: x[1] for x in nutrients.values()}
 
-    ################################################################################
+    ##########################################################################
     # Food-by-food analysis (w/ servings)
-    ################################################################################
+    ##########################################################################
     servings_rows = []
     nutrients_rows = []
     for food_id, nut_val_tuples in analyses.items():
@@ -81,9 +81,9 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
         )
         print_header("SERVINGS")
 
-        ################################################################################
+        ######################################################################
         # Serving table
-        ################################################################################
+        ######################################################################
         headers = ["msre_id", "msre_desc", "grams"]
         serving_rows = [(x[1], x[2], x[3]) for x in serving if x[0] == food_id]
         # Print table
@@ -101,12 +101,14 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
 
         print_header("NUTRITION")
 
-        ################################################################################
-        # Nutrient tree-view
-        ################################################################################
+        ######################################################################
+        # Nutrient colored RDA tree-view
+        ######################################################################
         headers = ["id", "nutrient", "rda", "amount", "units"]
         nutrient_rows = []
         for nutrient_id, amount in nut_val_tuples:
+            # TODO: skip small values (<1% RDA), report as color bar if RDA is available
+
             # Skip zero values
             if not amount:
                 continue
