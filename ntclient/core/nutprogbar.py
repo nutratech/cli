@@ -1,7 +1,13 @@
 """Temporary [wip] module for more visual (& colorful) RDA output"""
 
 
-def nutprogbar(food_amts: dict, food_analyses: list, nutrients: dict) -> dict:
+def nutprogbar(
+    food_amts: dict,
+    food_analyses: list,
+    nutrients: dict,
+    grams: float = 100,
+    width: int = 50,
+) -> dict:
     """Returns progress bars, colorized, for foods analyses"""
 
     def tally() -> None:

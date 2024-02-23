@@ -18,6 +18,7 @@ class Nutrient:
         self.nut_id = nut_id
         self.name = name
         self.hidden = hidden
+        self.rounded_rda = 0  # TODO: round day/recipe analysis to appropriate digit
 
 
 nnest = {

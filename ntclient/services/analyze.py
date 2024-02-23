@@ -18,6 +18,7 @@ from ntclient import (
     NUTR_ID_KCAL,
     NUTR_ID_PROTEIN,
 )
+from ntclient.core.nutprogbar import nutprogbar
 from ntclient.persistence.sql.usda.funcs import (
     sql_analyze_foods,
     sql_food_details,
@@ -42,7 +43,6 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
         print()
         print("=========================")
         print(header)
-        print()
         print("=========================")
 
     ##########################################################################
@@ -79,11 +79,11 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
             + "==> {0} ({1})\n".format(food_name, food_id)
             + "======================================\n"
         )
-        print_header("SERVINGS")
 
         ######################################################################
         # Serving table
         ######################################################################
+        print_header("SERVINGS")
         headers = ["msre_id", "msre_desc", "grams"]
         serving_rows = [(x[1], x[2], x[3]) for x in serving if x[0] == food_id]
         # Print table
@@ -99,12 +99,11 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
             print(refuse[0])
             print("    ({0}%, by mass)".format(refuse[1]))
 
-        print_header("NUTRITION")
-
         ######################################################################
         # Nutrient colored RDA tree-view
         ######################################################################
-        headers = ["id", "nutrient", "rda", "amount", "units"]
+        print_header("NUTRITION")
+        # headers = ["id", "nutrient", "rda", "amount", "units"]
         nutrient_rows = []
         for nutrient_id, amount in nut_val_tuples:
             # TODO: skip small values (<1% RDA), report as color bar if RDA is available
@@ -128,8 +127,9 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
         ############
         # Print view
         # TODO: nested, color-coded tree view
-        table = tabulate(nutrient_rows, headers=headers, tablefmt="presto")
-        print(table)
+        nutprogbar(food_amts, food_analyses, nutrients)
+        # table = tabulate(nutrient_rows, headers=headers, tablefmt="presto")
+        # print(table)
         nutrients_rows.append(nutrient_rows)
 
     return 0, nutrients_rows, servings_rows
