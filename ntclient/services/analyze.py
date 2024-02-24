@@ -214,6 +214,63 @@ def day_analyze(day_csv_paths: list, rda_csv_path: str = str()) -> tuple:
     return 0, nutrients_totals
 
 
+def print_macro_bar(
+    _fat: float, _net_carb: float, _pro: float, _kcals_max: float, _buffer: int = 0
+) -> None:
+    """Print macro-nutrients bar with details."""
+    _kcals = _fat * 9 + _net_carb * 4 + _pro * 4
+
+    p_fat = (_fat * 9) / _kcals
+    p_car = (_net_carb * 4) / _kcals
+    p_pro = (_pro * 4) / _kcals
+
+    # TODO: handle rounding cases, tack on to, or trim off FROM LONGEST ?
+    mult = _kcals / _kcals_max
+    n_fat = round(p_fat * _buffer * mult)
+    n_car = round(p_car * _buffer * mult)
+    n_pro = round(p_pro * _buffer * mult)
+
+    # Headers
+    f_buf = " " * (n_fat // 2) + "Fat" + " " * (n_fat - n_fat // 2 - 3)
+    c_buf = " " * (n_car // 2) + "Carbs" + " " * (n_car - n_car // 2 - 5)
+    p_buf = " " * (n_pro // 2) + "Pro" + " " * (n_pro - n_pro // 2 - 3)
+    print(
+        "  "
+        + CLI_CONFIG.color_yellow
+        + f_buf
+        + CLI_CONFIG.color_blue
+        + c_buf
+        + CLI_CONFIG.color_red
+        + p_buf
+        + CLI_CONFIG.style_reset_all
+    )
+
+    # Bars
+    print(" <", end="")
+    print(CLI_CONFIG.color_yellow + "=" * n_fat, end="")
+    print(CLI_CONFIG.color_blue + "=" * n_car, end="")
+    print(CLI_CONFIG.color_red + "=" * n_pro, end="")
+    print(CLI_CONFIG.style_reset_all + ">")
+
+    # Calorie footers
+    k_fat = str(round(_fat * 9))
+    k_car = str(round(_net_carb * 4))
+    k_pro = str(round(_pro * 4))
+    f_buf = " " * (n_fat // 2) + k_fat + " " * (n_fat - n_fat // 2 - len(k_fat))
+    c_buf = " " * (n_car // 2) + k_car + " " * (n_car - n_car // 2 - len(k_car))
+    p_buf = " " * (n_pro // 2) + k_pro + " " * (n_pro - n_pro // 2 - len(k_pro))
+    print(
+        "  "
+        + CLI_CONFIG.color_yellow
+        + f_buf
+        + CLI_CONFIG.color_blue
+        + c_buf
+        + CLI_CONFIG.color_red
+        + p_buf
+        + CLI_CONFIG.style_reset_all
+    )
+
+
 # TODO: why not this...? nutrients: Mapping[int, tuple]
 def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
     """Formats day analysis for printing to console"""
@@ -224,61 +281,6 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         print("-->  %s  <--" % header)
         print("=" * (len(header) + 2 * 5))
         print(CLI_CONFIG.style_reset_all)
-
-    def print_macro_bar(
-        _fat: float, _net_carb: float, _pro: float, _kcals_max: float, _buffer: int = 0
-    ) -> None:
-        _kcals = _fat * 9 + _net_carb * 4 + _pro * 4
-
-        p_fat = (_fat * 9) / _kcals
-        p_car = (_net_carb * 4) / _kcals
-        p_pro = (_pro * 4) / _kcals
-
-        # TODO: handle rounding cases, tack on to, or trim off FROM LONGEST ?
-        mult = _kcals / _kcals_max
-        n_fat = round(p_fat * _buffer * mult)
-        n_car = round(p_car * _buffer * mult)
-        n_pro = round(p_pro * _buffer * mult)
-
-        # Headers
-        f_buf = " " * (n_fat // 2) + "Fat" + " " * (n_fat - n_fat // 2 - 3)
-        c_buf = " " * (n_car // 2) + "Carbs" + " " * (n_car - n_car // 2 - 5)
-        p_buf = " " * (n_pro // 2) + "Pro" + " " * (n_pro - n_pro // 2 - 3)
-        print(
-            "  "
-            + CLI_CONFIG.color_yellow
-            + f_buf
-            + CLI_CONFIG.color_blue
-            + c_buf
-            + CLI_CONFIG.color_red
-            + p_buf
-            + CLI_CONFIG.style_reset_all
-        )
-
-        # Bars
-        print(" <", end="")
-        print(CLI_CONFIG.color_yellow + "=" * n_fat, end="")
-        print(CLI_CONFIG.color_blue + "=" * n_car, end="")
-        print(CLI_CONFIG.color_red + "=" * n_pro, end="")
-        print(CLI_CONFIG.style_reset_all + ">")
-
-        # Calorie footers
-        k_fat = str(round(_fat * 9))
-        k_car = str(round(_net_carb * 4))
-        k_pro = str(round(_pro * 4))
-        f_buf = " " * (n_fat // 2) + k_fat + " " * (n_fat - n_fat // 2 - len(k_fat))
-        c_buf = " " * (n_car // 2) + k_car + " " * (n_car - n_car // 2 - len(k_car))
-        p_buf = " " * (n_pro // 2) + k_pro + " " * (n_pro - n_pro // 2 - len(k_pro))
-        print(
-            "  "
-            + CLI_CONFIG.color_yellow
-            + f_buf
-            + CLI_CONFIG.color_blue
-            + c_buf
-            + CLI_CONFIG.color_red
-            + p_buf
-            + CLI_CONFIG.style_reset_all
-        )
 
     def print_nute_bar(_n_id: int, amount: float, _nutrients: dict) -> tuple:
         nutrient = _nutrients[_n_id]
@@ -353,7 +355,7 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
     print_header("Nutrition detail report")
     for n_id in analysis:
         print_nute_bar(n_id, analysis[n_id], nutrients)
-    # TODO: below
+    # TODO: actually filter and show the number of filtered fields
     print(
         "work in progress...",
         "some minor fields with negligible data, they are not shown here",
