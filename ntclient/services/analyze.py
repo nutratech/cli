@@ -135,9 +135,9 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
     return 0, nutrients_rows, servings_rows
 
 
-################################################################################
+##############################################################################
 # Day
-################################################################################
+##############################################################################
 def day_analyze(day_csv_paths: list, rda_csv_path: str = str()) -> tuple:
     """Analyze a day optionally with custom RDAs,
     e.g.  nutra day ~/.nutra/rocky.csv -r ~/.nutra/dog-rdas-18lbs.csv
@@ -220,15 +220,15 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
 
     def print_header(header: str) -> None:
         print(CLI_CONFIG.color_default, end="")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print("--> %s" % header)
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("=" * (len(header) + 2 * 5))
+        print("-->  %s  <--" % header)
+        print("=" * (len(header) + 2 * 5))
         print(CLI_CONFIG.style_reset_all)
 
     def print_macro_bar(
         _fat: float, _net_carb: float, _pro: float, _kcals_max: float, _buffer: int = 0
     ) -> None:
-        _kcals = fat * 9 + net_carb * 4 + _pro * 4
+        _kcals = _fat * 9 + _net_carb * 4 + _pro * 4
 
         p_fat = (_fat * 9) / _kcals
         p_car = (_net_carb * 4) / _kcals
@@ -263,9 +263,9 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         print(CLI_CONFIG.style_reset_all + ">")
 
         # Calorie footers
-        k_fat = str(round(fat * 9))
-        k_car = str(round(net_carb * 4))
-        k_pro = str(round(pro * 4))
+        k_fat = str(round(_fat * 9))
+        k_car = str(round(_net_carb * 4))
+        k_pro = str(round(_pro * 4))
         f_buf = " " * (n_fat // 2) + k_fat + " " * (n_fat - n_fat // 2 - len(k_fat))
         c_buf = " " * (n_car // 2) + k_car + " " * (n_car - n_car // 2 - len(k_car))
         p_buf = " " * (n_pro // 2) + k_pro + " " * (n_pro - n_pro // 2 - len(k_pro))
@@ -327,7 +327,7 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
     fat_rda = nutrients[NUTR_ID_FAT_TOT][1]
 
     # Print calories and macronutrient bars
-    print_header("Macronutrients")
+    print_header("Macro-nutrients")
     kcals_max = max(kcals, kcals_rda)
     rda_perc = round(kcals * 100 / kcals_rda, 1)
     print(
@@ -355,6 +355,6 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         print_nute_bar(n_id, analysis[n_id], nutrients)
     # TODO: below
     print(
-        "work in progress... "
-        "some minor fields with negligible data, they are not shown here"
+        "work in progress...",
+        "some minor fields with negligible data, they are not shown here",
     )
