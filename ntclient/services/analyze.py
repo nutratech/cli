@@ -151,6 +151,7 @@ def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tupl
     TODO: Should be a subset of foods_analyze
     """
 
+    # Get user RDAs from CSV file, if supplied
     if rda_csv_path:
         with open(rda_csv_path, encoding="utf-8") as file_path:
             rda_csv_input = csv.DictReader(
@@ -160,6 +161,7 @@ def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tupl
     else:
         rdas = []
 
+    # Get daily logs from CSV file
     logs = []
     food_ids = set()
     for day_csv_path in day_csv_paths:
@@ -172,7 +174,7 @@ def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tupl
                 food_ids.add(int(entry["id"]))
         logs.append(log)
 
-    # Inject user RDAs
+    # Inject user RDAs, if supplied (otherwise fall back to defaults)
     nutrients_lists = [list(x) for x in sql_nutrients_overview().values()]
     for rda in rdas:
         nutrient_id = int(rda["id"])
@@ -213,8 +215,7 @@ def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tupl
                         nutrient_totals[nutr_id] += nutr_val
         nutrients_totals.append(nutrient_totals)
 
-    #######
-    # Print
+    # Print results
     buffer = BUFFER_WD - 4 if BUFFER_WD > 4 else BUFFER_WD
     for analysis in nutrients_totals:
         day_format(analysis, nutrients, buffer=buffer)
