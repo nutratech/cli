@@ -52,16 +52,6 @@ def nutrient_progress_bars(
             else:
                 nut_amts[int(nutrient_id)] += amt * ratio
 
-    # nut_percs = {}
-    # for nutrient_id, amt in nut_amts.items():
-    #     # TODO: if not rda, show raw amounts?
-    #     if isinstance(_nutrients[nutrient_id][1], float):
-    #         # print(type(_nutrients[nutrient_id][1]), _nutrients[nutrient_id])
-    #         nut_percs[nutrient_id] = round(amt / _nutrients[nutrient_id][1], 3)
-    #     else:
-    #         print(type(_nutrients[nutrient_id][1]), _nutrients[nutrient_id])
-    #         continue
-
     print_bars()
     return nut_amts
 

@@ -26,7 +26,7 @@ def colorize(path: str, full: bool = False) -> str:
     file = path if full else os.path.basename(path)
 
     if os.path.islink(path):
-        return "".join(
+        return "".join(  # pragma: no cover
             [
                 COLOR_LINK,
                 file,
