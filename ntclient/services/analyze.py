@@ -44,13 +44,6 @@ def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
     TODO: support -t (tabular/non-visual) output flag
     """
 
-    def print_header(header: str) -> None:
-        """Print a header for this method"""
-        print()
-        print("=========================")
-        print(header)
-        print("=========================")
-
     ##########################################################################
     # Get analysis
     ##########################################################################
@@ -198,7 +191,8 @@ def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tupl
                 if CLI_CONFIG.debug:
                     substr = "{0} {1}".format(_rda, _nutrient[2]).ljust(12)
                     print("INJECT RDA: {0} -->  {1}".format(substr, _nutrient[4]))
-    nutrients = {int(x[0]): x for x in nutrients_lists}
+    nutrients = {int(x[0]): tuple(x) for x in nutrients_lists}
+    print(nutrients)
 
     # Analyze foods
     foods_analysis = {}
@@ -236,7 +230,9 @@ def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tupl
 
 
 def day_format(
-    analysis: Mapping[int, float], nutrients: Mapping[int, list], buffer: int = 0
+    analysis: Mapping[int, float],
+    nutrients: Mapping[int, tuple],
+    buffer: int = 0,
 ) -> None:
     """Formats day analysis for printing to console"""
 
@@ -278,8 +274,8 @@ def day_format(
 
     # Nutrition detail report
     print_header("Nutrition detail report")
-    for n_id in analysis:
-        print_nutrient_bar(n_id, analysis[n_id], nutrients)
+    for nutr_id, nutr_val in analysis.items():
+        print_nutrient_bar(nutr_id, nutr_val, nutrients)
     # TODO: actually filter and show the number of filtered fields
     print(
         "work in progress...",

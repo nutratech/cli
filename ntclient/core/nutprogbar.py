@@ -8,7 +8,7 @@ from ntclient.utils import CLI_CONFIG
 def nutrient_progress_bars(
     _food_amts: Mapping[int, float],
     _food_analyses: list,
-    _nutrients: Mapping[int, list],
+    _nutrients: Mapping[int, tuple],
     # grams: float = 100,
     # width: int = 50,
 ) -> Mapping[int, float]:
@@ -57,7 +57,7 @@ def nutrient_progress_bars(
 
 
 def print_nutrient_bar(
-    _n_id: int, _amount: float, _nutrients: Mapping[int, list]
+    _n_id: int, _amount: float, _nutrients: Mapping[int, tuple]
 ) -> tuple:
     """Print a single color-coded nutrient bar"""
     nutrient = _nutrients[_n_id]
