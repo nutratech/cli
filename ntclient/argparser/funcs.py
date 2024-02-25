@@ -59,7 +59,7 @@ def analyze(args: argparse.Namespace) -> tuple:
     """Analyze a food"""
     # exc: ValueError,
     food_ids = set(args.food_id)
-    grams = float(args.grams) if args.grams else 0.0
+    grams = float(args.grams) if args.grams else 100.0
 
     return ntclient.services.analyze.foods_analyze(food_ids, grams)
 

@@ -5,7 +5,7 @@ def nutprogbar(
     food_amts: dict,
     food_analyses: list,
     nutrients: dict,
-    grams: float = 100,
+    # grams: float = 100,
     width: int = 50,
 ) -> dict:
     """Returns progress bars, colorized, for foods analyses"""

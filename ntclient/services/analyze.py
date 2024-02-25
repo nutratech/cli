@@ -32,7 +32,7 @@ from ntclient.utils import CLI_CONFIG
 ##############################################################################
 # Foods
 ##############################################################################
-def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
+def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
     """
     Analyze a list of food_ids against stock RDA values
     TODO: from ntclient.utils.nutprogbar import nutprogbar
@@ -53,10 +53,8 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
     analyses = {}
     for analysis in raw_analyses:
         food_id = int(analysis[0])
-        if grams:
-            anl = (int(analysis[1]), float(round(analysis[2] * grams / 100, 2)))
-        else:
-            anl = (int(analysis[1]), float(analysis[2]))
+        anl = (int(analysis[1]), float(round(analysis[2] * grams / 100, 2)))
+        # Add values to list
         if food_id not in analyses:
             analyses[food_id] = [anl]
         else:
@@ -74,13 +72,14 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
     servings_rows = []
     nutrients_rows = []
     for food_id, nut_val_tuples in analyses.items():
+        # Print food name
         food_name = food_des[food_id][2]
-        if len(food_name) > 50:
-            food_name = food_name[:50] + "..."
+        if len(food_name) > 45:
+            food_name = food_name[:45] + "..."
         print(
-            "\n=================================================================\n"
+            "\n============================================================\n"
             + "==> {0} ({1})\n".format(food_name, food_id)
-            + "=================================================================\n"
+            + "============================================================\n"
         )
 
         ######################################################################
@@ -94,6 +93,7 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
         print(servings_table)
         servings_rows.append(serving_rows)
 
+        # Show refuse (aka waste) if available
         refuse = next(
             ((x[7], x[8]) for x in food_des.values() if x[0] == food_id and x[7]), None
         )
@@ -106,32 +106,34 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
         # Nutrient colored RDA tree-view
         ######################################################################
         print_header("NUTRITION")
-        # headers = ["id", "nutrient", "rda", "amount", "units"]
+        headers = ["id", "nutrient", "rda %", "amount", "units"]
         nutrient_rows = []
         for nutrient_id, amount in nut_val_tuples:
             # TODO: skip small values (<1% RDA), report as color bar if RDA is available
-
             # Skip zero values
             if not amount:
                 continue
 
+            # Get name and unit
             nutr_desc = nutrients[nutrient_id][4] or nutrients[nutrient_id][3]
             unit = nutrients[nutrient_id][2]
 
             # Insert RDA % into row
             if rdas[nutrient_id]:
-                rda_perc = str(round(amount / rdas[nutrient_id] * 100, 1)) + "%"
+                rda_perc = float(round(amount / rdas[nutrient_id] * 100, 1))
             else:
                 rda_perc = None
             row = [nutrient_id, nutr_desc, rda_perc, round(amount, 2), unit]
 
+            # Add to list
             nutrient_rows.append(row)
 
-        ############
         # Print view
-        # TODO: nested, color-coded tree view
         try:
-            nutprogbar(food_amts, food_analyses, nutrients)
+            # TODO: nested, color-coded tree view
+            # TODO: either make this function singular, or handle plural logic here
+            _food_id = list(food_ids)[0]
+            nutprogbar(_food_id, analyses[_food_id], nutrients)
         except NameError as exception:
             print(repr(exception))
             # exit(0)
@@ -200,7 +202,7 @@ def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tupl
     # Compute totals
     nutrients_totals = []
     for log in logs:
-        nutrient_totals = OrderedDict()  # dict()/{} is NOT ORDERED before 3.6/3.7
+        nutrient_totals = OrderedDict()  # NOTE: dict()/{} is NOT ORDERED before 3.6/3.7
         for entry in log:
             if entry["id"]:
                 food_id = int(entry["id"])
