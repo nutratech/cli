@@ -6,10 +6,12 @@ Created on Tue Feb 13 09:51:48 2024
 @author: shane
 """
 import os
+import platform
 import sqlite3
 import traceback
 
 import ntclient.services.api
+from ntclient import __db_target_nt__, __db_target_usda__, __version__
 from ntclient.persistence.sql.nt import sql as sql_nt
 from ntclient.utils import CLI_CONFIG
 
@@ -21,18 +23,34 @@ def insert(args: list, exception: Exception) -> None:
         sql_nt(
             """
 INSERT INTO bug
-  (profile_id, arguments, repr, stack, client_info, app_info, user_details)
+  (profile_id, arguments, exc_type, exc_msg, stack, client_info, app_info, user_details)
       VALUES
-        (?,?,?,?,?,?,?)
+        (?,?,?,?,?,?,?,?)
             """,
             (
                 1,
                 " ".join(args),
-                repr(exception),
+                exception.__class__.__name__,
+                str(exception),
                 os.linesep.join(traceback.format_tb(exception.__traceback__)),
-                "client_info",
-                "app_info",
-                "user_details",
+                # client_info
+                str(
+                    {
+                        "platform": platform.system(),
+                        "python_version": platform.python_version(),
+                        "client_interface": "cli",
+                    }
+                ),
+                # app_info
+                str(
+                    {
+                        "version": __version__,
+                        "version_nt_db_target": __db_target_nt__,
+                        "version_usda_db_target": __db_target_usda__,
+                    }
+                ),
+                # user_details
+                "NOT_IMPLEMENTED",
             ),
         )
     except sqlite3.IntegrityError as exc:

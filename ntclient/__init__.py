@@ -24,7 +24,8 @@ __copyright__ = "Copyright 2018-2022 Shane Jaroch"
 __url__ = "https://github.com/nutratech/cli"
 
 # Sqlite target versions
-__db_target_nt__ = "0.0.6"
+# TODO: should this be via versions.csv file?  Don't update in two places?
+__db_target_nt__ = "0.0.7"
 __db_target_usda__ = "0.0.9"
 USDA_XZ_SHA256 = "25dba8428ced42d646bec704981d3a95dc7943240254e884aad37d59eee9616a"
 
