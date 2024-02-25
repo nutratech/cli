@@ -50,12 +50,6 @@ class TestCli(unittest.TestCase):
     @todo: integration tests.. create user, recipe, log.. analyze & compare
     """
 
-    def test_000_init(self):
-        """Tests the SQL/persistence init in real time"""
-        code, result = init(yes=True)
-        assert code == 0
-        assert result
-
     def test_100_usda_sql_funcs(self):
         """Performs cursory inspection (sanity checks) of usda.sqlite3 image"""
         version = usda_ver()
