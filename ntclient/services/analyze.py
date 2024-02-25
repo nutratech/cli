@@ -52,11 +52,11 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
     raw_analyses = sql_analyze_foods(food_ids)
     analyses = {}
     for analysis in raw_analyses:
-        food_id = analysis[0]
+        food_id = int(analysis[0])
         if grams:
-            anl = (analysis[1], round(analysis[2] * grams / 100, 2))
+            anl = (int(analysis[1]), float(round(analysis[2] * grams / 100, 2)))
         else:
-            anl = (analysis[1], analysis[2])
+            anl = (int(analysis[1]), float(analysis[2]))
         if food_id not in analyses:
             analyses[food_id] = [anl]
         else:
