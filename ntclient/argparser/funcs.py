@@ -341,8 +341,7 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
 # pylint: disable=unused-argument
 def bug_simulate(args: argparse.Namespace) -> tuple:
     """Simulate a bug report"""
-    ntclient.services.bugs.simulate_bug()
-    return 0, None
+    raise NotImplementedError("This service intentionally raises an error, for testing")
 
 
 def bugs_list(args: argparse.Namespace) -> tuple:
