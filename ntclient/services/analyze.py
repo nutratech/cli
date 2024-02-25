@@ -128,7 +128,11 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
         ############
         # Print view
         # TODO: nested, color-coded tree view
-        nutprogbar(food_amts, food_analyses, nutrients)
+        try:
+            nutprogbar(food_amts, food_analyses, nutrients)
+        except NameError as exception:
+            print(repr(exception))
+            # exit(0)
         table = tabulate(nutrient_rows, headers=headers, tablefmt="presto")
         print(table)
         nutrients_rows.append(nutrient_rows)
