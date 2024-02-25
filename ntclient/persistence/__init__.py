@@ -17,7 +17,9 @@ from ntclient import NUTRA_HOME
 
 PREFS_FILE = os.path.join(NUTRA_HOME, "prefs.ini")
 
-if not os.path.exists(PREFS_FILE):
+os.makedirs(NUTRA_HOME, 0o755, exist_ok=True)
+
+if not os.path.isfile(PREFS_FILE):
     print("INFO: Generating prefs.ini file")
     config = configparser.ConfigParser()
     with open(PREFS_FILE, "w", encoding="utf-8") as _prefs_file:
