@@ -338,6 +338,12 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
     return 0, result
 
 
+##############################################################################
+# Bug
+##############################################################################
+# TODO: these all require args parameter due to parent parser defining a `--show` arg
+
+
 # pylint: disable=unused-argument
 def bug_simulate(args: argparse.Namespace) -> tuple:
     """Simulate a bug report"""
