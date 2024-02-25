@@ -75,10 +75,12 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
     nutrients_rows = []
     for food_id, nut_val_tuples in analyses.items():
         food_name = food_des[food_id][2]
+        if len(food_name) > 50:
+            food_name = food_name[:50] + "..."
         print(
-            "\n======================================\n"
+            "\n=================================================================\n"
             + "==> {0} ({1})\n".format(food_name, food_id)
-            + "======================================\n"
+            + "=================================================================\n"
         )
 
         ######################################################################
