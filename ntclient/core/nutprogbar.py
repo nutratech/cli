@@ -15,6 +15,8 @@ def nutprogbar(
             # TODO: get RDA values from nt DB, tree node nested organization
             print(nut)
 
+    # for _food_analysis in food_analyses:
+    #     print(_food_analysis)
     food_analyses_dict = {
         x[0]: {y[1]: y[2] for y in food_analyses if y[0] == x[0]} for x in food_analyses
     }

@@ -108,8 +108,8 @@ def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
         print_header("NUTRITION")
         headers = ["id", "nutrient", "rda %", "amount", "units"]
         nutrient_rows = []
+        # TODO: skip small values (<1% RDA), report as color bar if RDA is available
         for nutrient_id, amount in nut_val_tuples:
-            # TODO: skip small values (<1% RDA), report as color bar if RDA is available
             # Skip zero values
             if not amount:
                 continue
@@ -129,16 +129,18 @@ def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
             nutrient_rows.append(row)
 
         # Print view
-        try:
-            # TODO: nested, color-coded tree view
-            # TODO: either make this function singular, or handle plural logic here
-            _food_id = list(food_ids)[0]
-            nutprogbar(_food_id, analyses[_food_id], nutrients)
-        except NameError as exception:
-            print(repr(exception))
-            # exit(0)
+        # TODO: nested, color-coded tree view
+        # TODO: either make this function singular, or handle plural logic here
+        _food_id = list(food_ids)[0]
+        nutprogbar(
+            {_food_id: grams},
+            [(_food_id, x[0], x[1]) for x in analyses[_food_id]],
+            nutrients,
+        )
+        # BEGIN: deprecated code
         table = tabulate(nutrient_rows, headers=headers, tablefmt="presto")
         print(table)
+        # END: deprecated code
         nutrients_rows.append(nutrient_rows)
 
     return 0, nutrients_rows, servings_rows
@@ -148,9 +150,13 @@ def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
 # Day
 ##############################################################################
 def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tuple:
-    """Analyze a day optionally with custom RDAs,
-    e.g.  nutra day ~/.nutra/rocky.csv -r ~/.nutra/dog-rdas-18lbs.csv
-    TODO: Should be a subset of foods_analyze
+    """Analyze a day optionally with custom RDAs, examples:
+
+       ./nutra day tests/resources/day/human-test.csv
+
+       nutra day ~/.nutra/rocky.csv -r ~/.nutra/dog-rdas-18lbs.csv
+
+    TODO: Should be a subset of foods_analyze (encapsulate/abstract/reuse code)
     """
 
     # Get user RDAs from CSV file, if supplied
