@@ -48,15 +48,6 @@ class ApiClient:
         if not self.host:
             raise ConnectionError("Cannot find suitable API host!")
 
-    def get(self, path: str) -> requests.Response:
-        """Get data from the API."""
-        _res = requests.get(
-            f"{self.host}/{path}",
-            timeout=(REQUEST_CONNECT_TIMEOUT, REQUEST_READ_TIMEOUT),
-        )
-        _res.raise_for_status()
-        return _res
-
     def post(self, path: str, data: dict) -> requests.Response:
         """Post data to the API."""
         _res = requests.post(
