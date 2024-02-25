@@ -7,6 +7,7 @@ Created on Sun Nov 11 23:57:03 2018
 
 import csv
 from collections import OrderedDict
+from typing import Mapping, Sequence
 
 from tabulate import tabulate
 
@@ -138,7 +139,7 @@ def foods_analyze(food_ids: set, grams: float = 0) -> tuple:
 ##############################################################################
 # Day
 ##############################################################################
-def day_analyze(day_csv_paths: list, rda_csv_path: str = str()) -> tuple:
+def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tuple:
     """Analyze a day optionally with custom RDAs,
     e.g.  nutra day ~/.nutra/rocky.csv -r ~/.nutra/dog-rdas-18lbs.csv
     TODO: Should be a subset of foods_analyze
@@ -271,8 +272,9 @@ def print_macro_bar(
     )
 
 
-# TODO: why not this...? nutrients: Mapping[int, tuple]
-def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
+def day_format(
+    analysis: Mapping[int, float], nutrients: Mapping[int, list], buffer: int = 0
+) -> None:
     """Formats day analysis for printing to console"""
 
     def print_header(header: str) -> None:
@@ -282,7 +284,9 @@ def day_format(analysis: dict, nutrients: dict, buffer: int = 0) -> None:
         print("=" * (len(header) + 2 * 5))
         print(CLI_CONFIG.style_reset_all)
 
-    def print_nute_bar(_n_id: int, amount: float, _nutrients: dict) -> tuple:
+    def print_nute_bar(
+        _n_id: int, amount: float, _nutrients: Mapping[int, list]
+    ) -> tuple:
         nutrient = _nutrients[_n_id]
         rda = nutrient[1]
         tag = nutrient[3]
