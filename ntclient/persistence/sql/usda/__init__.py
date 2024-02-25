@@ -40,8 +40,10 @@ def usda_init(yes: bool = False) -> None:
     # TODO: handle resource moved on Bitbucket,
     #  or version mismatch due to developer mistake /  overwrite?
     #  And seed mirrors; don't hard code one host here!
-    url = "https://github.com/nutratech/usda-sqlite/releases"
-    "/download/{1}/{0}-{1}.tar.xz".format(USDA_DB_NAME, __db_target_usda__)
+    url = (
+        "https://github.com/nutratech/usda-sqlite/releases"
+        "/download/{1}/{0}-{1}.tar.xz".format(USDA_DB_NAME, __db_target_usda__)
+    )
 
     if USDA_DB_NAME not in os.listdir(NUTRA_HOME):
         print("INFO: usda.sqlite3 doesn't exist, is this a fresh install?")
