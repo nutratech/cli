@@ -10,7 +10,7 @@ import unittest
 import pytest
 
 import ntclient.services.recipe.utils as r
-from ntclient.services.recipe import RECIPE_STOCK
+from ntclient.services.recipe import RECIPE_STOCK, csv_utils
 
 
 class TestRecipe(unittest.TestCase):
@@ -46,3 +46,15 @@ class TestRecipe(unittest.TestCase):
             os.path.join(RECIPE_STOCK, "dinner", "burrito-bowl.csv")
         )
         assert exit_code in {0, 1}
+
+    def test_recipe_csv_utils(self):
+        """Test the (largely unused) CSV utils module"""
+        _csv_files = csv_utils.csv_files()
+        assert _csv_files
+
+        _csv_recipes = csv_utils.csv_recipes()
+        assert _csv_recipes
+
+        # sanity executions
+        csv_utils.csv_recipe_print_tree()
+        csv_utils.csv_print_details()
