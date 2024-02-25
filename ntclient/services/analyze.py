@@ -19,7 +19,12 @@ from ntclient import (
     NUTR_ID_KCAL,
     NUTR_ID_PROTEIN,
 )
-from ntclient.core.nutprogbar import nutprogbar
+from ntclient.core.nutprogbar import (
+    nutrient_progress_bars,
+    print_header,
+    print_macro_bar,
+    print_nutrient_bar,
+)
 from ntclient.persistence.sql.usda.funcs import (
     sql_analyze_foods,
     sql_food_details,
@@ -132,14 +137,14 @@ def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
         # TODO: nested, color-coded tree view
         # TODO: either make this function singular, or handle plural logic here
         _food_id = list(food_ids)[0]
-        nutprogbar(
+        nutrient_progress_bars(
             {_food_id: grams},
             [(_food_id, x[0], x[1]) for x in analyses[_food_id]],
             nutrients,
         )
         # BEGIN: deprecated code
-        table = tabulate(nutrient_rows, headers=headers, tablefmt="presto")
-        print(table)
+        # table = tabulate(nutrient_rows, headers=headers, tablefmt="presto")
+        # print(table)
         # END: deprecated code
         nutrients_rows.append(nutrient_rows)
 
@@ -230,109 +235,10 @@ def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tupl
     return 0, nutrients_totals
 
 
-def print_macro_bar(
-    _fat: float, _net_carb: float, _pro: float, _kcals_max: float, _buffer: int = 0
-) -> None:
-    """Print macro-nutrients bar with details."""
-    _kcals = _fat * 9 + _net_carb * 4 + _pro * 4
-
-    p_fat = (_fat * 9) / _kcals
-    p_car = (_net_carb * 4) / _kcals
-    p_pro = (_pro * 4) / _kcals
-
-    # TODO: handle rounding cases, tack on to, or trim off FROM LONGEST ?
-    mult = _kcals / _kcals_max
-    n_fat = round(p_fat * _buffer * mult)
-    n_car = round(p_car * _buffer * mult)
-    n_pro = round(p_pro * _buffer * mult)
-
-    # Headers
-    f_buf = " " * (n_fat // 2) + "Fat" + " " * (n_fat - n_fat // 2 - 3)
-    c_buf = " " * (n_car // 2) + "Carbs" + " " * (n_car - n_car // 2 - 5)
-    p_buf = " " * (n_pro // 2) + "Pro" + " " * (n_pro - n_pro // 2 - 3)
-    print(
-        "  "
-        + CLI_CONFIG.color_yellow
-        + f_buf
-        + CLI_CONFIG.color_blue
-        + c_buf
-        + CLI_CONFIG.color_red
-        + p_buf
-        + CLI_CONFIG.style_reset_all
-    )
-
-    # Bars
-    print(" <", end="")
-    print(CLI_CONFIG.color_yellow + "=" * n_fat, end="")
-    print(CLI_CONFIG.color_blue + "=" * n_car, end="")
-    print(CLI_CONFIG.color_red + "=" * n_pro, end="")
-    print(CLI_CONFIG.style_reset_all + ">")
-
-    # Calorie footers
-    k_fat = str(round(_fat * 9))
-    k_car = str(round(_net_carb * 4))
-    k_pro = str(round(_pro * 4))
-    f_buf = " " * (n_fat // 2) + k_fat + " " * (n_fat - n_fat // 2 - len(k_fat))
-    c_buf = " " * (n_car // 2) + k_car + " " * (n_car - n_car // 2 - len(k_car))
-    p_buf = " " * (n_pro // 2) + k_pro + " " * (n_pro - n_pro // 2 - len(k_pro))
-    print(
-        "  "
-        + CLI_CONFIG.color_yellow
-        + f_buf
-        + CLI_CONFIG.color_blue
-        + c_buf
-        + CLI_CONFIG.color_red
-        + p_buf
-        + CLI_CONFIG.style_reset_all
-    )
-
-
 def day_format(
     analysis: Mapping[int, float], nutrients: Mapping[int, list], buffer: int = 0
 ) -> None:
     """Formats day analysis for printing to console"""
-
-    def print_header(header: str) -> None:
-        print(CLI_CONFIG.color_default, end="")
-        print("=" * (len(header) + 2 * 5))
-        print("-->  %s  <--" % header)
-        print("=" * (len(header) + 2 * 5))
-        print(CLI_CONFIG.style_reset_all)
-
-    def print_nute_bar(
-        _n_id: int, amount: float, _nutrients: Mapping[int, list]
-    ) -> tuple:
-        nutrient = _nutrients[_n_id]
-        rda = nutrient[1]
-        tag = nutrient[3]
-        unit = nutrient[2]
-        # anti = nutrient[5]
-
-        if not rda:
-            return False, nutrient
-        attain = amount / rda
-        perc = round(100 * attain, 1)
-
-        if attain >= CLI_CONFIG.thresh_over:
-            color = CLI_CONFIG.color_over
-        elif attain <= CLI_CONFIG.thresh_crit:
-            color = CLI_CONFIG.color_crit
-        elif attain <= CLI_CONFIG.thresh_warn:
-            color = CLI_CONFIG.color_warn
-        else:
-            color = CLI_CONFIG.color_default
-
-        # Print
-        detail_amount = "{0}/{1} {2}".format(round(amount, 1), rda, unit).ljust(18)
-        detail_amount = "{0} -- {1}".format(detail_amount, tag)
-        left_index = 20
-        left_pos = round(left_index * attain) if attain < 1 else left_index
-        print(" {0}<".format(color), end="")
-        print("=" * left_pos + " " * (left_index - left_pos) + ">", end="")
-        print(" {0}%\t[{1}]".format(perc, detail_amount), end="")
-        print(CLI_CONFIG.style_reset_all)
-
-        return True, perc
 
     # Actual values
     kcals = round(analysis[NUTR_ID_KCAL])
@@ -373,7 +279,7 @@ def day_format(
     # Nutrition detail report
     print_header("Nutrition detail report")
     for n_id in analysis:
-        print_nute_bar(n_id, analysis[n_id], nutrients)
+        print_nutrient_bar(n_id, analysis[n_id], nutrients)
     # TODO: actually filter and show the number of filtered fields
     print(
         "work in progress...",

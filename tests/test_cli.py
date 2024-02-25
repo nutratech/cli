@@ -431,7 +431,7 @@ class TestCli(unittest.TestCase):
         """Verifies colored/visual output is successfully generated"""
         analysis = usda_funcs.sql_analyze_foods(food_ids={1001})
         nutrients = usda_funcs.sql_nutrients_overview()
-        output = nutprogbar.nutprogbar(
-            food_amts={1001: 100}, food_analyses=analysis, nutrients=nutrients
+        output = nutprogbar.nutrient_progress_bars(
+            _food_amts={1001: 100}, _food_analyses=analysis, _nutrients=nutrients
         )
         assert output
