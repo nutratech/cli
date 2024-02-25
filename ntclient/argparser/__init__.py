@@ -333,6 +333,14 @@ def build_subcommand_bug(subparsers: argparse._SubParsersAction) -> None:
     bug_parser.set_defaults(func=parser_funcs.bugs_list)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Simulate (bug)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    bug_simulate_parser = bug_subparser.add_parser(
+        "simulate", help="simulate a bug (for testing purposes)"
+    )
+    bug_simulate_parser.set_defaults(func=parser_funcs.bug_simulate)
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Report (bug)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     bug_report_parser = bug_subparser.add_parser(

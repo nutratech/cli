@@ -29,7 +29,7 @@ from ntclient.persistence.sql.nt.funcs import sql_nt_next_index
 from ntclient.persistence.sql.usda import funcs as usda_funcs
 from ntclient.persistence.sql.usda import sql as _usda_sql
 from ntclient.persistence.sql.usda import usda_ver
-from ntclient.services import bugs, init, usda
+from ntclient.services import init, usda
 from ntclient.services.recipe import RECIPE_HOME
 from ntclient.utils import CLI_CONFIG
 from ntclient.utils.exceptions import SqlInvalidVersionError
@@ -447,11 +447,3 @@ class TestCli(unittest.TestCase):
             _food_amts={1001: 100}, _food_analyses=analysis, _nutrients=nutrients
         )
         assert output
-
-    @unittest.expectedFailure
-    @pytest.mark.xfail(reason="Work in progress, need to get mocks working")
-    def test_1000_bugs(self):
-        """Tests the functions for listing and submitting bugs"""
-        bugs.list_bugs()
-        # TODO: this should be mocked
-        bugs.submit_bugs()

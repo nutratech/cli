@@ -51,6 +51,11 @@ def list_bugs() -> list:
     return sql_bugs
 
 
+def simulate_bug() -> None:
+    """Simulate bug"""
+    raise NotImplementedError("This service intentionally raises an error, for testing")
+
+
 def submit_bugs() -> int:
     """Submit bug reports to developer, return n_submitted."""
 

@@ -338,8 +338,15 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
     return 0, result
 
 
+# pylint: disable=unused-argument
+def bug_simulate(args: argparse.Namespace) -> tuple:
+    """Simulate a bug report"""
+    ntclient.services.bugs.simulate_bug()
+    return 0, None
+
+
 def bugs_list(args: argparse.Namespace) -> tuple:
-    """List bug reports that have een saved"""
+    """List bug reports that have been saved"""
     _bugs_list = ntclient.services.bugs.list_bugs()
     n_bugs_total = len(_bugs_list)
     n_bugs_unsubmitted = len([x for x in _bugs_list if not bool(x[-1])])
