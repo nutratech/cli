@@ -1,4 +1,5 @@
 """nt.sqlite3 functions module"""
+
 from ntclient.persistence.sql.nt import sql
 
 

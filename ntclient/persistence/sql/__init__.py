@@ -1,4 +1,5 @@
 """Main SQL persistence module, shared between USDA and NT databases"""
+
 import sqlite3
 from collections.abc import Sequence
 

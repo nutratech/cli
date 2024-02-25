@@ -1,4 +1,5 @@
 """Nutratracker DB specific sqlite module"""
+
 import os
 import sqlite3
 from collections.abc import Sequence
