@@ -198,7 +198,7 @@ def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tupl
                 if CLI_CONFIG.debug:
                     substr = "{0} {1}".format(_rda, _nutrient[2]).ljust(12)
                     print("INJECT RDA: {0} -->  {1}".format(substr, _nutrient[4]))
-    nutrients = {x[0]: x for x in nutrients_lists}
+    nutrients = {int(x[0]): x for x in nutrients_lists}
 
     # Analyze foods
     foods_analysis = {}

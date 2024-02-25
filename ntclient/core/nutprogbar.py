@@ -10,57 +10,60 @@ def nutrient_progress_bars(
     _food_analyses: list,
     _nutrients: Mapping[int, list],
     # grams: float = 100,
-    width: int = 50,
-) -> dict:
-    """Returns progress bars, colorized, for foods analyses"""
+    # width: int = 50,
+) -> Mapping[int, float]:
+    """
+    Returns progress bars, colorized, for foods analyses
+    @TODO add option to scale up to 2000 kcal (or configured RDA value)
+    @TODO consider organizing the numbers into a table, with the colored bar in one slot
+    """
 
-    def tally() -> int:
-        """Tally the progress bars, return n_skipped"""
+    def print_bars() -> int:
+        """Print the progress bars, return n_skipped"""
         n_skipped = 0
-        for nut in nut_percs.items():
+        for nut in nut_amts.items():
             nutr_id, nutr_val = nut
+
             # Skip if nutr_val == 0.0
             if not nutr_val:
                 n_skipped += 1
                 continue
+
             # Print bars
             print_nutrient_bar(nutr_id, nutr_val, _nutrients)
+
         return n_skipped
 
-    for _food_analysis in _food_analyses:
-        print(_food_analysis)
+    # Organize data into a dict<food_id, dict<nutr_id, nutr_val>>
     food_analyses_dict = {
-        x[0]: {y[1]: y[2] for y in _food_analyses if y[0] == x[0]}
+        int(x[0]): {int(y[1]): float(y[2]) for y in _food_analyses if y[0] == x[0]}
+        # NOTE: each analysis is a list of tuples, i.e. (11233, 203, 2.92)
         for x in _food_analyses
     }
 
-    # print(food_ids)
-    # print(food_analyses)
-
+    # Tally the nutrient totals
     nut_amts = {}
-
     for food_id, grams in _food_amts.items():
         ratio = grams / 100.0
         analysis = food_analyses_dict[food_id]
         for nutrient_id, amt in analysis.items():
             if nutrient_id not in nut_amts:
-                nut_amts[nutrient_id] = amt * ratio
+                nut_amts[int(nutrient_id)] = amt * ratio
             else:
-                nut_amts[nutrient_id] += amt * ratio
+                nut_amts[int(nutrient_id)] += amt * ratio
 
-    nut_percs = {}
+    # nut_percs = {}
+    # for nutrient_id, amt in nut_amts.items():
+    #     # TODO: if not rda, show raw amounts?
+    #     if isinstance(_nutrients[nutrient_id][1], float):
+    #         # print(type(_nutrients[nutrient_id][1]), _nutrients[nutrient_id])
+    #         nut_percs[nutrient_id] = round(amt / _nutrients[nutrient_id][1], 3)
+    #     else:
+    #         print(type(_nutrients[nutrient_id][1]), _nutrients[nutrient_id])
+    #         continue
 
-    for nutrient_id, amt in nut_amts.items():
-        # TODO: if not rda, show raw amounts?
-        if isinstance(_nutrients[nutrient_id][1], float):
-            # print(type(_nutrients[nutrient_id][1]), _nutrients[nutrient_id])
-            nut_percs[nutrient_id] = round(amt / _nutrients[nutrient_id][1], 3)
-        else:
-            print(type(_nutrients[nutrient_id][1]), _nutrients[nutrient_id])
-            continue
-
-    tally()
-    return nut_percs
+    print_bars()
+    return nut_amts
 
 
 def print_nutrient_bar(
