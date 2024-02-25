@@ -21,7 +21,7 @@ def usda_init(yes: bool = False) -> None:
         """Download USDA tarball from BitBucket and extract to storage folder"""
 
         # TODO: move this into separate module, ignore coverage. Avoid SLOW tests
-        if yes or input_agree().lower() == "y":
+        if yes or input_agree().lower() == "y":  # pragma: no cover
             # TODO: save with version in filename?
             #  Don't re-download tarball, just extract?
             save_path = os.path.join(NUTRA_HOME, "%s.tar.xz" % USDA_DB_NAME)
@@ -45,10 +45,10 @@ def usda_init(yes: bool = False) -> None:
         "/download/{1}/{0}-{1}.tar.xz".format(USDA_DB_NAME, __db_target_usda__)
     )
 
-    if USDA_DB_NAME not in os.listdir(NUTRA_HOME):
+    if USDA_DB_NAME not in os.listdir(NUTRA_HOME):  # pragma: no cover
         print("INFO: usda.sqlite3 doesn't exist, is this a fresh install?")
         download_extract_usda()
-    elif usda_ver() != __db_target_usda__:
+    elif usda_ver() != __db_target_usda__:  # pragma: no cover
         print(
             "INFO: usda.sqlite3 target [{0}] doesn't match actual [{1}], ".format(
                 __db_target_usda__, usda_ver()
