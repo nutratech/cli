@@ -7,6 +7,7 @@ Created on Fri Jan 31 15:19:53 2020
 
 @author: shane
 """
+import datetime
 import os
 import sys
 import unittest
@@ -381,8 +382,8 @@ class TestCli(unittest.TestCase):
         new_release = str(int(release) + 1)
         new_version = ".".join([major, minor, new_release])
         _usda_sql(
-            "INSERT INTO version (version) VALUES (?)",
-            values=(new_version,),
+            "INSERT INTO version (version, created) VALUES (?,?)",
+            values=(new_version,datetime.datetime.utcnow()),
             version_check=False,
         )
 
@@ -420,8 +421,8 @@ class TestCli(unittest.TestCase):
             # TODO: resolve PermissionError on Windows
             print(repr(err))
             _usda_sql(
-                "INSERT INTO version (version) VALUES (?)",
-                values=(__db_target_usda__,),
+                "INSERT INTO version (version, created) VALUES (?,?)",
+                values=(__db_target_usda__, datetime.datetime.utcnow()),
                 version_check=False,
             )
             pytest.xfail("PermissionError, are you using Microsoft Windows?")
