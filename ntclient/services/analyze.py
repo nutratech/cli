@@ -37,9 +37,7 @@ from ntclient.utils import CLI_CONFIG
 ##############################################################################
 # Foods
 ##############################################################################
-def foods_analyze(  # pylint: disable=too-many-locals
-    food_ids: set, grams: float = 100
-) -> tuple:
+def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
     """
     Analyze a list of food_ids against stock RDA values
     TODO: from ntclient.utils.nutprogbar import nutprogbar
@@ -149,9 +147,7 @@ def foods_analyze(  # pylint: disable=too-many-locals
 ##############################################################################
 # Day
 ##############################################################################
-def day_analyze(  # pylint: disable=too-many-branches,too-many-locals
-    day_csv_paths: Sequence[str], rda_csv_path: str = str()
-) -> tuple:
+def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tuple:
     """Analyze a day optionally with custom RDAs, examples:
 
        ./nutra day tests/resources/day/human-test.csv
@@ -233,7 +229,7 @@ def day_analyze(  # pylint: disable=too-many-branches,too-many-locals
     return 0, nutrients_totals
 
 
-def day_format(  # pylint: disable=too-many-locals
+def day_format(
     analysis: Mapping[int, float],
     nutrients: Mapping[int, tuple],
     buffer: int = 0,
