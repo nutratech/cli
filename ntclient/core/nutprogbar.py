@@ -43,14 +43,13 @@ def nutrient_progress_bars(
 
     # Tally the nutrient totals
     nut_amts = {}
-    for food_id, grams in _food_amts.items():
-        ratio = grams / 100.0
+    for food_id in _food_amts.keys():
         analysis = food_analyses_dict[food_id]
         for nutrient_id, amt in analysis.items():
             if nutrient_id not in nut_amts:
-                nut_amts[int(nutrient_id)] = amt * ratio
+                nut_amts[int(nutrient_id)] = amt
             else:
-                nut_amts[int(nutrient_id)] += amt * ratio
+                nut_amts[int(nutrient_id)] += amt
 
     print_bars()
     return nut_amts
