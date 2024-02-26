@@ -383,7 +383,7 @@ class TestCli(unittest.TestCase):
         new_version = ".".join([major, minor, new_release])
         _usda_sql(
             "INSERT INTO version (version, created) VALUES (?,?)",
-            values=(new_version,datetime.datetime.utcnow()),
+            values=(new_version, datetime.datetime.utcnow()),
             version_check=False,
         )
 

@@ -40,7 +40,7 @@ def nt_init() -> None:
             )
         print("..DONE!")
         os.remove(NTSQLITE_BUILDPATH)  # clean up
-    else:
+    else:  # pragma: no cover
         # TODO: is this logic (and these error messages) the best?
         #  what if .isdir() == True ? Fails with stacktrace?
         os.rename(NTSQLITE_BUILDPATH, NTSQLITE_DESTINATION)

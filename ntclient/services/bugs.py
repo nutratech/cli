@@ -90,10 +90,13 @@ def submit_bugs() -> int:
             sql_nt("UPDATE bug SET submitted = 1 WHERE id = %s", bug.id)
         elif _res.status_code == 204:
             sql_nt("UPDATE bug SET submitted = 2 WHERE id = %s", bug.id)
+        else:
+            print("WARN: unknown status [{0}]".format(_res.status_code))
+            continue
 
         print(".", end="", flush=True)
         n_submitted += 1
 
-    print()
+    print("submitted: {0} bugs".format(n_submitted))
 
     return n_submitted
