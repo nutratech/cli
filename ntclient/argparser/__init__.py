@@ -322,6 +322,7 @@ def build_subcommand_calc(subparsers: argparse._SubParsersAction) -> None:
     calc_lbl_parser.set_defaults(func=parser_funcs.calc_lbm_limits)
 
 
+# noinspection PyUnresolvedReferences,PyProtectedMember
 def build_subcommand_bug(subparsers: argparse._SubParsersAction) -> None:
     """List and report bugs"""
 
