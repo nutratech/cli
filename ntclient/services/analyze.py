@@ -40,8 +40,9 @@ from ntclient.utils import CLI_CONFIG
 def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
     """
     Analyze a list of food_ids against stock RDA values
-    TODO: from ntclient.utils.nutprogbar import nutprogbar
-    TODO: support -t (tabular/non-visual) output flag
+    (NOTE: only supports a single food for now... add compare foods support later)
+    TODO: support flag -t (tabular/non-visual output)
+    TODO: support flag -s (scale to 2000 kcal)
     """
 
     ##########################################################################
@@ -104,7 +105,6 @@ def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
         # Nutrient colored RDA tree-view
         ######################################################################
         print_header("NUTRITION")
-        headers = ["id", "nutrient", "rda %", "amount", "units"]
         nutrient_rows = []
         # TODO: skip small values (<1% RDA), report as color bar if RDA is available
         for nutrient_id, amount in nut_val_tuples:
@@ -126,8 +126,10 @@ def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
             # Add to list
             nutrient_rows.append(row)
 
+        # Add to list of lists
+        nutrients_rows.append(nutrient_rows)
+
         # Print view
-        # TODO: nested, color-coded tree view
         # TODO: either make this function singular, or handle plural logic here
         _food_id = list(food_ids)[0]
         nutrient_progress_bars(
@@ -135,11 +137,10 @@ def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
             [(_food_id, x[0], x[1]) for x in analyses[_food_id]],
             nutrients,
         )
-        # BEGIN: deprecated code
+        # TODO: make this into the `-t` or `--tabular` branch of the function
+        # headers = ["id", "nutrient", "rda %", "amount", "units"]
         # table = tabulate(nutrient_rows, headers=headers, tablefmt="presto")
         # print(table)
-        # END: deprecated code
-        nutrients_rows.append(nutrient_rows)
 
     return 0, nutrients_rows, servings_rows
 
