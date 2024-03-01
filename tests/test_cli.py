@@ -6,6 +6,7 @@ Need to offload them into special modules. The refactor has started.
 Created on Fri Jan 31 15:19:53 2020
 
 @author: shane
+@TODO: split this up... mock out argparser tests; then test missing service lines
 """
 import datetime
 import os
