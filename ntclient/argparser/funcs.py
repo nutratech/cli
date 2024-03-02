@@ -360,17 +360,6 @@ def bugs_list(args: argparse.Namespace) -> tuple:
     print(f"Of these, {n_bugs_unsubmitted} require submission/reporting.")
     print()
 
-    print(rows)
-    # print([[entry for entry in row] for row in rows])
-    # exit(0)
-    table = tabulate(
-        [[entry for entry in row if "\n" not in str(entry)] for row in rows],
-        headers=headers,
-        tablefmt="presto",
-    )
-    print(table)
-    exit(0)
-
     for bug in rows:
         if not args.show:
             continue
@@ -378,14 +367,7 @@ def bugs_list(args: argparse.Namespace) -> tuple:
         if bool(bug[-1]) and not args.debug:
             continue
         # Print all bug properties (except noisy stacktrace)
-        bug_line = str()
-        for _col_name, _value in dict(bug).items():
-            print(_col_name)
-            print(_value)
-            if "\n" in str(_value):
-                continue
-            bug_line += str(_value) + ", "
-        # print(", ".join(str(x) for x in bug if "\n" not in str(x)))
+        print(", ".join(str(x) for x in bug if "\n" not in str(x)))
         print()
 
     if n_bugs_unsubmitted > 0:
