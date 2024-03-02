@@ -56,8 +56,8 @@ class TestCli(unittest.TestCase):
         """Performs cursory inspection (sanity checks) of usda.sqlite3 image"""
         version = usda_ver()
         assert version == __db_target_usda__
-        result = usda_funcs.sql_nutrients_details()
-        assert len(result[1]) == 186
+        rows, _ = usda_funcs.sql_nutrients_details()
+        assert len(rows) == 186
 
         result = usda_funcs.sql_servings({9050, 9052})
         assert len(result) == 3

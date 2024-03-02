@@ -38,7 +38,7 @@ def sql_nutrients_overview() -> dict:
     return {x[0]: x for x in rows}
 
 
-def sql_nutrients_details() -> tuple:
+def sql_nutrients_details() -> tuple[list, list]:
     """Shows nutrients 'details'"""
 
     query = "SELECT * FROM nutrients_overview;"
