@@ -352,27 +352,46 @@ def bug_simulate(args: argparse.Namespace) -> tuple:
 
 def bugs_list(args: argparse.Namespace) -> tuple:
     """List bug reports that have been saved"""
-    _bugs_list = ntclient.services.bugs.list_bugs()
-    n_bugs_total = len(_bugs_list)
-    n_bugs_unsubmitted = len([x for x in _bugs_list if not bool(x[-1])])
+    rows, headers = ntclient.services.bugs.list_bugs()
+    n_bugs_total = len(rows)
+    n_bugs_unsubmitted = len([x for x in rows if not bool(x[-1])])
 
     print(f"You have: {n_bugs_total} total bugs amassed in your journey.")
     print(f"Of these, {n_bugs_unsubmitted} require submission/reporting.")
     print()
 
-    for bug in _bugs_list:
+    print(rows)
+    # print([[entry for entry in row] for row in rows])
+    # exit(0)
+    table = tabulate(
+        [[entry for entry in row if "\n" not in str(entry)] for row in rows],
+        headers=headers,
+        tablefmt="presto",
+    )
+    print(table)
+    exit(0)
+
+    for bug in rows:
         if not args.show:
             continue
         # Skip submitted bugs by default
         if bool(bug[-1]) and not args.debug:
             continue
         # Print all bug properties (except noisy stacktrace)
-        print(", ".join(str(x) for x in bug if "\n" not in str(x)))
+        bug_line = str()
+        for _col_name, _value in dict(bug).items():
+            print(_col_name)
+            print(_value)
+            if "\n" in str(_value):
+                continue
+            bug_line += str(_value) + ", "
+        # print(", ".join(str(x) for x in bug if "\n" not in str(x)))
+        print()
 
     if n_bugs_unsubmitted > 0:
         print("NOTE: You have bugs awaiting submission.  Please run the report command")
 
-    return 0, _bugs_list
+    return 0, rows
 
 
 # pylint: disable=unused-argument

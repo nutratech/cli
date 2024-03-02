@@ -49,8 +49,8 @@ INSERT INTO bug
                         "version_usda_db_target": __db_target_usda__,
                     }
                 ),
-                # user_details
-                "NOT_IMPLEMENTED",
+                # user_details (TODO: add user details)
+                None,
             ),
         )
     except sqlite3.IntegrityError as exc:
@@ -63,24 +63,24 @@ INSERT INTO bug
             raise
 
 
-def list_bugs() -> list:
-    """List all bugs."""
-    sql_bugs = sql_nt("SELECT * FROM bug")
-    return sql_bugs
+def list_bugs() -> tuple[list, list]:
+    """List all bugs, with headers."""
+    rows, headers, _, _ = sql_nt("SELECT * FROM bug")
+    return rows, headers
 
 
 def submit_bugs() -> int:
     """Submit bug reports to developer, return n_submitted."""
 
     # Gather bugs for submission
-    sql_bugs = sql_nt("SELECT * FROM bug WHERE submitted = 0")
+    rows, _, _, _ = sql_nt("SELECT * FROM bug WHERE submitted = 0")
     api_client = ntclient.services.api.ApiClient()
 
     n_submitted = 0
-    print(f"submitting {len(sql_bugs)} bug reports...")
-    print("_" * len(sql_bugs))
+    print(f"submitting {len(rows)} bug reports...")
+    print("_" * len(rows))
 
-    for bug in sql_bugs:
+    for bug in rows:
         _res = api_client.post_bug(bug)
         if CLI_CONFIG.debug:
             print(_res.json())

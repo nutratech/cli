@@ -1,7 +1,7 @@
 """usda.sqlite functions module"""
 
 from ntclient import NUTR_ID_KCAL
-from ntclient.persistence.sql.usda import sql, sql_headers
+from ntclient.persistence.sql.usda import sql
 
 
 ################################################################################
@@ -11,8 +11,8 @@ def sql_fdgrp() -> dict:
     """Shows food groups"""
 
     query = "SELECT * FROM fdgrp;"
-    result = sql(query)
-    return {x[0]: x for x in result}
+    rows, _, _, _ = sql(query)
+    return {x[0]: x for x in rows}
 
 
 def sql_food_details(_food_ids: set = None) -> list:  # type: ignore
@@ -26,22 +26,24 @@ def sql_food_details(_food_ids: set = None) -> list:  # type: ignore
         food_ids = ",".join(str(x) for x in set(_food_ids))
         query = query % food_ids
 
-    return sql(query)
+    rows, _, _, _ = sql(query)
+    return rows
 
 
 def sql_nutrients_overview() -> dict:
     """Shows nutrients overview"""
 
     query = "SELECT * FROM nutrients_overview;"
-    result = sql(query)
-    return {x[0]: x for x in result}
+    rows, _, _, _ = sql(query)
+    return {x[0]: x for x in rows}
 
 
 def sql_nutrients_details() -> tuple:
     """Shows nutrients 'details'"""
 
     query = "SELECT * FROM nutrients_overview;"
-    return sql_headers(query)
+    rows, headers, _, _ = sql(query)
+    return rows, headers
 
 
 def sql_servings(_food_ids: set) -> list:
@@ -61,7 +63,8 @@ WHERE
 """
     # FIXME: support this kind of thing by library code & parameterized queries
     food_ids = ",".join(str(x) for x in set(_food_ids))
-    return sql(query % food_ids)
+    rows, _, _, _ = sql(query % food_ids)
+    return rows
 
 
 def sql_analyze_foods(food_ids: set) -> list:
@@ -79,7 +82,8 @@ WHERE
 """
     # TODO: parameterized queries
     food_ids_concat = ",".join(str(x) for x in set(food_ids))
-    return sql(query % food_ids_concat)
+    rows, _, _, _ = sql(query % food_ids_concat)
+    return rows
 
 
 ################################################################################
@@ -101,8 +105,9 @@ WHERE
 ORDER BY
   food_id;
 """
-
-    return sql(query % (NUTR_ID_KCAL, nutrient_id))
+    # TODO: parameterized queries
+    rows, _, _, _ = sql(query % (NUTR_ID_KCAL, nutrient_id))
+    return rows
 
 
 def sql_sort_foods(nutr_id: int) -> list:
@@ -127,8 +132,9 @@ WHERE
 ORDER BY
   nut_data.nutr_val DESC;
 """
-
-    return sql(query % nutr_id)
+    # TODO: parameterized queries
+    rows, _, _, _ = sql(query % nutr_id)
+    return rows
 
 
 def sql_sort_foods_by_kcal(nutr_id: int) -> list:
@@ -156,5 +162,6 @@ WHERE
 ORDER BY
   (nut_data.nutr_val / kcal.nutr_val) DESC;
 """
-
-    return sql(query % nutr_id)
+    # TODO: parameterized queries
+    rows, _, _, _ = sql(query % nutr_id)
+    return rows

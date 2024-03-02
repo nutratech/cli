@@ -32,7 +32,7 @@ USDA_XZ_SHA256 = "25dba8428ced42d646bec704981d3a95dc7943240254e884aad37d59eee961
 # Global variables
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 NUTRA_HOME = os.getenv("NUTRA_HOME", os.path.join(os.path.expanduser("~"), ".nutra"))
-USDA_DB_NAME = "usda.sqlite"
+USDA_DB_NAME = "usda.sqlite3"
 # NOTE: NT_DB_NAME = "nt.sqlite3" is defined in ntclient.ntsqlite.sql
 
 NTSQLITE_BUILDPATH = os.path.join(PROJECT_ROOT, "ntsqlite", "sql", NT_DB_NAME)

@@ -30,7 +30,7 @@ from ntclient.utils import CLI_CONFIG
 def list_nutrients() -> tuple:
     """Lists out nutrients with basic details"""
 
-    headers, nutrients = sql_nutrients_details()
+    nutrients, headers = sql_nutrients_details()
     # TODO: include in SQL table cache?
     headers.append("avg_rda")
     nutrients = [list(x) for x in nutrients]

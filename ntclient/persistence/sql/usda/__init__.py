@@ -5,9 +5,10 @@ import sqlite3
 import tarfile
 import urllib.request
 from collections.abc import Sequence
+from typing import Optional
 
 from ntclient import NUTRA_HOME, USDA_DB_NAME, __db_target_usda__
-from ntclient.persistence.sql import _sql, _sql_headers, version
+from ntclient.persistence.sql import _sql, version
 from ntclient.utils.exceptions import SqlConnectError, SqlInvalidVersionError
 
 
@@ -98,7 +99,9 @@ def usda_ver() -> str:
     return version(con)
 
 
-def sql(query: str, values: Sequence = (), version_check: bool = True) -> list:
+def sql(
+    query: str, values: Sequence = (), version_check: bool = True
+) -> tuple[list, list, int, Optional[int]]:
     """
     Executes a SQL command to usda.sqlite3
 
@@ -114,21 +117,3 @@ def sql(query: str, values: Sequence = (), version_check: bool = True) -> list:
 
     # TODO: support argument: _sql(..., params=params, ...)
     return _sql(con, query, db_name="usda", values=values)
-
-
-def sql_headers(query: str, values: Sequence = (), version_check: bool = True) -> tuple:
-    """
-    Executes a SQL command to usda.sqlite3 [WITH HEADERS]
-
-    @param query: Input SQL query
-    @param values: Union[tuple, list] Leave as empty tuple for no values,
-        e.g. bare query. Populate a tuple for a single insert. And use a list for
-        cur.executemany()
-    @param version_check: Ignore mismatch version, useful for "meta" commands
-    @return: List of selected SQL items
-    """
-
-    con = usda_sqlite_connect(version_check=version_check)
-
-    # TODO: support argument: _sql(..., params=params, ...)
-    return _sql_headers(con, query, db_name="usda", values=values)

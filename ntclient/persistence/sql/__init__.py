@@ -2,6 +2,7 @@
 
 import sqlite3
 from collections.abc import Sequence
+from typing import Optional
 
 from ntclient.utils import CLI_CONFIG
 
@@ -10,12 +11,24 @@ from ntclient.utils import CLI_CONFIG
 # ------------------------------------------------
 
 
-def sql_entries(sql_result: sqlite3.Cursor) -> list:
-    """Formats and returns a `sql_result()` for console digestion and output"""
-    # TODO: return object: metadata, command, status, errors, etc?
+def sql_entries(sql_result: sqlite3.Cursor) -> tuple[list, list, int, Optional[int]]:
+    """
+    Formats and returns a `sql_result()` for console digestion and output
+    FIXME: the IDs are not necessarily integers, but are unique.
 
-    rows = sql_result.fetchall()
-    return rows
+    TODO: return object: metadata, command, status, errors, etc?
+    """
+
+    return (
+        # rows
+        sql_result.fetchall(),
+        # headers
+        [x[0] for x in sql_result.description],
+        # row_count
+        sql_result.rowcount,
+        # last_row_id
+        sql_result.lastrowid,
+    )
 
 
 def sql_entries_headers(sql_result: sqlite3.Cursor) -> tuple:
@@ -92,7 +105,7 @@ def _sql(
     query: str,
     db_name: str,
     values: Sequence = (),
-) -> list:
+) -> tuple[list, list, int, Optional[int]]:
     """@param values: tuple | list"""
 
     cur = _prep_query(con, query, db_name, values)
@@ -100,22 +113,6 @@ def _sql(
     # TODO: print "<number> SELECTED", or other info
     #  BASED ON command SELECT/INSERT/DELETE/UPDATE
     result = sql_entries(cur)
-
-    close_con_and_cur(con, cur)
-    return result
-
-
-def _sql_headers(
-    con: sqlite3.Connection,
-    query: str,
-    db_name: str,
-    values: Sequence = (),
-) -> tuple:
-    """@param values: tuple | list"""
-
-    cur = _prep_query(con, query, db_name, values)
-
-    result = sql_entries_headers(cur)
 
     close_con_and_cur(con, cur)
     return result
