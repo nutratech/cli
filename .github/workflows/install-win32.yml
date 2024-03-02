@@ -43,8 +43,8 @@ jobs:
 
       - name: Basic Tests / CLI / Integration
         run: |
-          n -v
-          nutra -d init -y
+          n --version
+          nutra --debug init -y
           nutra --no-pager nt
           nutra --no-pager sort -c 789
           nutra --no-pager search ultraviolet mushrooms

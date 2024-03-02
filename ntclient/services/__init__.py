@@ -1,4 +1,5 @@
 """Services module, currently only home to SQL/persistence init method"""
+
 import os
 
 from ntclient import NUTRA_HOME

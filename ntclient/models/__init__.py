@@ -30,8 +30,8 @@ class Recipe:
     def process_data(self) -> None:
         """
         Parses out the raw CSV input read in during self.__init__()
-        TODO: test this with an empty CSV file
-        @todo: CliConfig class, to avoid these non top-level import shenanigans
+        TODO: test this with an empty CSV file, one with missing or corrupt values
+              (e.g. empty or non-numeric grams or food_id)
         """
 
         # Read into memory

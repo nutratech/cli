@@ -14,6 +14,7 @@ import traceback
 from tabulate import tabulate
 
 import ntclient.services.analyze
+import ntclient.services.bugs
 import ntclient.services.recipe.utils
 import ntclient.services.usda
 from ntclient.services import calculate as calc
@@ -58,7 +59,7 @@ def analyze(args: argparse.Namespace) -> tuple:
     """Analyze a food"""
     # exc: ValueError,
     food_ids = set(args.food_id)
-    grams = float(args.grams) if args.grams else 0.0
+    grams = float(args.grams) if args.grams else 100.0
 
     return ntclient.services.analyze.foods_analyze(food_ids, grams)
 
@@ -133,10 +134,18 @@ def calc_1rm(args: argparse.Namespace) -> tuple:
             row.append(int(_values[_rep]))
         _all.append(row)
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Print results
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     print()
     print("Results for: epley, brzycki, and dos_remedios")
     print()
+
+    # Print the n=1 average for all three calculations
+    _avg_1rm = round(sum(_all[0][1:]) / len(_all[0][1:]), 1)
+    print("1RM:    %s" % _avg_1rm)
+    print()
+
     _table = tabulate(_all, headers=["n", "epl", "brz", "rmds"])
     print(_table)
 
@@ -327,3 +336,48 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
     print(_table)
 
     return 0, result
+
+
+##############################################################################
+# Bug
+##############################################################################
+# TODO: these all require args parameter due to parent parser defining a `--show` arg
+
+
+# pylint: disable=unused-argument
+def bug_simulate(args: argparse.Namespace) -> tuple:
+    """Simulate a bug report"""
+    raise NotImplementedError("This service intentionally raises an error, for testing")
+
+
+def bugs_list(args: argparse.Namespace) -> tuple:
+    """List bug reports that have been saved"""
+    rows, _ = ntclient.services.bugs.list_bugs()
+    n_bugs_total = len(rows)
+    n_bugs_unsubmitted = len([x for x in rows if not bool(x[-1])])
+
+    print(f"You have: {n_bugs_total} total bugs amassed in your journey.")
+    print(f"Of these, {n_bugs_unsubmitted} require submission/reporting.")
+    print()
+
+    for bug in rows:
+        if not args.show:
+            continue
+        # Skip submitted bugs by default
+        if bool(bug[-1]) and not args.debug:
+            continue
+        # Print all bug properties (except noisy stacktrace)
+        print(", ".join(str(x) for x in bug if "\n" not in str(x)))
+        print()
+
+    if n_bugs_unsubmitted > 0:
+        print("NOTE: You have bugs awaiting submission.  Please run the report command")
+
+    return 0, rows
+
+
+# pylint: disable=unused-argument
+def bugs_report(args: argparse.Namespace) -> tuple:
+    """Report bugs"""
+    n_submissions = ntclient.services.bugs.submit_bugs()
+    return 0, n_submissions

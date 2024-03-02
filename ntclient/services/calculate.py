@@ -112,7 +112,7 @@ def orm_dos_remedios(weight: float, reps: int) -> dict:
     }
 
     # Compute the 1-rep max
-    # NOTE: this should be guaranteed by arg-parse to be an integer, and 0 < n <= 20
+    # NOTE: this should be guaranteed by arg-parse to be an integer, and 1 ≤ n ≤ 20
     one_rm = round(
         weight / _max_rep_ratios[reps],
         1,

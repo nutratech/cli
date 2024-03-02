@@ -144,7 +144,7 @@ install:	## pip install .
 	${PY_SYS_INTERPRETER} -m pip install . || ${PY_SYS_INTERPRETER} -m pip install --user .
 	${PY_SYS_INTERPRETER} -m pip show nutra
 	- ${PY_SYS_INTERPRETER} -c 'import shutil; print(shutil.which("nutra"));'
-	nutra -v
+	nutra --version
 
 
 
