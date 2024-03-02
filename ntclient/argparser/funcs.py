@@ -352,7 +352,7 @@ def bug_simulate(args: argparse.Namespace) -> tuple:
 
 def bugs_list(args: argparse.Namespace) -> tuple:
     """List bug reports that have been saved"""
-    rows, headers = ntclient.services.bugs.list_bugs()
+    rows, _ = ntclient.services.bugs.list_bugs()
     n_bugs_total = len(rows)
     n_bugs_unsubmitted = len([x for x in rows if not bool(x[-1])])
 
