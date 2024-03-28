@@ -341,7 +341,7 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
 ##############################################################################
 # Bug
 ##############################################################################
-# TODO: these all require args parameter due to parent parser defining a `--show` arg
+# TODO: these all require args parameter (due to parent parser defining a `--show` arg)
 
 
 # pylint: disable=unused-argument
