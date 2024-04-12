@@ -40,14 +40,12 @@ class TestRecipe(unittest.TestCase):
             with pytest.raises(KeyError):
                 r.recipes_overview()
 
-    @unittest.expectedFailure
-    @pytest.mark.xfail(reason="Due to a wip refactor")
-    def test_recipe_overview_throws_exc_for_nonexistent_path(self):
-        """Raises index error if recipe int id is invalid"""
+    def test_recipe_overview_returns_exit_code_1_for_nonexistent_path(self):
+        """Returns (1, None) if recipe path is invalid"""
 
         # TODO: should we be using guid / uuid instead of integer id?
-        with pytest.raises(IndexError):
-            r.recipe_overview("-12345-FAKE-PATH-")
+        result = r.recipe_overview("-12345-FAKE-PATH-")
+        assert (1, None) == result
 
     def test_recipe_overview_might_succeed_for_maybe_existing_id(self):
         """Tries 'check for existing ID', but only can if the user initialized"""
