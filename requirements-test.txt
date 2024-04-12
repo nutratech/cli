@@ -1,3 +1,4 @@
+# TODO: test upgrading these; verify they work on older OSes/Python versions
 coverage>=6.2
 pytest>=7.0.1
 requests-mock>=1.12.1
