@@ -31,7 +31,9 @@ class Recipe:
         """
         Parses out the raw CSV input read in during self.__init__()
         TODO: test this with an empty CSV file, one with missing or corrupt values
-              (e.g. empty or non-numeric grams or food_id)
+              (e.g. empty or non-numeric grams or food_id).
+        TODO: test with a CSV file that has duplicate recipe_id/uuid values.
+        TODO: how is the recipe home directory determined here?
         """
 
         # Read into memory
