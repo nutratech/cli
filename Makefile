@@ -85,6 +85,9 @@ format: _venv	## Format with isort & black
 ifneq ($(CHANGED_FILES_PY),)
 	isort ${CHANGED_FILES_PY}
 	black ${CHANGED_FILES_PY}
+	-git --no-pager diff --stat
+	@echo "OK"
+	@git diff --quiet || echo "NOTE: You may want to run: git add ."
 else
 	$(info No changed Python files, skipping.)
 endif
