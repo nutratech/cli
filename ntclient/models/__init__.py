@@ -61,3 +61,4 @@ class Recipe:
 
     def print_analysis(self) -> None:
         """Run analysis on a single recipe"""
+        # TODO: implement this
