@@ -56,7 +56,7 @@ class ApiClient:
             json=data,
             timeout=(REQUEST_CONNECT_TIMEOUT, REQUEST_READ_TIMEOUT),
         )
-        # _res.raise_for_status()
+        _res.raise_for_status()
         return _res
 
     # TODO: move this outside class; support with host iteration helper method
