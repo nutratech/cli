@@ -45,7 +45,7 @@ PY_MIN_STR = ".".join(str(x) for x in PY_MIN_VER)
 PY_SYS_STR = ".".join(str(x) for x in PY_SYS_VER)
 if PY_SYS_VER < PY_MIN_VER:
     # TODO: make this testable with: `class CliConfig`?
-    raise RuntimeError(  # pragma: no cover
+    raise RuntimeError(
         "ERROR: %s requires Python %s or later to run" % (__title__, PY_MIN_STR),
         "HINT:  You're running Python %s" % PY_SYS_STR,
     )
