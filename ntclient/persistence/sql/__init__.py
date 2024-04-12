@@ -30,14 +30,6 @@ def sql_entries(sql_result: sqlite3.Cursor) -> tuple[list, list, int, Optional[i
     )
 
 
-def sql_entries_headers(sql_result: sqlite3.Cursor) -> tuple:
-    """Formats and returns a `sql_result()` for console digestion and output"""
-    rows = sql_result.fetchall()
-    headers = [x[0] for x in sql_result.description]
-
-    return headers, rows
-
-
 # ------------------------------------------------
 # Supporting methods
 # ------------------------------------------------
