@@ -11,7 +11,7 @@ import pytest
 from ntclient import version_check
 
 
-def test_archaic_python_version_raises_runtime_error() -> None:
+def test_version_check_archaic_python_version_raises_runtime_error() -> None:
     """Test that the correct error is raised when the Python version is too low."""
 
     with patch("sys.version_info", (3, 4, 0)):
