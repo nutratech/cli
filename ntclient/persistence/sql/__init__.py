@@ -81,10 +81,10 @@ def _prep_query(
 
     # TODO: separate `entry` & `entries` entity for single vs. bulk insert?
     if values:
-        if isinstance(values, list):
-            cur.executemany(query, values)
-        elif isinstance(values, tuple):
+        if isinstance(values, tuple):
             cur.execute(query, values)
+        # elif isinstance(values, list):
+        #     cur.executemany(query, values)
         else:
             raise TypeError("'values' must be a list or tuple!")
 
