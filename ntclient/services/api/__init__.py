@@ -14,7 +14,7 @@ REQUEST_CONNECT_TIMEOUT = 5
 
 # TODO: try all of these; cache (save in prefs.json) the one which works first
 URLS_API = (
-    # "https://api.nutra.tk",
+    "https://api.nutra.tk",
     "https://api.dev.nutra.tk",
     "http://216.218.228.93",  # dev
     "http://216.218.216.163",  # prod
@@ -35,7 +35,7 @@ def cache_mirrors() -> str:
             # TODO: save in persistence config.ini
             print(f"INFO: mirror SUCCESS '{mirror}'")
             return mirror
-        except requests.exceptions.ConnectionError:  # pragma: no cover
+        except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError):
             print(f"WARN: mirror FAILURE '{mirror}'")
 
     return str()
