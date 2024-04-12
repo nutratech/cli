@@ -38,17 +38,28 @@ USDA_DB_NAME = "usda.sqlite3"
 NTSQLITE_BUILDPATH = os.path.join(PROJECT_ROOT, "ntsqlite", "sql", NT_DB_NAME)
 NTSQLITE_DESTINATION = os.path.join(NUTRA_HOME, NT_DB_NAME)
 
-# Check Python version
+
+def version_check() -> None:
+    """Check Python version"""
+    # pylint: disable=global-statement
+    global PY_SYS_VER, PY_SYS_STR
+    PY_SYS_VER = sys.version_info[0:3]
+    PY_SYS_STR = ".".join(str(x) for x in PY_SYS_VER)
+
+    if PY_SYS_VER < PY_MIN_VER:
+        # TODO: make this testable with: `class CliConfig`?
+        raise RuntimeError(
+            "ERROR: %s requires Python %s or later to run" % (__title__, PY_MIN_STR),
+            "HINT:  You're running Python %s" % PY_SYS_STR,
+        )
+
+
 PY_MIN_VER = (3, 4, 3)
 PY_SYS_VER = sys.version_info[0:3]
 PY_MIN_STR = ".".join(str(x) for x in PY_MIN_VER)
 PY_SYS_STR = ".".join(str(x) for x in PY_SYS_VER)
-if PY_SYS_VER < PY_MIN_VER:
-    # TODO: make this testable with: `class CliConfig`?
-    raise RuntimeError(
-        "ERROR: %s requires Python %s or later to run" % (__title__, PY_MIN_STR),
-        "HINT:  You're running Python %s" % PY_SYS_STR,
-    )
+# Run the check
+version_check()
 
 # Console size, don't print more than it
 BUFFER_WD = shutil.get_terminal_size()[0]
