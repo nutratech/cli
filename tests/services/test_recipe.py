@@ -11,6 +11,7 @@ from unittest.mock import patch
 import pytest
 
 import ntclient.services.recipe.utils as r
+from ntclient.models import Recipe
 from ntclient.services.recipe import RECIPE_STOCK, csv_utils
 
 
@@ -32,13 +33,17 @@ class TestRecipe(unittest.TestCase):
         exit_code, _ = r.recipes_overview()
         assert exit_code == 0
 
-    @unittest.skip("Not implemented")
-    def test_recipes_overview_process_data_dupe_recipe_uuids_throws_key_error(self):
+    # @unittest.skip("Not implemented")
+    def test_recipe_process_data_multiple_recipe_uuids_throws_key_error(self):
         """Raises key error if recipe uuids are not unique"""
         # TODO: return_value should be a list of recipe dicts, each with a 'uuid' key
-        with patch("ntclient.models.Recipe.rows", return_value={1, 2}):
+        with patch(
+            "ntclient.models.Recipe.aggregate_rows",
+            return_value=[{"recipe_id": "UUID_1"}, {"recipe_id": "UUID_2"}],
+        ):
             with pytest.raises(KeyError):
-                r.recipes_overview()
+                recipe = Recipe("FAKE-PATH")
+                recipe.process_data()
 
     def test_recipe_overview_returns_exit_code_1_for_nonexistent_path(self):
         """Returns (1, None) if recipe path is invalid"""

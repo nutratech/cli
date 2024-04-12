@@ -27,6 +27,13 @@ class Recipe:
 
         self.food_data = {}  # type: ignore
 
+    def aggregate_rows(self) -> tuple:
+        """Aggregate rows into a tuple"""
+        print("Processing recipe file: %s" % self.file_path)
+        with open(self.file_path, "r", encoding="utf-8") as _file:
+            self.csv_reader = csv.DictReader(_file)
+            return tuple(list(self.csv_reader))
+
     def process_data(self) -> None:
         """
         Parses out the raw CSV input read in during self.__init__()
@@ -37,10 +44,7 @@ class Recipe:
         """
 
         # Read into memory
-        print("Processing recipe file: %s" % self.file_path)
-        with open(self.file_path, "r", encoding="utf-8") as _file:
-            self.csv_reader = csv.DictReader(_file)
-            self.rows = tuple(list(self.csv_reader))
+        self.rows = self.aggregate_rows()
 
         # Validate data
         uuids = {x["recipe_id"] for x in self.rows}
