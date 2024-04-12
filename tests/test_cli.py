@@ -40,12 +40,6 @@ TEST_HOME = os.path.dirname(os.path.abspath(__file__))
 arg_parser = build_arg_parser()
 
 
-# TODO: attach some env props to it, and re-instantiate a CliConfig() class.
-#  We're just setting it on the shell, as an env var, before running tests in CI.
-#  e.g. the equivalent of putting this early in the __init__ file;
-#  os.environ["NUTRA_HOME"] = os.path.join(TEST_HOME, ".nutra.test")
-
-
 class TestCli(unittest.TestCase):
     """
     Original one-stop-shop for testing.
