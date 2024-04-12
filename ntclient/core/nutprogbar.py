@@ -48,8 +48,9 @@ def nutrient_progress_bars(
         for nutrient_id, amt in analysis.items():
             if nutrient_id not in nut_amts:
                 nut_amts[int(nutrient_id)] = amt
-            else:
-                nut_amts[int(nutrient_id)] += amt
+            else:  # pragma: no cover
+                # nut_amts[int(nutrient_id)] += amt
+                raise ValueError("Not implemented yet, need to sum up nutrient amounts")
 
     print_bars()
     return nut_amts

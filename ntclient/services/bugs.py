@@ -14,6 +14,8 @@ from ntclient import __db_target_nt__, __db_target_usda__, __version__
 from ntclient.persistence.sql.nt import sql as sql_nt
 from ntclient.utils import CLI_CONFIG
 
+# TODO: handle mocks in tests so coverage doesn't vary when bugs exist (vs. don't)
+
 
 def insert(args: list, exception: Exception) -> None:
     """Insert bug report into nt.sqlite3, return True/False."""
@@ -54,9 +56,10 @@ INSERT INTO bug
         )
     except sqlite3.IntegrityError as exc:
         print(f"WARN: {repr(exc)}")
-        if repr(exc) == (
-            "IntegrityError('UNIQUE constraint failed: " "bug.arguments, bug.stack')"
-        ):
+        dupe_bug_insertion_exc = (
+            "IntegrityError('UNIQUE constraint failed: bug.arguments, bug.stack')"
+        )
+        if repr(exc) == dupe_bug_insertion_exc:
             print("INFO: bug report already exists")
         else:
             raise
