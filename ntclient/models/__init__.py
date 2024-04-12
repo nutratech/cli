@@ -38,7 +38,7 @@ class Recipe:
         print("Processing recipe file: %s" % self.file_path)
         with open(self.file_path, "r", encoding="utf-8") as _file:
             self.csv_reader = csv.DictReader(_file)
-            self.rows = tuple(self.csv_reader)
+            self.rows = tuple(list(self.csv_reader))
 
         # Validate data
         uuids = {x["recipe_id"] for x in self.rows}

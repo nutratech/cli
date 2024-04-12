@@ -6,6 +6,7 @@ Created on Wed Jul 20 21:36:43 2022
 """
 import os
 import unittest
+from unittest.mock import patch
 
 import pytest
 
@@ -30,6 +31,14 @@ class TestRecipe(unittest.TestCase):
 
         exit_code, _ = r.recipes_overview()
         assert exit_code == 0
+
+    @unittest.skip("Not implemented")
+    def test_recipes_overview_process_data_dupe_recipe_uuids_throws_key_error(self):
+        """Raises key error if recipe uuids are not unique"""
+        # TODO: return_value should be a list of recipe dicts, each with a 'uuid' key
+        with patch("ntclient.models.Recipe.rows", return_value={1, 2}):
+            with pytest.raises(KeyError):
+                r.recipes_overview()
 
     @unittest.expectedFailure
     @pytest.mark.xfail(reason="Due to a wip refactor")
