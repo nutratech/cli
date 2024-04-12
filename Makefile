@@ -76,6 +76,10 @@ deps: _venv	## Install requirements
 # Format, lint, test
 # ---------------------------------------
 
+# LINT_LOCS := ntclient/ tests/ setup.py
+CHANGED_FILES_RST ?= $(shell git diff origin/master --name-only --diff-filter=MACRU \*.rst)
+CHANGED_FILES_PY ?= $(shell git diff origin/master --name-only --diff-filter=MACRU \*.py)
+
 .PHONY: format
 format: _venv	## Format with isort & black
 ifneq ($(CHANGED_FILES_PY),)
@@ -84,11 +88,6 @@ ifneq ($(CHANGED_FILES_PY),)
 else
 	$(info No changed Python files, skipping.)
 endif
-
-
-# LINT_LOCS := ntclient/ tests/ setup.py
-CHANGED_FILES_RST ?= $(shell git diff origin/master --name-only --diff-filter=MACRU \*.rst)
-CHANGED_FILES_PY ?= $(shell git diff origin/master --name-only --diff-filter=MACRU \*.py)
 
 .PHONY: lint
 lint: _venv	## Lint code and documentation

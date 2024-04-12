@@ -71,7 +71,7 @@ def list_bugs() -> tuple[list, list]:
 
 def submit_bugs() -> int:
     """Submit bug reports to developer, return n_submitted."""
-
+    # TODO: mock sql_nt() for testing
     # Gather bugs for submission
     rows, _, _, _ = sql_nt("SELECT * FROM bug WHERE submitted = 0")
     api_client = ntclient.services.api.ApiClient()
@@ -87,9 +87,9 @@ def submit_bugs() -> int:
 
         # Distinguish bug which are unique vs. duplicates (someone else submitted)
         if _res.status_code == 201:
-            sql_nt("UPDATE bug SET submitted = 1 WHERE id = %s", bug.id)
+            sql_nt("UPDATE bug SET submitted = 1 WHERE id = ?", (bug["id"],))
         elif _res.status_code == 204:
-            sql_nt("UPDATE bug SET submitted = 2 WHERE id = %s", bug.id)
+            sql_nt("UPDATE bug SET submitted = 2 WHERE id = ?", (bug["id"],))
         else:
             print("WARN: unknown status [{0}]".format(_res.status_code))
             continue

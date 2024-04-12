@@ -5,6 +5,7 @@ Created on Sun Feb 25 16:18:08 2024
 @author: shane
 """
 import unittest
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -24,8 +25,12 @@ class TestBug(unittest.TestCase):
         """Tests the functions for listing bugs"""
         bugs.list_bugs()
 
-    @unittest.expectedFailure
-    @pytest.mark.xfail(reason="Work in progress, need to get mocks working")
-    def test_bug_report(self) -> None:
+    @patch("ntclient.services.api.cache_mirrors", return_value="https://someurl.com")
+    @patch(
+        "ntclient.services.api.ApiClient.post",
+        return_value=MagicMock(status_code=201),
+    )
+    # pylint: disable=unused-argument
+    def test_bug_report(self, *args: MagicMock) -> None:
         """Tests the functions for submitting bugs"""
         bugs.submit_bugs()

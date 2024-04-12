@@ -19,14 +19,13 @@ def sql_entries(sql_result: sqlite3.Cursor) -> tuple[list, list, int, Optional[i
     TODO: return object: metadata, command, status, errors, etc?
     """
 
+    rows = sql_result.fetchall()
+    headers = [x[0] for x in (sql_result.description if sql_result.description else [])]
+
     return (
-        # rows
-        sql_result.fetchall(),
-        # headers
-        [x[0] for x in sql_result.description],
-        # row_count
+        rows,
+        headers,
         sql_result.rowcount,
-        # last_row_id
         sql_result.lastrowid,
     )
 
@@ -92,8 +91,11 @@ def _prep_query(
     if values:
         if isinstance(values, list):
             cur.executemany(query, values)
-        else:  # tuple
+        elif isinstance(values, tuple):
             cur.execute(query, values)
+        else:
+            raise TypeError("'values' must be a list or tuple!")
+
     else:
         cur.execute(query)
 

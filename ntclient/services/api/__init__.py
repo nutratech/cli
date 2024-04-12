@@ -14,7 +14,7 @@ REQUEST_CONNECT_TIMEOUT = 5
 
 # TODO: try all of these; cache (save in prefs.json) the one which works first
 URLS_API = (
-    "https://api.nutra.tk",
+    # "https://api.nutra.tk",
     "https://api.dev.nutra.tk",
     "http://216.218.228.93",  # dev
     "http://216.218.216.163",  # prod
