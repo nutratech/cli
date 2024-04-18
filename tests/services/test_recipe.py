@@ -38,7 +38,7 @@ class TestRecipe(unittest.TestCase):
         """Raises key error if recipe uuids are not unique"""
         # TODO: return_value should be a list of recipe dicts, each with a 'uuid' key
         with patch(
-            "ntclient.models.Recipe.aggregate_rows",
+            "ntclient.models.Recipe._aggregate_rows",
             return_value=[{"recipe_id": "UUID_1"}, {"recipe_id": "UUID_2"}],
         ):
             with pytest.raises(KeyError):

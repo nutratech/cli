@@ -27,7 +27,7 @@ class Recipe:
 
         self.food_data = {}  # type: ignore
 
-    def aggregate_rows(self) -> tuple:
+    def _aggregate_rows(self) -> tuple:
         """Aggregate rows into a tuple"""
         print("Processing recipe file: %s" % self.file_path)
         with open(self.file_path, "r", encoding="utf-8") as _file:
@@ -44,7 +44,7 @@ class Recipe:
         """
 
         # Read into memory
-        self.rows = self.aggregate_rows()
+        self.rows = self._aggregate_rows()
 
         # Validate data
         uuids = {x["recipe_id"] for x in self.rows}
