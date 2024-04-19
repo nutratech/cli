@@ -63,7 +63,7 @@ def sort_foods(
     # TODO: sub shrt_desc for long if available, and support config.FOOD_NAME_TRUNC
 
     def print_results(
-        _results: Sequence[Sequence[Optional[float]]], _nutrient_id: int
+        _results: list[list[Optional[float]]], _nutrient_id: int
     ) -> None:
         """Prints truncated list for sort"""
         nutrients = sql_nutrients_overview()
