@@ -110,6 +110,7 @@ ORDER BY
     return list(rows)
 
 
+# TODO: these functions are unused, replace `sql_sort_helper1` (above) with these two
 def sql_sort_foods(nutr_id: int) -> list:
     """Sort foods by nutr_id per 100 g"""
 
