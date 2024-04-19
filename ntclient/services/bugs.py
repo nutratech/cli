@@ -61,30 +61,68 @@ INSERT INTO bug
         )
         if repr(exc) == dupe_bug_insertion_exc:
             print("INFO: bug report already exists")
-        else:
+        else:  # pragma: no cover
             raise
 
 
-def list_bugs() -> tuple[list, list]:
-    """List all bugs, with headers."""
-    rows, headers, _, _ = sql_nt("SELECT * FROM bug")
-    return rows, headers
+def _list_bugs() -> list:
+    """List all bugs, with headers as dict keys."""
+    rows, _, _, _ = sql_nt("SELECT * FROM bug")
+    bugs = [dict(x) for x in rows]
+    return bugs
+
+
+def list_bugs(show_all: bool) -> tuple[int, list]:
+    """List all bugs, with headers.  Returns (exit_code, bugs: list[dict])."""
+
+    bugs = _list_bugs()
+    n_bugs_total = len(bugs)
+    n_bugs_unsubmitted = len([x for x in bugs if not bool(x["submitted"])])
+
+    print(f"You have: {n_bugs_total} total bugs amassed in your journey.")
+    print(f"Of these, {n_bugs_unsubmitted} require submission/reporting.")
+    print()
+
+    for bug in bugs:
+        if not show_all:
+            continue
+        # Skip submitted bugs by default
+        if bool(bug["submitted"]) and not CLI_CONFIG.debug:
+            continue
+        # Print all bug properties (except noisy stacktrace)
+        print(", ".join(str(x) for x in bug if "\n" not in str(x)))
+        print()
+
+    if n_bugs_unsubmitted > 0:
+        print("NOTE: You have bugs awaiting submission.  Please run the report command")
+    return 0, bugs
+
+
+def _list_bugs_unsubmitted() -> list:
+    """List unsubmitted bugs, with headers as dict keys."""
+    rows, _, _, _ = sql_nt("SELECT * FROM bug WHERE submitted = 0")
+    bugs = [dict(x) for x in rows]
+    return bugs
 
 
 def submit_bugs() -> int:
     """Submit bug reports to developer, return n_submitted."""
-    # TODO: mock sql_nt() for testing
-    # Gather bugs for submission
-    rows, _, _, _ = sql_nt("SELECT * FROM bug WHERE submitted = 0")
+    bugs = _list_bugs_unsubmitted()
+
+    if len(bugs) == 0:
+        print("INFO: no unsubmitted bugs found")
+        return 0
+
     api_client = ntclient.services.api.ApiClient()
 
     n_submitted = 0
-    print(f"submitting {len(rows)} bug reports...")
-    print("_" * len(rows))
+    print(f"submitting {len(bugs)} bug reports...")
+    print("_" * len(bugs))
 
-    for bug in rows:
+    for bug in bugs:
         _res = api_client.post_bug(bug)
-        if CLI_CONFIG.debug:
+
+        if CLI_CONFIG.debug:  # pragma: no cover
             print(_res.json())
 
         # Distinguish bug which are unique vs. duplicates (someone else submitted)
@@ -92,7 +130,7 @@ def submit_bugs() -> int:
             sql_nt("UPDATE bug SET submitted = 1 WHERE id = ?", (bug["id"],))
         elif _res.status_code == 204:
             sql_nt("UPDATE bug SET submitted = 2 WHERE id = ?", (bug["id"],))
-        else:
+        else:  # pragma: no cover
             print("WARN: unknown status [{0}]".format(_res.status_code))
             continue
 
@@ -100,5 +138,4 @@ def submit_bugs() -> int:
         n_submitted += 1
 
     print("submitted: {0} bugs".format(n_submitted))
-
     return n_submitted

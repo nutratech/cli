@@ -350,34 +350,13 @@ def bug_simulate(args: argparse.Namespace) -> tuple:
     raise NotImplementedError("This service intentionally raises an error, for testing")
 
 
-def bugs_list(args: argparse.Namespace) -> tuple:
+def bugs_list(args: argparse.Namespace) -> tuple[int, list]:
     """List bug reports that have been saved"""
-    rows, _ = ntclient.services.bugs.list_bugs()
-    n_bugs_total = len(rows)
-    n_bugs_unsubmitted = len([x for x in rows if not bool(x[-1])])
-
-    print(f"You have: {n_bugs_total} total bugs amassed in your journey.")
-    print(f"Of these, {n_bugs_unsubmitted} require submission/reporting.")
-    print()
-
-    for bug in rows:
-        if not args.show:
-            continue
-        # Skip submitted bugs by default
-        if bool(bug[-1]) and not args.debug:
-            continue
-        # Print all bug properties (except noisy stacktrace)
-        print(", ".join(str(x) for x in bug if "\n" not in str(x)))
-        print()
-
-    if n_bugs_unsubmitted > 0:
-        print("NOTE: You have bugs awaiting submission.  Please run the report command")
-
-    return 0, rows
+    return ntclient.services.bugs.list_bugs(show_all=args.show)
 
 
 # pylint: disable=unused-argument
-def bugs_report(args: argparse.Namespace) -> tuple:
+def bugs_report(args: argparse.Namespace) -> tuple[int, int]:
     """Report bugs"""
     n_submissions = ntclient.services.bugs.submit_bugs()
     return 0, n_submissions

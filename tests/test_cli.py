@@ -292,6 +292,11 @@ class TestCli(unittest.TestCase):
         assert code == 0
         assert isinstance(result, list)
 
+        args = arg_parser.parse_args(args="bug report".split())
+        code, result = args.func(args)
+        assert code == 0
+        assert isinstance(result, int)
+
     def test_415_invalid_path_day_throws_error(self):
         """Ensures invalid path throws exception in `day` subcommand"""
         invalid_day_csv_path = os.path.join(
