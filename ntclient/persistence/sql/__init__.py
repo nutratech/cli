@@ -11,7 +11,7 @@ from ntclient.utils import CLI_CONFIG
 # ------------------------------------------------
 
 
-def sql_entries(sql_result: sqlite3.Cursor) -> tuple[list, list, int, Optional[int]]:
+def sql_entries(sql_result: sqlite3.Cursor) -> Sequence[list, list, int, Optional[int]]:
     """
     Formats and returns a `sql_result()` for console digestion and output
     FIXME: the IDs are not necessarily integers, but are unique.
