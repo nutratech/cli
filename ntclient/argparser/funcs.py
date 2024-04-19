@@ -350,13 +350,13 @@ def bug_simulate(args: argparse.Namespace) -> tuple:
     raise NotImplementedError("This service intentionally raises an error, for testing")
 
 
-def bugs_list(args: argparse.Namespace) -> tuple[int, list]:
+def bugs_list(args: argparse.Namespace) -> tuple:
     """List bug reports that have been saved"""
     return ntclient.services.bugs.list_bugs(show_all=args.show)
 
 
 # pylint: disable=unused-argument
-def bugs_report(args: argparse.Namespace) -> tuple[int, int]:
+def bugs_report(args: argparse.Namespace) -> tuple:
     """Report bugs"""
     n_submissions = ntclient.services.bugs.submit_bugs()
     return 0, n_submissions

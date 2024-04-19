@@ -73,7 +73,7 @@ def _list_bugs() -> list:
     return bugs
 
 
-def list_bugs(show_all: bool) -> tuple[int, list]:
+def list_bugs(show_all: bool) -> tuple:
     """List all bugs, with headers.  Returns (exit_code, bugs: list[dict])."""
 
     bugs = _list_bugs()

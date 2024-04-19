@@ -2,7 +2,6 @@
 
 import sqlite3
 from collections.abc import Sequence
-from typing import Optional
 
 from ntclient.utils import CLI_CONFIG
 
@@ -11,7 +10,7 @@ from ntclient.utils import CLI_CONFIG
 # ------------------------------------------------
 
 
-def sql_entries(sql_result: sqlite3.Cursor) -> Sequence[list, list, int, Optional[int]]:
+def sql_entries(sql_result: sqlite3.Cursor) -> tuple:
     """
     Formats and returns a `sql_result()` for console digestion and output
     FIXME: the IDs are not necessarily integers, but are unique.
@@ -99,7 +98,7 @@ def _sql(
     query: str,
     db_name: str,
     values: Sequence = (),
-) -> tuple[list, list, int, Optional[int]]:
+) -> tuple:
     """@param values: tuple | list"""
 
     cur = _prep_query(con, query, db_name, values)

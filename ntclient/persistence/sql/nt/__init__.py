@@ -3,7 +3,6 @@
 import os
 import sqlite3
 from collections.abc import Sequence
-from typing import Optional
 
 from ntclient import (
     NT_DB_NAME,
@@ -81,7 +80,7 @@ def nt_sqlite_connect(version_check: bool = True) -> sqlite3.Connection:
     raise SqlConnectError("ERROR: nt database doesn't exist, please run `nutra init`")
 
 
-def sql(query: str, values: Sequence = ()) -> tuple[list, list, int, Optional[int]]:
+def sql(query: str, values: Sequence = ()) -> tuple:
     """Executes a SQL command to nt.sqlite3"""
 
     con = nt_sqlite_connect()

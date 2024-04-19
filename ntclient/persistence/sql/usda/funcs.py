@@ -27,7 +27,7 @@ def sql_food_details(_food_ids: set = None) -> list:  # type: ignore
         query = query % food_ids
 
     rows, _, _, _ = sql(query)
-    return rows
+    return list(rows)
 
 
 def sql_nutrients_overview() -> dict:
@@ -38,7 +38,7 @@ def sql_nutrients_overview() -> dict:
     return {x[0]: x for x in rows}
 
 
-def sql_nutrients_details() -> tuple[list, list]:
+def sql_nutrients_details() -> tuple:
     """Shows nutrients 'details'"""
 
     query = "SELECT * FROM nutrients_overview;"
@@ -64,7 +64,7 @@ WHERE
     # FIXME: support this kind of thing by library code & parameterized queries
     food_ids = ",".join(str(x) for x in set(_food_ids))
     rows, _, _, _ = sql(query % food_ids)
-    return rows
+    return list(rows)
 
 
 def sql_analyze_foods(food_ids: set) -> list:
@@ -83,7 +83,7 @@ WHERE
     # TODO: parameterized queries
     food_ids_concat = ",".join(str(x) for x in set(food_ids))
     rows, _, _, _ = sql(query % food_ids_concat)
-    return rows
+    return list(rows)
 
 
 ################################################################################
@@ -107,7 +107,7 @@ ORDER BY
 """
     # TODO: parameterized queries
     rows, _, _, _ = sql(query % (NUTR_ID_KCAL, nutrient_id))
-    return rows
+    return list(rows)
 
 
 def sql_sort_foods(nutr_id: int) -> list:
@@ -134,7 +134,7 @@ ORDER BY
 """
     # TODO: parameterized queries
     rows, _, _, _ = sql(query % nutr_id)
-    return rows
+    return list(rows)
 
 
 def sql_sort_foods_by_kcal(nutr_id: int) -> list:
@@ -164,4 +164,4 @@ ORDER BY
 """
     # TODO: parameterized queries
     rows, _, _, _ = sql(query % nutr_id)
-    return rows
+    return list(rows)

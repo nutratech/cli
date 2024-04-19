@@ -5,7 +5,6 @@ import sqlite3
 import tarfile
 import urllib.request
 from collections.abc import Sequence
-from typing import Optional
 
 from ntclient import NUTRA_HOME, USDA_DB_NAME, __db_target_usda__
 from ntclient.persistence.sql import _sql, version
@@ -99,9 +98,7 @@ def usda_ver() -> str:
     return version(con)
 
 
-def sql(
-    query: str, values: Sequence = (), version_check: bool = True
-) -> tuple[list, list, int, Optional[int]]:
+def sql(query: str, values: Sequence = (), version_check: bool = True) -> tuple:
     """
     Executes a SQL command to usda.sqlite3
 

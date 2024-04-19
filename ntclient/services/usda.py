@@ -6,7 +6,6 @@ Created on Sat Oct 27 20:28:06 2018
 """
 
 import pydoc
-from typing import Sequence, Optional
 
 from tabulate import tabulate
 
@@ -62,9 +61,7 @@ def sort_foods(
 
     # TODO: sub shrt_desc for long if available, and support config.FOOD_NAME_TRUNC
 
-    def print_results(
-        _results: list[list[Optional[float]]], _nutrient_id: int
-    ) -> None:
+    def print_results(_results: list, _nutrient_id: int) -> None:
         """Prints truncated list for sort"""
         nutrients = sql_nutrients_overview()
         nutrient = nutrients[_nutrient_id]
