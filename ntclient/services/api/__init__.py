@@ -4,8 +4,6 @@ Created on Tue Feb 13 14:28:20 2024
 
 @author: shane
 """
-import sqlite3
-
 import requests
 
 REQUEST_READ_TIMEOUT = 18
@@ -59,6 +57,6 @@ class ApiClient:
         return _res
 
     # TODO: move this outside class; support with host iteration helper method
-    def post_bug(self, bug: sqlite3.Row) -> requests.Response:
+    def post_bug(self, bug: dict) -> requests.Response:
         """Post a bug report to the developer."""
-        return self.post("bug", dict(bug))
+        return self.post("bug", bug)
