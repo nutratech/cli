@@ -12,6 +12,7 @@ import datetime
 import os
 import sys
 import unittest
+from unittest.mock import patch
 
 import pytest
 
@@ -293,9 +294,10 @@ class TestCli(unittest.TestCase):
         assert isinstance(result, list)
 
         args = arg_parser.parse_args(args="bug report".split())
-        code, result = args.func(args)
+        with patch("ntclient.services.bugs.submit_bugs", return_value=1):
+            code, result = args.func(args)
         assert code == 0
-        assert isinstance(result, int)
+        assert result == 1
 
     def test_415_invalid_path_day_throws_error(self):
         """Ensures invalid path throws exception in `day` subcommand"""
