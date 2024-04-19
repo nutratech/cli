@@ -30,10 +30,10 @@ def cache_mirrors() -> str:
 
             _res.raise_for_status()
             # TODO: save in persistence config.ini
-            print(f"INFO: mirror SUCCESS '{mirror}'")
+            print("INFO: mirror SUCCESS '%s'" % mirror)
             return mirror
         except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError):
-            print(f"WARN: mirror FAILURE '{mirror}'")
+            print("WARN: mirror FAILURE '%s'" % mirror)
 
     return str()
 
@@ -49,7 +49,7 @@ class ApiClient:
     def post(self, path: str, data: dict) -> requests.Response:
         """Post data to the API."""
         _res = requests.post(
-            f"{self.host}/{path}",
+            self.host + "/" + path,
             json=data,
             timeout=(REQUEST_CONNECT_TIMEOUT, REQUEST_READ_TIMEOUT),
         )

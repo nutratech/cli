@@ -56,7 +56,7 @@ INSERT INTO bug
             ),
         )
     except sqlite3.IntegrityError as exc:
-        print(f"WARN: {repr(exc)}")
+        print("WARN: %s" % repr(exc))
         dupe_bug_insertion_exc = (
             "IntegrityError('UNIQUE constraint failed: bug.arguments, bug.stack')"
         )
@@ -80,8 +80,8 @@ def list_bugs(show_all: bool) -> tuple:
     n_bugs_total = len(bugs)
     n_bugs_unsubmitted = len([x for x in bugs if not bool(x["submitted"])])
 
-    print(f"You have: {n_bugs_total} total bugs amassed in your journey.")
-    print(f"Of these, {n_bugs_unsubmitted} require submission/reporting.")
+    print("You have: %s total bugs amassed in your journey." % n_bugs_total)
+    print("Of these, %s require submission/reporting." % n_bugs_unsubmitted)
     print()
 
     for bug in bugs:
@@ -117,7 +117,7 @@ def submit_bugs() -> int:
     api_client = ntclient.services.api.ApiClient()
 
     n_submitted = 0
-    print(f"submitting {len(bugs)} bug reports...")
+    print("submitting %s bug reports..." % len(bugs))
     print("_" * len(bugs))
 
     for bug in bugs:
