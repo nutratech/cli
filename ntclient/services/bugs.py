@@ -8,6 +8,7 @@ import os
 import platform
 import sqlite3
 import traceback
+from typing import Sequence
 
 import ntclient.services.api
 from ntclient import __db_target_nt__, __db_target_usda__, __version__
@@ -98,7 +99,7 @@ def list_bugs(show_all: bool) -> tuple[int, list]:
     return 0, bugs
 
 
-def _list_bugs_unsubmitted() -> list:
+def _list_bugs_unsubmitted() -> Sequence[dict]:
     """List unsubmitted bugs, with headers as dict keys."""
     rows, _, _, _ = sql_nt("SELECT * FROM bug WHERE submitted = 0")
     bugs = [dict(x) for x in rows]
