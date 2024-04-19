@@ -49,7 +49,7 @@ class Recipe:
         # Validate data
         uuids = {x["recipe_id"] for x in self.rows}
         if len(uuids) != 1:
-            print("Found %s keys: %s" % (len(uuids), uuids))
+            print("ERROR: Found %s keys: %s" % (len(uuids), uuids))
             raise KeyError("FATAL: must have exactly 1 uuid per recipe CSV file!")
         self.uuid = list(uuids)[0]
 

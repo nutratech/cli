@@ -33,10 +33,9 @@ class TestRecipe(unittest.TestCase):
         exit_code, _ = r.recipes_overview()
         assert exit_code == 0
 
-    # @unittest.skip("Not implemented")
     def test_recipe_process_data_multiple_recipe_uuids_throws_key_error(self):
         """Raises key error if recipe uuids are not unique"""
-        # TODO: return_value should be a list of recipe dicts, each with a 'uuid' key
+        # TODO: this should be a custom exception, i.e. RecipeValidationException
         with patch(
             "ntclient.models.Recipe._aggregate_rows",
             return_value=[{"recipe_id": "UUID_1"}, {"recipe_id": "UUID_2"}],
