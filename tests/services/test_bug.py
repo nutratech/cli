@@ -49,12 +49,25 @@ class TestBug(unittest.TestCase):
         "ntclient.services.api.ApiClient.post",
         return_value=MagicMock(status_code=201),
     )
-    @patch("ntclient.services.bugs._list_bugs_unsubmitted", return_value=[{"id": 1}])
-    @patch("ntclient.services.bugs.sql_nt")
+    @patch("ntclient.services.bugs.sql_nt", return_value=([], [], [], []))
     # pylint: disable=unused-argument
     def test_bug_report(self, *args: MagicMock) -> None:
         """Tests the functions for submitting bugs"""
-        bugs.submit_bugs()
+        result = bugs.submit_bugs()
+        assert isinstance(result, int)
+
+    @patch("ntclient.services.api.cache_mirrors", return_value="https://someurl.com")
+    @patch(
+        "ntclient.services.api.ApiClient.post",
+        return_value=MagicMock(status_code=201),
+    )
+    @patch("ntclient.services.bugs._list_bugs_unsubmitted", return_value=[{"id": 1}])
+    @patch("ntclient.services.bugs.sql_nt")
+    # pylint: disable=unused-argument
+    def test_bug_report_with_unsubmitted(self, *args: MagicMock) -> None:
+        """Tests the functions for submitting bugs"""
+        result = bugs.submit_bugs()
+        assert isinstance(result, int)
 
     @patch("ntclient.services.api.cache_mirrors", return_value="https://someurl.com")
     @patch(
@@ -66,7 +79,8 @@ class TestBug(unittest.TestCase):
     # pylint: disable=unused-argument
     def test_bug_report_on_204_status(self, *args: MagicMock) -> None:
         """Tests the functions for submitting bugs"""
-        bugs.submit_bugs()
+        result = bugs.submit_bugs()
+        assert result == 1
 
     @patch("ntclient.services.api.cache_mirrors", return_value="https://someurl.com")
     @patch(
