@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 import pytest
 
-import ntclient.services.recipe.utils as r
+import ntclient.services.recipe.recipe as r
 from ntclient.models import Recipe
 from ntclient.services.recipe import RECIPE_STOCK, csv_utils
 

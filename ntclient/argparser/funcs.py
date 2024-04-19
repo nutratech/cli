@@ -15,7 +15,7 @@ from tabulate import tabulate
 
 import ntclient.services.analyze
 import ntclient.services.bugs
-import ntclient.services.recipe.utils
+import ntclient.services.recipe.recipe
 import ntclient.services.usda
 from ntclient.services import calculate as calc
 from ntclient.utils import CLI_CONFIG, Gender, activity_factor_from_index
@@ -81,12 +81,12 @@ def recipes_init(args: argparse.Namespace) -> tuple:
     """Copy example/stock data into RECIPE_HOME"""
     _force = args.force
 
-    return ntclient.services.recipe.utils.recipes_init(_force=_force)
+    return ntclient.services.recipe.recipe.recipes_init(_force=_force)
 
 
 def recipes() -> tuple:
     """Show all, in tree or detail view"""
-    return ntclient.services.recipe.utils.recipes_overview()
+    return ntclient.services.recipe.recipe.recipes_overview()
 
 
 def recipe(args: argparse.Namespace) -> tuple:
@@ -97,7 +97,7 @@ def recipe(args: argparse.Namespace) -> tuple:
     """
     recipe_path = args.path
 
-    return ntclient.services.recipe.utils.recipe_overview(recipe_path=recipe_path)
+    return ntclient.services.recipe.recipe.recipe_overview(recipe_path=recipe_path)
 
 
 ##############################################################################
