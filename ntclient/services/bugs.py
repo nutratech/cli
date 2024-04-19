@@ -91,7 +91,7 @@ def list_bugs(show_all: bool) -> tuple:
         if bool(bug["submitted"]) and not CLI_CONFIG.debug:
             continue
         # Print all bug properties (except noisy stacktrace)
-        print(", ".join(str(x) for x in bug if "\n" not in str(x)))
+        print(", ".join(str(x) for x in bug.values() if "\n" not in str(x)))
         print()
 
     if n_bugs_unsubmitted > 0:
