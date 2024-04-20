@@ -13,8 +13,6 @@ import os
 
 from ntclient import NUTRA_HOME
 
-# TODO: create and maintain prefs.json file?  See if there's a library for that, lol
-
 PREFS_FILE = os.path.join(NUTRA_HOME, "prefs.ini")
 
 os.makedirs(NUTRA_HOME, 0o755, exist_ok=True)
