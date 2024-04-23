@@ -100,7 +100,7 @@ Install with,
     HOOK='eval "$(direnv hook '$DEFAULT_SHELL')"'
 
     # Install the hook, if not already
-    grep "$HOOK" $SHELL_RC_FILE || echo "$HOOK" >>$SHELL_RC_FILE
+    grep ^"$HOOK"$ $SHELL_RC_FILE || echo "$HOOK" >>$SHELL_RC_FILE
     source $SHELL_RC_FILE
 
 This is what the ``.envrc`` file is for. It automatically activates ``venv``.
