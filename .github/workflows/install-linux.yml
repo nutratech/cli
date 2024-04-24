@@ -15,16 +15,16 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: ["3.11", "3.5"]
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           # update-environment: false
@@ -35,7 +35,7 @@ jobs:
 
       # NOTE: see above NOTE, we are still using deprecated cache restore
       - name: Reload Cache / pip
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           # NOTE: only cares about base requirements.txt
@@ -52,6 +52,6 @@ jobs:
 
       - name: Basic Tests / CLI / Integration
         run: |
-          n -v
-          nutra -d recipe init -f
+          n --version
+          nutra --debug recipe init -f
           nutra --no-pager recipe

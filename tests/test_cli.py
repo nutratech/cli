@@ -6,10 +6,13 @@ Need to offload them into special modules. The refactor has started.
 Created on Fri Jan 31 15:19:53 2020
 
 @author: shane
+@TODO: split this up... mock out argparser tests; then test missing service lines
 """
+import datetime
 import os
 import sys
 import unittest
+from unittest.mock import patch
 
 import pytest
 
@@ -38,30 +41,18 @@ TEST_HOME = os.path.dirname(os.path.abspath(__file__))
 arg_parser = build_arg_parser()
 
 
-# TODO: attach some env props to it, and re-instantiate a CliConfig() class.
-#  We're just setting it on the shell, as an env var, before running tests in CI.
-#  e.g. the equivalent of putting this early in the __init__ file;
-#  os.environ["NUTRA_HOME"] = os.path.join(TEST_HOME, ".nutra.test")
-
-
 class TestCli(unittest.TestCase):
     """
     Original one-stop-shop for testing.
     @todo: integration tests.. create user, recipe, log.. analyze & compare
     """
 
-    def test_000_init(self):
-        """Tests the SQL/persistence init in real time"""
-        code, result = init(yes=True)
-        assert code == 0
-        assert result
-
     def test_100_usda_sql_funcs(self):
         """Performs cursory inspection (sanity checks) of usda.sqlite3 image"""
         version = usda_ver()
         assert version == __db_target_usda__
-        result = usda_funcs.sql_nutrients_details()
-        assert len(result[1]) == 186
+        rows, _ = usda_funcs.sql_nutrients_details()
+        assert len(rows) == 186
 
         result = usda_funcs.sql_servings({9050, 9052})
         assert len(result) == 3
@@ -91,7 +82,7 @@ class TestCli(unittest.TestCase):
 
     def test_300_argparser_debug_no_paging(self):
         """Verifies the debug and no_paging flags are set"""
-        args = arg_parser.parse_args(args=["-d", "--no-pager"])
+        args = arg_parser.parse_args(args=["--debug", "--no-pager"])
         CLI_CONFIG.set_flags(args)
 
         assert args.debug is True
@@ -247,7 +238,7 @@ class TestCli(unittest.TestCase):
         assert result["navy"] == 10.64
 
         # Invalid (failed Navy)
-        args = arg_parser.parse_args(args="-d calc bf -w 80 -n 40".split())
+        args = arg_parser.parse_args(args="--debug calc bf -w 80 -n 40".split())
         CLI_CONFIG.set_flags(args)
         code, result = args.func(args)
         assert code in {0, 1}  # Might be a failed code one day, but returns 0 for now
@@ -290,6 +281,24 @@ class TestCli(unittest.TestCase):
             17.11,
         )
 
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Bug
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        args = arg_parser.parse_args(args="bug".split())
+        code, result = args.func(args)
+        assert code == 0
+        assert isinstance(result, list)
+        args = arg_parser.parse_args(args="bug --show".split())
+        code, result = args.func(args)
+        assert code == 0
+        assert isinstance(result, list)
+
+        args = arg_parser.parse_args(args="bug report".split())
+        with patch("ntclient.services.bugs.submit_bugs", return_value=1):
+            code, result = args.func(args)
+        assert code == 0
+        assert result == 1
+
     def test_415_invalid_path_day_throws_error(self):
         """Ensures invalid path throws exception in `day` subcommand"""
         invalid_day_csv_path = os.path.join(
@@ -323,8 +332,8 @@ class TestCli(unittest.TestCase):
             nt_main(args=["-h"])
         assert system_exit.value.code == 0
 
-        # -d
-        code = nt_main(args=["-d"])
+        # --debug
+        code = nt_main(args=["--debug"])
         assert code == 0
 
         # __main__: if args_dict
@@ -342,7 +351,7 @@ class TestCli(unittest.TestCase):
         # TODO: replace with non-biometric test
         # from ntclient.services import biometrics
         #
-        # args = arg_parser.parse_args(args=["-d", "bio", "log", "add", "12,12"])
+        # args = arg_parser.parse_args(args=["--debug", "bio", "log", "add", "12,12"])
         # biometrics.input = (
         #     lambda x: "y"
         # )  # mocks input, could also pass `-y` flag or set yes=True
@@ -375,8 +384,8 @@ class TestCli(unittest.TestCase):
         new_release = str(int(release) + 1)
         new_version = ".".join([major, minor, new_release])
         _usda_sql(
-            "INSERT INTO version (version) VALUES (?)",
-            values=(new_version,),
+            "INSERT INTO version (version, created) VALUES (?,?)",
+            values=(new_version, datetime.datetime.utcnow()),
             version_check=False,
         )
 
@@ -395,7 +404,7 @@ class TestCli(unittest.TestCase):
         )
 
         with pytest.raises(SqlInvalidVersionError) as sql_invalid_version_error:
-            nt_main(["-d", "nt"])
+            nt_main(["--debug", "nt"])
         assert sql_invalid_version_error is not None
 
     @unittest.skip(reason="Long-running test, want to replace with more 'unit' style")
@@ -414,8 +423,8 @@ class TestCli(unittest.TestCase):
             # TODO: resolve PermissionError on Windows
             print(repr(err))
             _usda_sql(
-                "INSERT INTO version (version) VALUES (?)",
-                values=(__db_target_usda__,),
+                "INSERT INTO version (version, created) VALUES (?,?)",
+                values=(__db_target_usda__, datetime.datetime.utcnow()),
                 version_check=False,
             )
             pytest.xfail("PermissionError, are you using Microsoft Windows?")
@@ -431,7 +440,7 @@ class TestCli(unittest.TestCase):
         """Verifies colored/visual output is successfully generated"""
         analysis = usda_funcs.sql_analyze_foods(food_ids={1001})
         nutrients = usda_funcs.sql_nutrients_overview()
-        output = nutprogbar.nutprogbar(
-            food_amts={1001: 100}, food_analyses=analysis, nutrients=nutrients
+        output = nutprogbar.nutrient_progress_bars(
+            _food_amts={1001: 100}, _food_analyses=analysis, _nutrients=nutrients
         )
         assert output

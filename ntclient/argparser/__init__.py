@@ -15,21 +15,22 @@ from ntclient.argparser import types
 def build_subcommands(subparsers: argparse._SubParsersAction) -> None:
     """Attaches subcommands to main parser"""
 
-    build_init_subcommand(subparsers)
-    build_nt_subcommand(subparsers)
-    build_search_subcommand(subparsers)
-    build_sort_subcommand(subparsers)
-    build_analyze_subcommand(subparsers)
-    build_day_subcommand(subparsers)
-    build_recipe_subcommand(subparsers)
-    build_calc_subcommand(subparsers)
+    build_subcommand_init(subparsers)
+    build_subcommand_nt(subparsers)
+    build_subcommand_search(subparsers)
+    build_subcommand_sort(subparsers)
+    build_subcommand_analyze(subparsers)
+    build_subcommand_day(subparsers)
+    build_subcommand_recipe(subparsers)
+    build_subcommand_calc(subparsers)
+    build_subcommand_bug(subparsers)
 
 
 ################################################################################
 # Methods to build subparsers, and attach back to main arg_parser
 ################################################################################
 # noinspection PyUnresolvedReferences,PyProtectedMember
-def build_init_subcommand(subparsers: argparse._SubParsersAction) -> None:
+def build_subcommand_init(subparsers: argparse._SubParsersAction) -> None:
     """Self running init command"""
 
     init_parser = subparsers.add_parser(
@@ -45,7 +46,7 @@ def build_init_subcommand(subparsers: argparse._SubParsersAction) -> None:
 
 
 # noinspection PyUnresolvedReferences,PyProtectedMember
-def build_nt_subcommand(subparsers: argparse._SubParsersAction) -> None:
+def build_subcommand_nt(subparsers: argparse._SubParsersAction) -> None:
     """Lists out nutrients details with computed totals and averages"""
 
     nutrient_parser = subparsers.add_parser(
@@ -55,7 +56,7 @@ def build_nt_subcommand(subparsers: argparse._SubParsersAction) -> None:
 
 
 # noinspection PyUnresolvedReferences,PyProtectedMember
-def build_search_subcommand(subparsers: argparse._SubParsersAction) -> None:
+def build_subcommand_search(subparsers: argparse._SubParsersAction) -> None:
     """Search: terms [terms ... ]"""
 
     search_parser = subparsers.add_parser(
@@ -83,7 +84,7 @@ def build_search_subcommand(subparsers: argparse._SubParsersAction) -> None:
 
 
 # noinspection PyUnresolvedReferences,PyProtectedMember
-def build_sort_subcommand(subparsers: argparse._SubParsersAction) -> None:
+def build_subcommand_sort(subparsers: argparse._SubParsersAction) -> None:
     """Sort foods ranked by nutr_id, per 100g or 200kcal"""
 
     sort_parser = subparsers.add_parser("sort", help="sort foods by nutrient ID")
@@ -106,10 +107,12 @@ def build_sort_subcommand(subparsers: argparse._SubParsersAction) -> None:
 
 
 # noinspection PyUnresolvedReferences,PyProtectedMember
-def build_analyze_subcommand(subparsers: argparse._SubParsersAction) -> None:
+def build_subcommand_analyze(subparsers: argparse._SubParsersAction) -> None:
     """Analyzes (foods only for now)"""
 
-    analyze_parser = subparsers.add_parser("anl", help="analyze food(s)")
+    analyze_parser = subparsers.add_parser(
+        "anl", help="analyze food(s), recipe(s), or day(s)"
+    )
 
     analyze_parser.add_argument(
         "-g",
@@ -122,7 +125,7 @@ def build_analyze_subcommand(subparsers: argparse._SubParsersAction) -> None:
 
 
 # noinspection PyUnresolvedReferences,PyProtectedMember
-def build_day_subcommand(subparsers: argparse._SubParsersAction) -> None:
+def build_subcommand_day(subparsers: argparse._SubParsersAction) -> None:
     """Analyzes a DAY.csv, uses new colored progress bar spec"""
 
     day_parser = subparsers.add_parser(
@@ -146,7 +149,7 @@ def build_day_subcommand(subparsers: argparse._SubParsersAction) -> None:
 
 
 # noinspection PyUnresolvedReferences,PyProtectedMember
-def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
+def build_subcommand_recipe(subparsers: argparse._SubParsersAction) -> None:
     """View, add, edit, delete recipes"""
 
     recipe_parser = subparsers.add_parser("recipe", help="list and analyze recipes")
@@ -183,7 +186,7 @@ def build_recipe_subcommand(subparsers: argparse._SubParsersAction) -> None:
 
 
 # noinspection PyUnresolvedReferences,PyProtectedMember
-def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
+def build_subcommand_calc(subparsers: argparse._SubParsersAction) -> None:
     """BMR, 1 rep-max, and other calculators"""
 
     calc_parser = subparsers.add_parser(
@@ -317,3 +320,31 @@ def build_calc_subcommand(subparsers: argparse._SubParsersAction) -> None:
         "ankle", type=float, nargs="?", help="ankle (cm) [casey_butt]"
     )
     calc_lbl_parser.set_defaults(func=parser_funcs.calc_lbm_limits)
+
+
+# noinspection PyUnresolvedReferences,PyProtectedMember
+def build_subcommand_bug(subparsers: argparse._SubParsersAction) -> None:
+    """List and report bugs"""
+
+    bug_parser = subparsers.add_parser("bug", help="report bugs")
+    bug_subparser = bug_parser.add_subparsers(title="bug subcommands")
+    bug_parser.add_argument(
+        "--show", action="store_true", help="show list of unsubmitted bugs"
+    )
+    bug_parser.set_defaults(func=parser_funcs.bugs_list)
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Simulate (bug)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    bug_simulate_parser = bug_subparser.add_parser(
+        "simulate", help="simulate a bug (for testing purposes)"
+    )
+    bug_simulate_parser.set_defaults(func=parser_funcs.bug_simulate)
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Report (bug)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    bug_report_parser = bug_subparser.add_parser(
+        "report", help="submit/report all bugs"
+    )
+    bug_report_parser.set_defaults(func=parser_funcs.bugs_report)

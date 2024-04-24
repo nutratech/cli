@@ -52,7 +52,7 @@ def recipes_overview() -> tuple:
     try:
         csv_utils.csv_recipe_print_tree()
         return 0, None
-    except FileNotFoundError:
+    except FileNotFoundError:  # pragma: no covers
         print("WARN: no recipes found, create some or run: nutra recipe init")
         return 1, None
 

@@ -1,4 +1,5 @@
 """Main SQL persistence module, shared between USDA and NT databases"""
+
 import sqlite3
 from collections.abc import Sequence
 
@@ -9,20 +10,23 @@ from ntclient.utils import CLI_CONFIG
 # ------------------------------------------------
 
 
-def sql_entries(sql_result: sqlite3.Cursor) -> list:
-    """Formats and returns a `sql_result()` for console digestion and output"""
-    # TODO: return object: metadata, command, status, errors, etc?
+def sql_entries(sql_result: sqlite3.Cursor) -> tuple:
+    """
+    Formats and returns a `sql_result()` for console digestion and output
+    FIXME: the IDs are not necessarily integers, but are unique.
+
+    TODO: return object: metadata, command, status, errors, etc?
+    """
 
     rows = sql_result.fetchall()
-    return rows
+    headers = [x[0] for x in (sql_result.description if sql_result.description else [])]
 
-
-def sql_entries_headers(sql_result: sqlite3.Cursor) -> tuple:
-    """Formats and returns a `sql_result()` for console digestion and output"""
-    rows = sql_result.fetchall()
-    headers = [x[0] for x in sql_result.description]
-
-    return headers, rows
+    return (
+        rows,
+        headers,
+        sql_result.rowcount,
+        sql_result.lastrowid,
+    )
 
 
 # ------------------------------------------------
@@ -76,10 +80,13 @@ def _prep_query(
 
     # TODO: separate `entry` & `entries` entity for single vs. bulk insert?
     if values:
-        if isinstance(values, list):
-            cur.executemany(query, values)
-        else:  # tuple
+        if isinstance(values, tuple):
             cur.execute(query, values)
+        # elif isinstance(values, list):
+        #     cur.executemany(query, values)
+        else:
+            raise TypeError("'values' must be a list or tuple!")
+
     else:
         cur.execute(query)
 
@@ -91,7 +98,7 @@ def _sql(
     query: str,
     db_name: str,
     values: Sequence = (),
-) -> list:
+) -> tuple:
     """@param values: tuple | list"""
 
     cur = _prep_query(con, query, db_name, values)
@@ -99,22 +106,6 @@ def _sql(
     # TODO: print "<number> SELECTED", or other info
     #  BASED ON command SELECT/INSERT/DELETE/UPDATE
     result = sql_entries(cur)
-
-    close_con_and_cur(con, cur)
-    return result
-
-
-def _sql_headers(
-    con: sqlite3.Connection,
-    query: str,
-    db_name: str,
-    values: Sequence = (),
-) -> tuple:
-    """@param values: tuple | list"""
-
-    cur = _prep_query(con, query, db_name, values)
-
-    result = sql_entries_headers(cur)
 
     close_con_and_cur(con, cur)
     return result

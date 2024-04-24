@@ -100,7 +100,7 @@ Install with,
     HOOK='eval "$(direnv hook '$DEFAULT_SHELL')"'
 
     # Install the hook, if not already
-    grep "$HOOK" $SHELL_RC_FILE || echo "$HOOK" >>$SHELL_RC_FILE
+    grep ^"$HOOK"$ $SHELL_RC_FILE || echo "$HOOK" >>$SHELL_RC_FILE
     source $SHELL_RC_FILE
 
 This is what the ``.envrc`` file is for. It automatically activates ``venv``.
@@ -269,4 +269,5 @@ Usage
 Requires internet connection to download initial datasets.
 Run ``nutra init`` for this step.
 
-Run ``n`` or ``nutra`` to output usage (``-h`` flag is optional and defaulted).
+Run ``n`` or ``nutra`` to output usage (``--help`` flag is optional and
+defaulted).

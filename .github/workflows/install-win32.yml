@@ -17,18 +17,18 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           # update-environment: false
 
       - name: Reload Cache / pip
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~\AppData\Local\pip\Cache
           # NOTE: only cares about base requirements.txt
@@ -43,8 +43,8 @@ jobs:
 
       - name: Basic Tests / CLI / Integration
         run: |
-          n -v
-          nutra -d init -y
+          n --version
+          nutra --debug init -y
           nutra --no-pager nt
           nutra --no-pager sort -c 789
           nutra --no-pager search ultraviolet mushrooms

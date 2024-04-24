@@ -1,4 +1,5 @@
 """Nutratracker DB specific sqlite module"""
+
 import os
 import sqlite3
 from collections.abc import Sequence
@@ -10,7 +11,7 @@ from ntclient import (
     NUTRA_HOME,
     __db_target_nt__,
 )
-from ntclient.persistence.sql import _sql, _sql_headers, version
+from ntclient.persistence.sql import _sql, version
 from ntclient.utils.exceptions import SqlConnectError, SqlInvalidVersionError
 
 
@@ -39,7 +40,7 @@ def nt_init() -> None:
             )
         print("..DONE!")
         os.remove(NTSQLITE_BUILDPATH)  # clean up
-    else:
+    else:  # pragma: no cover
         # TODO: is this logic (and these error messages) the best?
         #  what if .isdir() == True ? Fails with stacktrace?
         os.rename(NTSQLITE_BUILDPATH, NTSQLITE_DESTINATION)
@@ -79,15 +80,8 @@ def nt_sqlite_connect(version_check: bool = True) -> sqlite3.Connection:
     raise SqlConnectError("ERROR: nt database doesn't exist, please run `nutra init`")
 
 
-def sql(query: str, values: Sequence = ()) -> list:
+def sql(query: str, values: Sequence = ()) -> tuple:
     """Executes a SQL command to nt.sqlite3"""
 
     con = nt_sqlite_connect()
     return _sql(con, query, db_name="nt", values=values)
-
-
-def sql_headers(query: str, values: Sequence = ()) -> tuple:
-    """Executes a SQL command to nt.sqlite3"""
-
-    con = nt_sqlite_connect()
-    return _sql_headers(con, query, db_name="nt", values=values)

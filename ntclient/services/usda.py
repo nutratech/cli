@@ -30,7 +30,7 @@ from ntclient.utils import CLI_CONFIG
 def list_nutrients() -> tuple:
     """Lists out nutrients with basic details"""
 
-    headers, nutrients = sql_nutrients_details()
+    nutrients, headers = sql_nutrients_details()
     # TODO: include in SQL table cache?
     headers.append("avg_rda")
     nutrients = [list(x) for x in nutrients]
@@ -61,7 +61,7 @@ def sort_foods(
 
     # TODO: sub shrt_desc for long if available, and support config.FOOD_NAME_TRUNC
 
-    def print_results(_results: list, _nutrient_id: int) -> list:
+    def print_results(_results: list, _nutrient_id: int) -> None:
         """Prints truncated list for sort"""
         nutrients = sql_nutrients_overview()
         nutrient = nutrients[_nutrient_id]
@@ -72,7 +72,6 @@ def sort_foods(
 
         table = tabulate(_results, headers=headers, tablefmt="simple")
         print(table)
-        return _results
 
     # Gets values for nutrient_id and kcal=208
     nut_data = sql_sort_helper1(nutrient_id)

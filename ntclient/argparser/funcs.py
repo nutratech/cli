@@ -14,7 +14,8 @@ import traceback
 from tabulate import tabulate
 
 import ntclient.services.analyze
-import ntclient.services.recipe.utils
+import ntclient.services.bugs
+import ntclient.services.recipe.recipe
 import ntclient.services.usda
 from ntclient.services import calculate as calc
 from ntclient.utils import CLI_CONFIG, Gender, activity_factor_from_index
@@ -58,7 +59,7 @@ def analyze(args: argparse.Namespace) -> tuple:
     """Analyze a food"""
     # exc: ValueError,
     food_ids = set(args.food_id)
-    grams = float(args.grams) if args.grams else 0.0
+    grams = float(args.grams) if args.grams else 100.0
 
     return ntclient.services.analyze.foods_analyze(food_ids, grams)
 
@@ -80,12 +81,12 @@ def recipes_init(args: argparse.Namespace) -> tuple:
     """Copy example/stock data into RECIPE_HOME"""
     _force = args.force
 
-    return ntclient.services.recipe.utils.recipes_init(_force=_force)
+    return ntclient.services.recipe.recipe.recipes_init(_force=_force)
 
 
 def recipes() -> tuple:
     """Show all, in tree or detail view"""
-    return ntclient.services.recipe.utils.recipes_overview()
+    return ntclient.services.recipe.recipe.recipes_overview()
 
 
 def recipe(args: argparse.Namespace) -> tuple:
@@ -96,7 +97,7 @@ def recipe(args: argparse.Namespace) -> tuple:
     """
     recipe_path = args.path
 
-    return ntclient.services.recipe.utils.recipe_overview(recipe_path=recipe_path)
+    return ntclient.services.recipe.recipe.recipe_overview(recipe_path=recipe_path)
 
 
 ##############################################################################
@@ -133,10 +134,18 @@ def calc_1rm(args: argparse.Namespace) -> tuple:
             row.append(int(_values[_rep]))
         _all.append(row)
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Print results
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     print()
     print("Results for: epley, brzycki, and dos_remedios")
     print()
+
+    # Print the n=1 average for all three calculations
+    _avg_1rm = round(sum(_all[0][1:]) / len(_all[0][1:]), 1)
+    print("1RM:    %s" % _avg_1rm)
+    print()
+
     _table = tabulate(_all, headers=["n", "epl", "brz", "rmds"])
     print(_table)
 
@@ -327,3 +336,27 @@ def calc_lbm_limits(args: argparse.Namespace) -> tuple:
     print(_table)
 
     return 0, result
+
+
+##############################################################################
+# Bug
+##############################################################################
+# TODO: these all require args parameter (due to parent parser defining a `--show` arg)
+
+
+# pylint: disable=unused-argument
+def bug_simulate(args: argparse.Namespace) -> tuple:
+    """Simulate a bug report"""
+    raise NotImplementedError("This service intentionally raises an error, for testing")
+
+
+def bugs_list(args: argparse.Namespace) -> tuple:
+    """List bug reports that have been saved"""
+    return ntclient.services.bugs.list_bugs(show_all=args.show)
+
+
+# pylint: disable=unused-argument
+def bugs_report(args: argparse.Namespace) -> tuple:
+    """Report bugs"""
+    n_submissions = ntclient.services.bugs.submit_bugs()
+    return 0, n_submissions
