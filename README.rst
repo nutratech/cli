@@ -269,4 +269,5 @@ Usage
 Requires internet connection to download initial datasets.
 Run ``nutra init`` for this step.
 
-Run ``n`` or ``nutra`` to output usage (``-h`` flag is optional and defaulted).
+Run ``n`` or ``nutra`` to output usage (``--help`` flag is optional and
+defaulted).
