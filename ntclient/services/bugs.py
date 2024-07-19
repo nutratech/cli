@@ -31,7 +31,7 @@ INSERT INTO bug
             """,
             (
                 1,
-                " ".join(args),
+                " ".join(args) if args else None,
                 exception.__class__.__name__,
                 str(exception),
                 os.linesep.join(traceback.format_tb(exception.__traceback__)),
