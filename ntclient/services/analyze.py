@@ -129,12 +129,16 @@ def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
         # Add to list of lists
         nutrients_rows.append(nutrient_rows)
 
+        # Calculate stuff
+        _kcal = next((x[1] for x in nut_val_tuples if x[0] == NUTR_ID_KCAL), 0)
+
         # Print view
         # TODO: either make this function singular, or handle plural logic here
+        # TODO: support flag --absolute (use 2000 kcal; dont' scale to food kcal)
         _food_id = list(food_ids)[0]
         nutrient_progress_bars(
             {_food_id: grams},
-            [(_food_id, x[0], x[1]) for x in analyses[_food_id]],
+            [(_food_id, x[0], x[1] * (grams / 100)) for x in analyses[_food_id]],
             nutrients,
         )
         # TODO: make this into the `-t` or `--tabular` branch of the function
