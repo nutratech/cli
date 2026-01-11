@@ -98,19 +98,26 @@ def usda_ver() -> str:
     return version(con)
 
 
-def sql(query: str, values: Sequence = (), version_check: bool = True) -> tuple:
+def sql(
+    query: str,
+    values: Sequence = (),
+    version_check: bool = True,
+    params: Sequence = (),
+) -> tuple:
     """
     Executes a SQL command to usda.sqlite3
 
     @param query: Input SQL query
-    @param values: Union[tuple, list] Leave as empty tuple for no values,
-        e.g. bare query. Populate a tuple for a single insert. And use a list for
-        cur.executemany()
-    @param version_check: Ignore mismatch version, useful for "meta" commands
+    @param values: Union[tuple, list] (Deprecated: use params)
+    @param version_check: Ignore mismatch version
+    @param params: bind parameters
     @return: List of selected SQL items
     """
 
     con = usda_sqlite_connect(version_check=version_check)
 
+    # Support params alias
+    _values = params if params else values
+
     # TODO: support argument: _sql(..., params=params, ...)
-    return _sql(con, query, db_name="usda", values=values)
+    return _sql(con, query, db_name="usda", values=_values)

@@ -20,13 +20,14 @@ def sql_food_details(_food_ids: set = None) -> list:  # type: ignore
 
     if not _food_ids:
         query = "SELECT * FROM food_des;"
+        params = ()
     else:
-        # TODO: does sqlite3 driver support this? cursor.executemany() ?
-        query = "SELECT * FROM food_des WHERE id IN (%s);"
-        food_ids = ",".join(str(x) for x in set(_food_ids))
-        query = query % food_ids
+        # Generate placeholders for IN clause
+        placeholders = ",".join("?" for _ in _food_ids)
+        query = f"SELECT * FROM food_des WHERE id IN ({placeholders});"  # nosec: B608
+        params = tuple(_food_ids)
 
-    rows, _, _, _ = sql(query)
+    rows, _, _, _ = sql(query, params=params)
     return list(rows)
 
 
@@ -61,9 +62,10 @@ FROM
 WHERE
   serv.food_id IN (%s);
 """
-    # FIXME: support this kind of thing by library code & parameterized queries
-    food_ids = ",".join(str(x) for x in set(_food_ids))
-    rows, _, _, _ = sql(query % food_ids)
+    # Dynamically generate placeholders
+    placeholders = ",".join("?" for _ in _food_ids)
+    query = query % placeholders
+    rows, _, _, _ = sql(query, params=tuple(_food_ids))
     return list(rows)
 
 
@@ -80,9 +82,10 @@ FROM
 WHERE
   food_des.id IN (%s);
 """
-    # TODO: parameterized queries
-    food_ids_concat = ",".join(str(x) for x in set(food_ids))
-    rows, _, _, _ = sql(query % food_ids_concat)
+    # parameterized queries
+    placeholders = ",".join("?" for _ in food_ids)
+    query = query % placeholders
+    rows, _, _, _ = sql(query, params=tuple(food_ids))
     return list(rows)
 
 
@@ -100,13 +103,13 @@ SELECT
 FROM
   nut_data
 WHERE
-  nutr_id = %s
-  OR nutr_id = %s
+  nutr_id = ?
+  OR nutr_id = ?
 ORDER BY
   food_id;
 """
-    # TODO: parameterized queries
-    rows, _, _, _ = sql(query % (NUTR_ID_KCAL, nutrient_id))
+    # Parameterized query
+    rows, _, _, _ = sql(query, params=(NUTR_ID_KCAL, nutrient_id))
     return list(rows)
 
 
@@ -129,12 +132,12 @@ FROM
   LEFT JOIN nut_data kcal ON food.id = kcal.food_id
     AND kcal.nutr_id = 208
 WHERE
-  nut_data.nutr_id = %s
+  nut_data.nutr_id = ?
 ORDER BY
   nut_data.nutr_val DESC;
 """
-    # TODO: parameterized queries
-    rows, _, _, _ = sql(query % nutr_id)
+    # Parameterized query
+    rows, _, _, _ = sql(query, params=(nutr_id,))
     return list(rows)
 
 
@@ -159,10 +162,10 @@ FROM
     AND kcal.nutr_id = 208
     AND kcal.nutr_val > 0
 WHERE
-  nut_data.nutr_id = %s
+  nut_data.nutr_id = ?
 ORDER BY
   (nut_data.nutr_val / kcal.nutr_val) DESC;
 """
-    # TODO: parameterized queries
-    rows, _, _, _ = sql(query % nutr_id)
+    # Parameterized query
+    rows, _, _, _ = sql(query, params=(nutr_id,))
     return list(rows)

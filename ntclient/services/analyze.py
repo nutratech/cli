@@ -19,12 +19,7 @@ from ntclient import (
     NUTR_ID_KCAL,
     NUTR_ID_PROTEIN,
 )
-from ntclient.core.nutprogbar import (
-    nutrient_progress_bars,
-    print_header,
-    print_macro_bar,
-    print_nutrient_bar,
-)
+from ntclient.core.nutprogbar import print_header, print_macro_bar, print_nutrient_bar
 from ntclient.persistence.sql.usda.funcs import (
     sql_analyze_foods,
     sql_food_details,
