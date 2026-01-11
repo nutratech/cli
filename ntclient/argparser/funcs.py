@@ -15,6 +15,7 @@ from tabulate import tabulate
 
 import ntclient.services.analyze
 import ntclient.services.bugs
+import ntclient.services.logs
 import ntclient.services.recipe.recipe
 import ntclient.services.usda
 from ntclient.services import calculate as calc
@@ -370,3 +371,19 @@ def bugs_report(args: argparse.Namespace) -> tuple:
     """Report bugs"""
     n_submissions = ntclient.services.bugs.submit_bugs()
     return 0, n_submissions
+
+
+def log_add(args: argparse.Namespace) -> tuple:
+    """Wrapper for log add"""
+    ntclient.services.logs.log_add(args.food_id, args.grams, args.date)
+    return 0, []
+
+def log_view(args: argparse.Namespace) -> tuple:
+    """Wrapper for log view"""
+    ntclient.services.logs.log_view(args.date)
+    return 0, []
+
+def log_analyze(args: argparse.Namespace) -> tuple:
+    """Wrapper for log analyze"""
+    ntclient.services.logs.log_analyze(args.date)
+    return 0, []
