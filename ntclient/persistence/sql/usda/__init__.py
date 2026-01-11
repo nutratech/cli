@@ -4,7 +4,7 @@ import os
 import sqlite3
 import tarfile
 import urllib.request
-from collections.abc import Sequence
+from collections.abc import Sequence  # pylint: disable=import-error
 
 from ntclient import NUTRA_HOME, USDA_DB_NAME, __db_target_usda__
 from ntclient.persistence.sql import _sql, version

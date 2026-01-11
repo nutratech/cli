@@ -7,6 +7,13 @@ Classes, structures for storing, displaying, and editing data.
 """
 import csv
 
+from ntclient import BUFFER_WD
+from ntclient.persistence.sql.usda.funcs import (
+    sql_analyze_foods,
+    sql_nutrients_overview,
+)
+from ntclient.services.analyze import day_format
+from ntclient.services.calculate import calculate_nutrient_totals
 from ntclient.utils import CLI_CONFIG
 
 
@@ -61,12 +68,6 @@ class Recipe:
 
     def print_analysis(self, scale: float = 0, scale_mode: str = "kcal") -> None:
         """Run analysis on a single recipe"""
-        from ntclient import BUFFER_WD
-        from ntclient.persistence.sql.usda.funcs import (
-            sql_analyze_foods,
-            sql_nutrients_overview,
-        )
-        from ntclient.services.analyze import day_format
 
         # Get nutrient overview (RDAs, units, etc.)
         nutrients_rows = sql_nutrients_overview()
@@ -85,20 +86,9 @@ class Recipe:
                 foods_analysis[food_id].append(anl)
 
         # Compute totals
-        nutrient_totals = {}
-        total_weight = 0.0
-        for food_id, grams in self.food_data.items():
-            total_weight += grams
-            if food_id not in foods_analysis:
-                continue
-            for _nutrient in foods_analysis[food_id]:
-                nutr_id = _nutrient[0]
-                nutr_per_100g = _nutrient[1]
-                nutr_val = grams / 100 * nutr_per_100g
-                if nutr_id not in nutrient_totals:
-                    nutrient_totals[nutr_id] = nutr_val
-                else:
-                    nutrient_totals[nutr_id] += nutr_val
+        nutrient_totals, total_weight = calculate_nutrient_totals(
+            self.food_data, foods_analysis
+        )
 
         # Print results using day_format for consistency
         buffer = BUFFER_WD - 4 if BUFFER_WD > 4 else BUFFER_WD

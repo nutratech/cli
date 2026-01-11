@@ -196,22 +196,23 @@ def day_analyze(
     # Compute totals
     nutrients_totals = []
     total_grams_list = []
+    from ntclient.services.calculate import calculate_nutrient_totals
+
     for log in logs:
-        nutrient_totals = OrderedDict()  # NOTE: dict()/{} is NOT ORDERED before 3.6/3.7
-        daily_grams = 0.0
+        # Aggregate duplicates in log if any
+        food_data: OrderedDict[int, float] = OrderedDict()
         for entry in log:
             if entry["id"]:
-                food_id = int(entry["id"])
-                grams = float(entry["grams"])
-                daily_grams += grams
-                for _nutrient2 in foods_analysis[food_id]:
-                    nutr_id = _nutrient2[0]
-                    nutr_per_100g = _nutrient2[1]
-                    nutr_val = grams / 100 * nutr_per_100g
-                    if nutr_id not in nutrient_totals:
-                        nutrient_totals[nutr_id] = nutr_val
-                    else:
-                        nutrient_totals[nutr_id] += nutr_val
+                f_id = int(entry["id"])
+                f_grams = float(entry["grams"])
+                if f_id in food_data:
+                    food_data[f_id] += f_grams
+                else:
+                    food_data[f_id] = f_grams
+
+        nutrient_totals, daily_grams = calculate_nutrient_totals(
+            food_data, foods_analysis
+        )
         nutrients_totals.append(nutrient_totals)
         total_grams_list.append(daily_grams)
 
@@ -239,40 +240,15 @@ def day_format(
 ) -> None:
     """Formats day analysis for printing to console"""
 
-    multiplier = 1.0
-    if scale:
-        if scale_mode == "kcal":
-            current_val = analysis.get(NUTR_ID_KCAL, 0)
-            multiplier = scale / current_val if current_val else 0
-        elif scale_mode == "weight":
-            multiplier = scale / total_weight if total_weight else 0
-        else:
-            # Try to interpret scale_mode as nutrient ID or Name
-            target_id = None
-            # 1. Check if int
-            try:
-                target_id = int(scale_mode)
-            except ValueError:
-                # 2. Check names
-                for n_id, n_data in nutrients.items():
-                    # n_data usually: (id, rda, unit, tag, name, ...)
-                    # Check tag or desc
-                    if scale_mode.lower() in str(n_data[3]).lower():
-                        target_id = n_id
-                        break
-                    if scale_mode.lower() in str(n_data[4]).lower():
-                        target_id = n_id
-                        break
+    from ntclient.services.calculate import calculate_scaling_multiplier
 
-            if target_id and target_id in analysis:
-                current_val = analysis[target_id]
-                multiplier = scale / current_val if current_val else 0
-            else:
-                print(f"WARN: Could not scale by '{scale_mode}', nutrient not found.")
+    multiplier = calculate_scaling_multiplier(
+        scale, scale_mode, analysis, nutrients, total_weight
+    )
 
-        # Apply multiplier
-        if multiplier != 1.0:
-            analysis = {k: v * multiplier for k, v in analysis.items()}
+    # Apply multiplier
+    if multiplier != 1.0:
+        analysis = {k: v * multiplier for k, v in analysis.items()}
 
     # Actual values
     kcals = round(analysis.get(NUTR_ID_KCAL, 0))

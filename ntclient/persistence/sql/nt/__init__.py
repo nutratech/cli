@@ -2,7 +2,7 @@
 
 import os
 import sqlite3
-from collections.abc import Sequence
+from collections.abc import Sequence  # pylint: disable=import-error
 
 from ntclient import (
     NT_DB_NAME,

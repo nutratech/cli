@@ -8,6 +8,8 @@ Created on Tue Aug 11 20:53:14 2020
 """
 import argparse
 import math
+from collections import OrderedDict
+from typing import Mapping
 
 from ntclient.utils import Gender
 
@@ -511,3 +513,82 @@ def lbl_casey_butt(height: float, args: argparse.Namespace) -> tuple:
         # calf
         round(0.9812 * ankle + 0.1250 * height, 2),
     )
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Nutrient Aggregation
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def calculate_nutrient_totals(
+    food_data: Mapping[int, float], foods_analysis: Mapping[int, list]
+) -> tuple[OrderedDict, float]:
+    """
+    Common logic to aggregate nutrient data for a list of foods.
+
+    @param food_data: dict of {food_id: grams, ...}
+    @param foods_analysis: dict of {food_id: [(nutr_id, val_per_100g), ...], ...}
+    @return: (nutrient_totals, total_grams)
+    """
+    nutrient_totals = OrderedDict()
+    total_grams = 0.0
+
+    for food_id, grams in food_data.items():
+        total_grams += grams
+        if food_id not in foods_analysis:
+            continue
+        for _nutrient in foods_analysis[food_id]:
+            nutr_id = _nutrient[0]
+            nutr_per_100g = _nutrient[1]
+            nutr_val = grams / 100 * nutr_per_100g
+            if nutr_id not in nutrient_totals:
+                nutrient_totals[nutr_id] = nutr_val
+            else:
+                nutrient_totals[nutr_id] += nutr_val
+
+    return nutrient_totals, total_grams
+
+
+def calculate_scaling_multiplier(
+    scale: float,
+    scale_mode: str,
+    analysis: Mapping,
+    nutrients: Mapping,
+    total_weight: float,
+) -> float:
+    """
+    Determine the multiplier needed to scale the analysis values.
+    """
+    multiplier = 1.0
+    from ntclient import NUTR_ID_KCAL
+
+    if not scale:
+        return multiplier
+
+    if scale_mode == "kcal":
+        current_val = analysis.get(NUTR_ID_KCAL, 0)
+        multiplier = scale / current_val if current_val else 0
+    elif scale_mode == "weight":
+        multiplier = scale / total_weight if total_weight else 0
+    else:
+        # Try to interpret scale_mode as nutrient ID or Name
+        target_id = None
+        # 1. Check if int
+        try:
+            target_id = int(scale_mode)
+        except ValueError:
+            # 2. Check names
+            for n_id, n_data in nutrients.items():
+                # n_data usually: (id, rda, unit, tag, name, ...)
+                if scale_mode.lower() in str(n_data[3]).lower():
+                    target_id = n_id
+                    break
+                if scale_mode.lower() in str(n_data[4]).lower():
+                    target_id = n_id
+                    break
+
+        if target_id and target_id in analysis:
+            current_val = analysis[target_id]
+            multiplier = scale / current_val if current_val else 0
+        else:
+            print(f"WARN: Could not scale by '{scale_mode}', nutrient not found.")
+
+    return multiplier

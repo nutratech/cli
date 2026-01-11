@@ -1,7 +1,7 @@
 """Main SQL persistence module, shared between USDA and NT databases"""
 
 import sqlite3
-from collections.abc import Sequence
+from collections.abc import Sequence  # pylint: disable=import-error
 
 from ntclient.utils import CLI_CONFIG
 
