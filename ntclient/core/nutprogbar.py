@@ -101,9 +101,14 @@ def print_macro_bar(
     """Print macro-nutrients bar with details."""
     _kcals = _fat * 9 + _net_carb * 4 + _pro * 4
 
-    p_fat = (_fat * 9) / _kcals
-    p_car = (_net_carb * 4) / _kcals
-    p_pro = (_pro * 4) / _kcals
+    if _kcals == 0:
+        p_fat = 0.0
+        p_car = 0.0
+        p_pro = 0.0
+    else:
+        p_fat = (_fat * 9) / _kcals
+        p_car = (_net_carb * 4) / _kcals
+        p_pro = (_pro * 4) / _kcals
 
     # TODO: handle rounding cases, tack on to, or trim off FROM LONGEST ?
     mult = _kcals / _kcals_max

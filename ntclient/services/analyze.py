@@ -26,6 +26,10 @@ from ntclient.persistence.sql.usda.funcs import (
     sql_nutrients_overview,
     sql_servings,
 )
+from ntclient.services.calculate import (
+    calculate_nutrient_totals,
+    calculate_scaling_multiplier,
+)
 from ntclient.utils import CLI_CONFIG
 
 
@@ -39,6 +43,7 @@ def foods_analyze(
     Analyze a list of food_ids against stock RDA values
     (NOTE: only supports a single food for now... add compare foods support later)
     """
+    # pylint: disable=too-many-locals
 
     ##########################################################################
     # Get analysis
@@ -145,6 +150,7 @@ def day_analyze(
 
     TODO: Should be a subset of foods_analyze (encapsulate/abstract/reuse code)
     """
+    # pylint: disable=too-many-locals,too-many-branches
 
     # Get user RDAs from CSV file, if supplied
     if rda_csv_path:
@@ -196,7 +202,6 @@ def day_analyze(
     # Compute totals
     nutrients_totals = []
     total_grams_list = []
-    from ntclient.services.calculate import calculate_nutrient_totals
 
     for log in logs:
         # Aggregate duplicates in log if any
@@ -239,8 +244,7 @@ def day_format(
     total_weight: float = 0,
 ) -> None:
     """Formats day analysis for printing to console"""
-
-    from ntclient.services.calculate import calculate_scaling_multiplier
+    # pylint: disable=too-many-arguments,too-many-locals
 
     multiplier = calculate_scaling_multiplier(
         scale, scale_mode, analysis, nutrients, total_weight

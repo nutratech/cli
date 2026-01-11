@@ -58,6 +58,7 @@ def sort_foods(
     nutrient_id: int, by_kcal: bool, limit: int = DEFAULT_RESULT_LIMIT
 ) -> tuple:
     """Sort, by nutrient, either (amount / 100 g) or (amount / 200 kcal)"""
+    # pylint: disable=too-many-locals
 
     # TODO: sub shrt_desc for long if available, and support config.FOOD_NAME_TRUNC
 
@@ -128,6 +129,7 @@ def sort_foods(
 ################################################################################
 def search(words: list, fdgrp_id: int = 0, limit: int = DEFAULT_RESULT_LIMIT) -> tuple:
     """Searches foods for input"""
+    # pylint: disable=too-many-locals
 
     def tabulate_search(_results: list) -> list:
         """Makes search results more readable"""

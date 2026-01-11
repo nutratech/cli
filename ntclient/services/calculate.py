@@ -11,6 +11,7 @@ import math
 from collections import OrderedDict
 from typing import Mapping
 
+from ntclient import NUTR_ID_KCAL
 from ntclient.utils import Gender
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -558,11 +559,6 @@ def calculate_scaling_multiplier(
     Determine the multiplier needed to scale the analysis values.
     """
     multiplier = 1.0
-    from ntclient import NUTR_ID_KCAL
-
-    if not scale:
-        return multiplier
-
     if scale_mode == "kcal":
         current_val = analysis.get(NUTR_ID_KCAL, 0)
         multiplier = scale / current_val if current_val else 0
