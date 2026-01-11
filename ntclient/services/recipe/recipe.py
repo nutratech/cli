@@ -57,18 +57,22 @@ def recipes_overview() -> tuple:
         return 1, None
 
 
-def recipe_overview(recipe_path: str) -> tuple:
+def recipe_overview(
+    recipe_path: str, scale: float = 0, scale_mode: str = "kcal"
+) -> tuple:
     """
     Shows single recipe overview
 
     @param recipe_path: full path on disk
+    @param scale: optional target value to scale to
+    @param scale_mode: mode for scaling (kcal, weight, nutrient)
     @return: (exit_code: int, None)
     """
 
     try:
         _recipe = Recipe(recipe_path)
         _recipe.process_data()
-        # TODO: extract relevant bits off, process, use nutprogbar (e.g. day analysis)
+        _recipe.print_analysis(scale=scale, scale_mode=scale_mode)
         return 0, _recipe
     except (FileNotFoundError, IndexError) as err:
         print("ERROR: %s" % repr(err))

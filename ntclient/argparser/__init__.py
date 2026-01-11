@@ -120,6 +120,20 @@ def build_subcommand_analyze(subparsers: argparse._SubParsersAction) -> None:
         type=float,
         help="scale to custom number of grams (default is 100g)",
     )
+    analyze_parser.add_argument(
+        "-s",
+        dest="scale",
+        metavar="N",
+        type=float,
+        help="scale actual values to N (default: kcal)",
+    )
+    analyze_parser.add_argument(
+        "-m",
+        dest="scale_mode",
+        metavar="MODE",
+        type=str,
+        help="scale mode: 'kcal', 'weight', or nutrient name/ID",
+    )
     analyze_parser.add_argument("food_id", type=int, nargs="+")
     analyze_parser.set_defaults(func=parser_funcs.analyze)
 
@@ -144,6 +158,20 @@ def build_subcommand_day(subparsers: argparse._SubParsersAction) -> None:
         metavar="rda.csv",
         type=types.file_path,
         help="provide a custom RDA file in csv format",
+    )
+    day_parser.add_argument(
+        "-s",
+        dest="scale",
+        metavar="N",
+        type=float,
+        help="scale actual values to N (default: kcal)",
+    )
+    day_parser.add_argument(
+        "-m",
+        dest="scale_mode",
+        metavar="MODE",
+        type=str,
+        help="scale mode: 'kcal', 'weight', or nutrient name/ID",
     )
     day_parser.set_defaults(func=parser_funcs.day)
 
@@ -181,6 +209,20 @@ def build_subcommand_recipe(subparsers: argparse._SubParsersAction) -> None:
     )
     recipe_anl_parser.add_argument(
         "path", type=str, help="view (and analyze) recipe by file path"
+    )
+    recipe_anl_parser.add_argument(
+        "-s",
+        dest="scale",
+        metavar="N",
+        type=float,
+        help="scale actual values to N (default: kcal)",
+    )
+    recipe_anl_parser.add_argument(
+        "-m",
+        dest="scale_mode",
+        metavar="MODE",
+        type=str,
+        help="scale mode: 'kcal', 'weight', or nutrient name/ID",
     )
     recipe_anl_parser.set_defaults(func=parser_funcs.recipe)
 

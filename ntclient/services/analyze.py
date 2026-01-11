@@ -37,12 +37,12 @@ from ntclient.utils import CLI_CONFIG
 ##############################################################################
 # Foods
 ##############################################################################
-def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
+def foods_analyze(
+    food_ids: set, grams: float = 100, scale: float = 0, scale_mode: str = "kcal"
+) -> tuple:
     """
     Analyze a list of food_ids against stock RDA values
     (NOTE: only supports a single food for now... add compare foods support later)
-    TODO: support flag -t (tabular/non-visual output)
-    TODO: support flag -s (scale to 2000 kcal)
     """
 
     ##########################################################################
@@ -101,50 +101,34 @@ def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
             print(refuse[0])
             print("    ({0}%, by mass)".format(refuse[1]))
 
-        ######################################################################
-        # Nutrient colored RDA tree-view
-        ######################################################################
-        print_header("NUTRITION")
+        # Prepare analysis dict for day_format
+        analysis_dict = {x[0]: x[1] for x in nut_val_tuples}
+
+        # Reconstruct nutrient_rows to satisfy legacy return contract (and tests)
         nutrient_rows = []
-        # TODO: skip small values (<1% RDA), report as color bar if RDA is available
         for nutrient_id, amount in nut_val_tuples:
-            # Skip zero values
             if not amount:
                 continue
-
-            # Get name and unit
             nutr_desc = nutrients[nutrient_id][4] or nutrients[nutrient_id][3]
             unit = nutrients[nutrient_id][2]
-
-            # Insert RDA % into row
             if rdas[nutrient_id]:
                 rda_perc = float(round(amount / rdas[nutrient_id] * 100, 1))
             else:
                 rda_perc = None
             row = [nutrient_id, nutr_desc, rda_perc, round(amount, 2), unit]
-
-            # Add to list
             nutrient_rows.append(row)
-
-        # Add to list of lists
         nutrients_rows.append(nutrient_rows)
 
-        # Calculate stuff
-        _kcal = next((x[1] for x in nut_val_tuples if x[0] == NUTR_ID_KCAL), 0)
-
-        # Print view
-        # TODO: either make this function singular, or handle plural logic here
-        # TODO: support flag --absolute (use 2000 kcal; dont' scale to food kcal)
-        _food_id = list(food_ids)[0]
-        nutrient_progress_bars(
-            {_food_id: grams},
-            [(_food_id, x[0], x[1] * (grams / 100)) for x in analyses[_food_id]],
+        # Print view using consistent format
+        buffer = BUFFER_WD - 4 if BUFFER_WD > 4 else BUFFER_WD
+        day_format(
+            analysis_dict,
             nutrients,
+            buffer=buffer,
+            scale=scale,
+            scale_mode=scale_mode,
+            total_weight=grams,
         )
-        # TODO: make this into the `-t` or `--tabular` branch of the function
-        # headers = ["id", "nutrient", "rda %", "amount", "units"]
-        # table = tabulate(nutrient_rows, headers=headers, tablefmt="presto")
-        # print(table)
 
     return 0, nutrients_rows, servings_rows
 
@@ -152,7 +136,12 @@ def foods_analyze(food_ids: set, grams: float = 100) -> tuple:
 ##############################################################################
 # Day
 ##############################################################################
-def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tuple:
+def day_analyze(
+    day_csv_paths: Sequence[str],
+    rda_csv_path: str = str(),
+    scale: float = 0,
+    scale_mode: str = "kcal",
+) -> tuple:
     """Analyze a day optionally with custom RDAs, examples:
 
        ./nutra day tests/resources/day/human-test.csv
@@ -211,12 +200,15 @@ def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tupl
 
     # Compute totals
     nutrients_totals = []
+    total_grams_list = []
     for log in logs:
         nutrient_totals = OrderedDict()  # NOTE: dict()/{} is NOT ORDERED before 3.6/3.7
+        daily_grams = 0.0
         for entry in log:
             if entry["id"]:
                 food_id = int(entry["id"])
                 grams = float(entry["grams"])
+                daily_grams += grams
                 for _nutrient2 in foods_analysis[food_id]:
                     nutr_id = _nutrient2[0]
                     nutr_per_100g = _nutrient2[1]
@@ -226,11 +218,19 @@ def day_analyze(day_csv_paths: Sequence[str], rda_csv_path: str = str()) -> tupl
                     else:
                         nutrient_totals[nutr_id] += nutr_val
         nutrients_totals.append(nutrient_totals)
+        total_grams_list.append(daily_grams)
 
     # Print results
     buffer = BUFFER_WD - 4 if BUFFER_WD > 4 else BUFFER_WD
-    for analysis in nutrients_totals:
-        day_format(analysis, nutrients, buffer=buffer)
+    for i, analysis in enumerate(nutrients_totals):
+        day_format(
+            analysis,
+            nutrients,
+            buffer=buffer,
+            scale=scale,
+            scale_mode=scale_mode,
+            total_weight=total_grams_list[i],
+        )
     return 0, nutrients_totals
 
 
@@ -238,14 +238,52 @@ def day_format(
     analysis: Mapping[int, float],
     nutrients: Mapping[int, tuple],
     buffer: int = 0,
+    scale: float = 0,
+    scale_mode: str = "kcal",
+    total_weight: float = 0,
 ) -> None:
     """Formats day analysis for printing to console"""
 
+    multiplier = 1.0
+    if scale:
+        if scale_mode == "kcal":
+            current_val = analysis.get(NUTR_ID_KCAL, 0)
+            multiplier = scale / current_val if current_val else 0
+        elif scale_mode == "weight":
+            multiplier = scale / total_weight if total_weight else 0
+        else:
+            # Try to interpret scale_mode as nutrient ID or Name
+            target_id = None
+            # 1. Check if int
+            try:
+                target_id = int(scale_mode)
+            except ValueError:
+                # 2. Check names
+                for n_id, n_data in nutrients.items():
+                    # n_data usually: (id, rda, unit, tag, name, ...)
+                    # Check tag or desc
+                    if scale_mode.lower() in str(n_data[3]).lower():
+                        target_id = n_id
+                        break
+                    if scale_mode.lower() in str(n_data[4]).lower():
+                        target_id = n_id
+                        break
+
+            if target_id and target_id in analysis:
+                current_val = analysis[target_id]
+                multiplier = scale / current_val if current_val else 0
+            else:
+                print(f"WARN: Could not scale by '{scale_mode}', nutrient not found.")
+
+        # Apply multiplier
+        if multiplier != 1.0:
+            analysis = {k: v * multiplier for k, v in analysis.items()}
+
     # Actual values
-    kcals = round(analysis[NUTR_ID_KCAL])
-    pro = analysis[NUTR_ID_PROTEIN]
-    net_carb = analysis[NUTR_ID_CARBS] - analysis[NUTR_ID_FIBER]
-    fat = analysis[NUTR_ID_FAT_TOT]
+    kcals = round(analysis.get(NUTR_ID_KCAL, 0))
+    pro = analysis.get(NUTR_ID_PROTEIN, 0)
+    net_carb = analysis.get(NUTR_ID_CARBS, 0) - analysis.get(NUTR_ID_FIBER, 0)
+    fat = analysis.get(NUTR_ID_FAT_TOT, 0)
     kcals_449 = round(4 * pro + 4 * net_carb + 9 * fat)
 
     # Desired values
@@ -257,12 +295,15 @@ def day_format(
     # Print calories and macronutrient bars
     print_header("Macro-nutrients")
     kcals_max = max(kcals, kcals_rda)
-    rda_perc = round(kcals * 100 / kcals_rda, 1)
+    rda_perc = round(kcals * 100 / kcals_rda, 1) if kcals_rda else 0
     print(
         "Actual:    {0} kcal ({1}% RDA), {2} by 4-4-9".format(
             kcals, rda_perc, kcals_449
         )
     )
+    if scale:
+        print(" (Scaled to %s %s)" % (scale, scale_mode))
+
     print_macro_bar(fat, net_carb, pro, kcals_max, _buffer=buffer)
     print(
         "\nDesired:   {0} kcal ({1} kcal)".format(
@@ -278,7 +319,7 @@ def day_format(
     )
 
     # Nutrition detail report
-    print_header("Nutrition detail report")
+    print_header("Nutrition detail report%s" % (" (SCALED)" if scale else ""))
     for nutr_id, nutr_val in analysis.items():
         print_nutrient_bar(nutr_id, nutr_val, nutrients)
     # TODO: actually filter and show the number of filtered fields

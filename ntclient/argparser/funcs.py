@@ -60,17 +60,23 @@ def analyze(args: argparse.Namespace) -> tuple:
     # exc: ValueError,
     food_ids = set(args.food_id)
     grams = float(args.grams) if args.grams else 100.0
+    scale = float(args.scale) if args.scale else 0.0
+    scale_mode = args.scale_mode if args.scale_mode else "kcal"
 
-    return ntclient.services.analyze.foods_analyze(food_ids, grams)
+    return ntclient.services.analyze.foods_analyze(
+        food_ids, grams, scale=scale, scale_mode=scale_mode
+    )
 
 
 def day(args: argparse.Namespace) -> tuple:
     """Analyze a day's worth of meals"""
     day_csv_paths = [str(os.path.expanduser(x)) for x in args.food_log]
     rda_csv_path = str(os.path.expanduser(args.rda)) if args.rda else str()
+    scale = float(args.scale) if args.scale else 0.0
+    scale_mode = args.scale_mode if args.scale_mode else "kcal"
 
     return ntclient.services.analyze.day_analyze(
-        day_csv_paths, rda_csv_path=rda_csv_path
+        day_csv_paths, rda_csv_path=rda_csv_path, scale=scale, scale_mode=scale_mode
     )
 
 
@@ -96,8 +102,12 @@ def recipe(args: argparse.Namespace) -> tuple:
     @todo: use as default command? Currently this is reached by `nutra recipe anl`
     """
     recipe_path = args.path
+    scale = float(args.scale) if args.scale else 0.0
+    scale_mode = args.scale_mode if args.scale_mode else "kcal"
 
-    return ntclient.services.recipe.recipe.recipe_overview(recipe_path=recipe_path)
+    return ntclient.services.recipe.recipe.recipe_overview(
+        recipe_path=recipe_path, scale=scale, scale_mode=scale_mode
+    )
 
 
 ##############################################################################
