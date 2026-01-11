@@ -559,6 +559,8 @@ def calculate_scaling_multiplier(
     Determine the multiplier needed to scale the analysis values.
     """
     multiplier = 1.0
+    if not scale:
+        return multiplier
     if scale_mode == "kcal":
         current_val = analysis.get(NUTR_ID_KCAL, 0)
         multiplier = scale / current_val if current_val else 0

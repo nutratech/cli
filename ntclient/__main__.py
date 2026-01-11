@@ -124,3 +124,9 @@ def main(args: list = None) -> int:  # type: ignore
             print("Exit code: %s" % exit_code)
 
     return exit_code
+
+
+if __name__ == "__main__":
+    import sys
+
+    sys.exit(main())

@@ -21,6 +21,7 @@ def build_subcommands(subparsers: argparse._SubParsersAction) -> None:
     build_subcommand_sort(subparsers)
     build_subcommand_analyze(subparsers)
     build_subcommand_day(subparsers)
+    build_subcommand_log(subparsers)
     build_subcommand_recipe(subparsers)
     build_subcommand_calc(subparsers)
     build_subcommand_bug(subparsers)
@@ -390,3 +391,27 @@ def build_subcommand_bug(subparsers: argparse._SubParsersAction) -> None:
         "report", help="submit/report all bugs"
     )
     bug_report_parser.set_defaults(func=parser_funcs.bugs_report)
+
+
+# noinspection PyUnresolvedReferences,PyProtectedMember
+def build_subcommand_log(subparsers: argparse._SubParsersAction) -> None:
+    """Log management: add, view, analyze"""
+    log_parser = subparsers.add_parser("log", help="manage daily food logs")
+    log_subparsers = log_parser.add_subparsers(dest="subcommand", required=True)
+
+    # ADD
+    add_parser = log_subparsers.add_parser("add", help="add food to log")
+    add_parser.add_argument("food_id", type=int, help="food ID")
+    add_parser.add_argument("grams", type=float, help="amount in grams")
+    add_parser.add_argument("-d", "--date", help="date YYYY-MM-DD (default: today)")
+    add_parser.set_defaults(func=parser_funcs.log_add)
+
+    # VIEW
+    view_parser = log_subparsers.add_parser("view", help="view log entries")
+    view_parser.add_argument("-d", "--date", help="date YYYY-MM-DD (default: today)")
+    view_parser.set_defaults(func=parser_funcs.log_view)
+
+    # ANALYZE
+    anl_parser = log_subparsers.add_parser("anl", help="analyze log")
+    anl_parser.add_argument("-d", "--date", help="date YYYY-MM-DD (default: today)")
+    anl_parser.set_defaults(func=parser_funcs.log_analyze)

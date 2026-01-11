@@ -378,10 +378,12 @@ def log_add(args: argparse.Namespace) -> tuple:
     ntclient.services.logs.log_add(args.food_id, args.grams, args.date)
     return 0, []
 
+
 def log_view(args: argparse.Namespace) -> tuple:
     """Wrapper for log view"""
     ntclient.services.logs.log_view(args.date)
     return 0, []
+
 
 def log_analyze(args: argparse.Namespace) -> tuple:
     """Wrapper for log analyze"""
