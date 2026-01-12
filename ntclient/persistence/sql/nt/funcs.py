@@ -9,4 +9,4 @@ def sql_nt_next_index(table: str) -> int:
     # noinspection SqlResolve
     query = "SELECT MAX(id) as max_id FROM %s;" % table  # nosec: B608
     rows, _, _, _ = sql(query)
-    return int(rows[0]["max_id"])
+    return int(rows[0]["max_id"] or 0)
