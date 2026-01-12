@@ -1,7 +1,13 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-"""Executable script, copied over by pip"""
+"""
+Created on Fri Sep 28 22:25:38 2018
+
+Executable script, copied over by pip.
+
+@author: shane
+"""
 import re
 import sys
 

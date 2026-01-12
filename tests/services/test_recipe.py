@@ -6,11 +6,13 @@ Created on Wed Jul 20 21:36:43 2022
 """
 import os
 import unittest
+from unittest.mock import patch
 
 import pytest
 
-import ntclient.services.recipe.utils as r
-from ntclient.services.recipe import RECIPE_STOCK
+import ntclient.services.recipe.recipe as r
+from ntclient.models import Recipe
+from ntclient.services.recipe import RECIPE_STOCK, csv_utils
 
 
 class TestRecipe(unittest.TestCase):
@@ -31,14 +33,23 @@ class TestRecipe(unittest.TestCase):
         exit_code, _ = r.recipes_overview()
         assert exit_code == 0
 
-    @unittest.expectedFailure
-    @pytest.mark.xfail(reason="Due to a wip refactor")
-    def test_recipe_overview_throws_exc_for_nonexistent_path(self):
-        """Raises index error if recipe int id is invalid"""
+    def test_recipe_process_data_multiple_recipe_uuids_throws_key_error(self):
+        """Raises key error if recipe uuids are not unique"""
+        # TODO: this should be a custom exception, i.e. RecipeValidationException
+        with patch(
+            "ntclient.models.Recipe._aggregate_rows",
+            return_value=[{"recipe_id": "UUID_1"}, {"recipe_id": "UUID_2"}],
+        ):
+            with pytest.raises(KeyError):
+                recipe = Recipe("FAKE-PATH")
+                recipe.process_data()
+
+    def test_recipe_overview_returns_exit_code_1_for_nonexistent_path(self):
+        """Returns (1, None) if recipe path is invalid"""
 
         # TODO: should we be using guid / uuid instead of integer id?
-        with pytest.raises(IndexError):
-            r.recipe_overview("-12345-FAKE-PATH-")
+        result = r.recipe_overview("-12345-FAKE-PATH-")
+        assert (1, None) == result
 
     def test_recipe_overview_might_succeed_for_maybe_existing_id(self):
         """Tries 'check for existing ID', but only can if the user initialized"""
@@ -46,3 +57,15 @@ class TestRecipe(unittest.TestCase):
             os.path.join(RECIPE_STOCK, "dinner", "burrito-bowl.csv")
         )
         assert exit_code in {0, 1}
+
+    def test_recipe_csv_utils(self):
+        """Test the (largely unused) CSV utils module"""
+        _csv_files = csv_utils.csv_files()
+        assert _csv_files
+
+        _csv_recipes = csv_utils.csv_recipes()
+        assert _csv_recipes
+
+        # sanity executions
+        csv_utils.csv_recipe_print_tree()
+        csv_utils.csv_print_details()

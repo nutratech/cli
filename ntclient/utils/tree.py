@@ -26,7 +26,7 @@ def colorize(path: str, full: bool = False) -> str:
     file = path if full else os.path.basename(path)
 
     if os.path.islink(path):
-        return "".join(
+        return "".join(  # pragma: no cover
             [
                 COLOR_LINK,
                 file,
@@ -39,7 +39,7 @@ def colorize(path: str, full: bool = False) -> str:
     if os.path.isdir(path):
         return "".join([COLOR_DIR, file, colors.STYLE_RESET_ALL])
 
-    if os.access(path, os.X_OK):
+    if os.access(path, os.X_OK):  # pragma: no cover
         return "".join([COLOR_EXEC, file, colors.STYLE_RESET_ALL])
 
     return file
@@ -68,11 +68,11 @@ def print_dir(_dir: str, pre: str = str()) -> tuple:
     dir_len = len(os.listdir(_dir)) - 1
     for i, file in enumerate(sorted(os.listdir(_dir), key=str.lower)):
         path = os.path.join(_dir, file)
-        if file.startswith(".") and not SHOW_HIDDEN:
+        if file.startswith(".") and not SHOW_HIDDEN:  # pragma: no cover
             continue
         if os.path.isdir(path):
             print(pre + strs[2 if i == dir_len else 1] + colorize(path))
-            if os.path.islink(path):
+            if os.path.islink(path):  # pragma: no cover
                 n_dirs += 1
             else:
                 n_d, n_f, n_s = print_dir(path, pre + strs[3 if i == dir_len else 0])

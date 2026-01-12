@@ -1,4 +1,5 @@
 """Services module, currently only home to SQL/persistence init method"""
+
 import os
 
 from ntclient import NUTRA_HOME
@@ -27,6 +28,7 @@ def init(yes: bool = False) -> tuple:
     if not os.path.isdir(NUTRA_HOME):
         os.makedirs(NUTRA_HOME, 0o755)
     print("..DONE!")
+    # TODO: should creating preferences/settings file be handled in persistence module?
 
     # TODO: print off checks, return False if failed
     print("USDA db          ", end="")
@@ -37,12 +39,12 @@ def init(yes: bool = False) -> tuple:
     build_ntsqlite()
     nt_init()
 
-    print("\nAll checks have passed!")
+    print("\nSuccess!  All checks have passed!")
     print(
         """
-Nutrient tracker is free software. It comes with NO warranty or guarantee.
+Nutrient Tracker is free software. It comes with NO warranty or guarantee.
 You may use it as you please.
-You may make changes, as long as you disclose and publish them.
+You may make changes as long as you disclose and publish them.
     """
     )
     return 0, True

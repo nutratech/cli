@@ -1,7 +1,7 @@
 """usda.sqlite functions module"""
 
 from ntclient import NUTR_ID_KCAL
-from ntclient.persistence.sql.usda import sql, sql_headers
+from ntclient.persistence.sql.usda import sql
 
 
 ################################################################################
@@ -11,8 +11,8 @@ def sql_fdgrp() -> dict:
     """Shows food groups"""
 
     query = "SELECT * FROM fdgrp;"
-    result = sql(query)
-    return {x[0]: x for x in result}
+    rows, _, _, _ = sql(query)
+    return {x[0]: x for x in rows}
 
 
 def sql_food_details(_food_ids: set = None) -> list:  # type: ignore
@@ -20,28 +20,31 @@ def sql_food_details(_food_ids: set = None) -> list:  # type: ignore
 
     if not _food_ids:
         query = "SELECT * FROM food_des;"
+        params = ()
     else:
-        # TODO: does sqlite3 driver support this? cursor.executemany() ?
-        query = "SELECT * FROM food_des WHERE id IN (%s);"
-        food_ids = ",".join(str(x) for x in set(_food_ids))
-        query = query % food_ids
+        # Generate placeholders for IN clause
+        placeholders = ",".join("?" for _ in _food_ids)
+        query = f"SELECT * FROM food_des WHERE id IN ({placeholders});"  # nosec: B608
+        params = tuple(_food_ids)
 
-    return sql(query)
+    rows, _, _, _ = sql(query, params=params)
+    return list(rows)
 
 
 def sql_nutrients_overview() -> dict:
     """Shows nutrients overview"""
 
     query = "SELECT * FROM nutrients_overview;"
-    result = sql(query)
-    return {x[0]: x for x in result}
+    rows, _, _, _ = sql(query)
+    return {x[0]: x for x in rows}
 
 
 def sql_nutrients_details() -> tuple:
     """Shows nutrients 'details'"""
 
     query = "SELECT * FROM nutrients_overview;"
-    return sql_headers(query)
+    rows, headers, _, _ = sql(query)
+    return rows, headers
 
 
 def sql_servings(_food_ids: set) -> list:
@@ -59,9 +62,11 @@ FROM
 WHERE
   serv.food_id IN (%s);
 """
-    # FIXME: support this kind of thing by library code & parameterized queries
-    food_ids = ",".join(str(x) for x in set(_food_ids))
-    return sql(query % food_ids)
+    # Dynamically generate placeholders
+    placeholders = ",".join("?" for _ in _food_ids)
+    query = query % placeholders
+    rows, _, _, _ = sql(query, params=tuple(_food_ids))
+    return list(rows)
 
 
 def sql_analyze_foods(food_ids: set) -> list:
@@ -77,9 +82,11 @@ FROM
 WHERE
   food_des.id IN (%s);
 """
-    # TODO: parameterized queries
-    food_ids_concat = ",".join(str(x) for x in set(food_ids))
-    return sql(query % food_ids_concat)
+    # parameterized queries
+    placeholders = ",".join("?" for _ in food_ids)
+    query = query % placeholders
+    rows, _, _, _ = sql(query, params=tuple(food_ids))
+    return list(rows)
 
 
 ################################################################################
@@ -96,15 +103,17 @@ SELECT
 FROM
   nut_data
 WHERE
-  nutr_id = %s
-  OR nutr_id = %s
+  nutr_id = ?
+  OR nutr_id = ?
 ORDER BY
   food_id;
 """
+    # Parameterized query
+    rows, _, _, _ = sql(query, params=(NUTR_ID_KCAL, nutrient_id))
+    return list(rows)
 
-    return sql(query % (NUTR_ID_KCAL, nutrient_id))
 
-
+# TODO: these functions are unused, replace `sql_sort_helper1` (above) with these two
 def sql_sort_foods(nutr_id: int) -> list:
     """Sort foods by nutr_id per 100 g"""
 
@@ -123,12 +132,13 @@ FROM
   LEFT JOIN nut_data kcal ON food.id = kcal.food_id
     AND kcal.nutr_id = 208
 WHERE
-  nut_data.nutr_id = %s
+  nut_data.nutr_id = ?
 ORDER BY
   nut_data.nutr_val DESC;
 """
-
-    return sql(query % nutr_id)
+    # Parameterized query
+    rows, _, _, _ = sql(query, params=(nutr_id,))
+    return list(rows)
 
 
 def sql_sort_foods_by_kcal(nutr_id: int) -> list:
@@ -152,9 +162,10 @@ FROM
     AND kcal.nutr_id = 208
     AND kcal.nutr_val > 0
 WHERE
-  nut_data.nutr_id = %s
+  nut_data.nutr_id = ?
 ORDER BY
   (nut_data.nutr_val / kcal.nutr_val) DESC;
 """
-
-    return sql(query % nutr_id)
+    # Parameterized query
+    rows, _, _, _ = sql(query, params=(nutr_id,))
+    return list(rows)

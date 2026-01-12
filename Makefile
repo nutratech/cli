@@ -6,7 +6,7 @@ SHELL=/bin/bash
 .PHONY: _help
 _help:
 	@printf "\nUsage: make <command>, valid commands:\n\n"
-	@grep "##" $(MAKEFILE_LIST) | grep -v IGNORE_ME | sed -e 's/##//' | column -t -s $$'\t'
+	@grep "##" $(MAKEFILE_LIST) | grep -v ^# | grep -v IGNORE_ME | sed -e 's/##//' | column -t -s $$'\t'
 
 
 
@@ -16,11 +16,15 @@ _help:
 
 .PHONY: init
 init:	## Set up a Python virtual environment
+	# Fetch submodule
 	git submodule update --init
+	# Re-add virtual environment
 	rm -rf .venv
 	${PY_SYS_INTERPRETER} -m venv .venv
+	# Upgrade dependencies and pip, if NOT running in CI automation
 	- if [ -z "${CI}" ]; then ${PY_SYS_INTERPRETER} -m venv --upgrade-deps .venv; fi
 	direnv allow
+	@echo "INFO: Successfully initialized venv, run 'make deps' now!"
 
 # include .env
 SKIP_VENV ?=
@@ -29,7 +33,8 @@ PWD ?= $(shell pwd)
 .PHONY: _venv
 _venv:
 	# Test to enforce venv usage across important make targets
-	[ "${SKIP_VENV}" ] || [ "${PYTHON}" = "${PWD}/.venv/bin/python" ]
+	test "${SKIP_VENV}" || test "${PYTHON}" = "${PWD}/.venv/bin/python"
+	@echo "OK"
 
 
 
@@ -54,10 +59,12 @@ REQ_LINT := requirements-lint.txt
 REQ_TEST := requirements-test.txt
 REQ_TEST_OLD := requirements-test-old.txt
 
+# TODO: this is a fragile hack (to get it to work in CI and locally too)
 PIP_OPT_ARGS ?= $(shell if [ "$(SKIP_VENV)" ]; then echo "--user"; fi)
 
 .PHONY: deps
 deps: _venv	## Install requirements
+	# Install requirements
 	${PIP} install wheel
 	${PIP} install ${PIP_OPT_ARGS} -r requirements.txt
 	- ${PIP} install ${PIP_OPT_ARGS} -r ${REQ_OPT}
@@ -69,42 +76,65 @@ deps: _venv	## Install requirements
 # Format, lint, test
 # ---------------------------------------
 
-.PHONY: format
-format: _venv	## Format with isort & black
-	if [ "${CHANGED_FILES_PY_FLAG}" ]; then isort ${CHANGED_FILES_PY} ; fi
-	if [ "${CHANGED_FILES_PY_FLAG}" ]; then black ${CHANGED_FILES_PY} ; fi
-
-
-LINT_LOCS := ntclient/ tests/ setup.py
+# LINT_LOCS := ntclient/ tests/ setup.py
 CHANGED_FILES_RST ?= $(shell git diff origin/master --name-only --diff-filter=MACRU \*.rst)
 CHANGED_FILES_PY ?= $(shell git diff origin/master --name-only --diff-filter=MACRU \*.py)
-CHANGED_FILES_PY_FLAG ?= $(shell if [ "$(CHANGED_FILES_PY)" ]; then echo 1; fi)
+
+.PHONY: format
+format: _venv	## Format with isort & black
+ifneq ($(CHANGED_FILES_PY),)
+	isort ${CHANGED_FILES_PY}
+	black ${CHANGED_FILES_PY}
+	-git --no-pager diff --stat
+	@echo "OK"
+	@git diff --quiet || echo "NOTE: You may want to run: git add ."
+else
+	$(info No changed Python files, skipping.)
+endif
 
 .PHONY: lint
 lint: _venv	## Lint code and documentation
+ifneq ($(CHANGED_FILES_RST),)
 	# lint RST
-	if [ "${CHANGED_FILES_RST}" ]; then doc8 --quiet ${CHANGED_FILES_RST}; fi
+	doc8 --quiet ${CHANGED_FILES_RST}
+	@echo "OK"
+else
+	$(info No changed RST files, skipping.)
+endif
+ifneq ($(CHANGED_FILES_PY),)
 	# check formatting: Python
-	if [ "${CHANGED_FILES_PY_FLAG}" ]; then isort --diff --check ${CHANGED_FILES_PY} ; fi
-	if [ "${CHANGED_FILES_PY_FLAG}" ]; then black --check ${CHANGED_FILES_PY} ; fi
+	isort --diff --check ${CHANGED_FILES_PY}
+	black --check ${CHANGED_FILES_PY}
 	# lint Python
-	if [ "${CHANGED_FILES_PY_FLAG}" ]; then pycodestyle --statistics ${CHANGED_FILES_PY}; fi
-	if [ "${CHANGED_FILES_PY_FLAG}" ]; then bandit -q -c .banditrc -r ${CHANGED_FILES_PY}; fi
-	if [ "${CHANGED_FILES_PY_FLAG}" ]; then flake8 ${CHANGED_FILES_PY}; fi
-	if [ "${CHANGED_FILES_PY_FLAG}" ]; then mypy ${CHANGED_FILES_PY}; fi
-	if [ "${CHANGED_FILES_PY_FLAG}" ]; then pylint ${CHANGED_FILES_PY}; fi
+	pycodestyle --statistics ${CHANGED_FILES_PY}
+	bandit -q -c .banditrc -r ${CHANGED_FILES_PY}
+	flake8 ${CHANGED_FILES_PY}
+	mypy ${CHANGED_FILES_PY}
+	pylint ${CHANGED_FILES_PY}
+	@echo "OK"
+else
+	$(info No changed Python files, skipping.)
+endif
 
 .PHONY: pylint
 pylint:
-	if [ "${CHANGED_FILES_PY_FLAG}" ]; then pylint ${CHANGED_FILES_PY}; fi
+ifneq ($(CHANGED_FILES_PY),)
+	pylint ${CHANGED_FILES_PY}
+else
+	$(info No changed Python files, skipping.)
+endif
 
 .PHONY: mypy
 mypy:
-	if [ "${CHANGED_FILES_PY_FLAG}" ]; then mypy ${CHANGED_FILES_PY}; fi
+ifneq ($(CHANGED_FILES_PY),)
+	mypy ${CHANGED_FILES_PY}
+else
+	$(info No changed Python files, skipping.)
+endif
 
 
 .PHONY: test
-test: _venv	## Run CLI unittests
+test: _venv	## Run CLI unit tests
 	coverage run
 	coverage report
 	- grep fail_under setup.cfg
@@ -144,7 +174,7 @@ install:	## pip install .
 	${PY_SYS_INTERPRETER} -m pip install . || ${PY_SYS_INTERPRETER} -m pip install --user .
 	${PY_SYS_INTERPRETER} -m pip show nutra
 	- ${PY_SYS_INTERPRETER} -c 'import shutil; print(shutil.which("nutra"));'
-	nutra -v
+	nutra --version
 
 
 
@@ -156,7 +186,8 @@ RECURSIVE_CLEAN_LOCS ?= $(shell find ntclient/ tests/ \
 -name __pycache__ \
 -o -name .coverage \
 -o -name .mypy_cache \
--o -name .pytest_cache)
+-o -name .pytest_cache \
+)
 
 .PHONY: clean
 clean:	## Clean up __pycache__ and leftover bits
@@ -164,8 +195,10 @@ clean:	## Clean up __pycache__ and leftover bits
 	rm -rf build/
 	rm -rf nutra.egg-info/
 	rm -rf .pytest_cache/ .mypy_cache/
+ifneq ($(RECURSIVE_CLEAN_LOCS),)
 	# Recursively find & remove
-	if [ "${RECURSIVE_CLEAN_LOCS}" ]; then rm -rf ${RECURSIVE_CLEAN_LOCS}; fi
+	rm -rf ${RECURSIVE_CLEAN_LOCS}
+endif
 
 
 
@@ -175,4 +208,4 @@ clean:	## Clean up __pycache__ and leftover bits
 
 .PHONY: extras/cloc
 extras/cloc:	## Count lines of source code
-	- cloc HEAD
+	- cloc HEAD ntclient/ntsqlite

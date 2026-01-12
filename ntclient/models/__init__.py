@@ -7,6 +7,13 @@ Classes, structures for storing, displaying, and editing data.
 """
 import csv
 
+from ntclient import BUFFER_WD
+from ntclient.persistence.sql.usda.funcs import (
+    sql_analyze_foods,
+    sql_nutrients_overview,
+)
+from ntclient.services.analyze import day_format
+from ntclient.services.calculate import calculate_nutrient_totals
 from ntclient.utils import CLI_CONFIG
 
 
@@ -27,23 +34,29 @@ class Recipe:
 
         self.food_data = {}  # type: ignore
 
-    def process_data(self) -> None:
-        """
-        Parses out the raw CSV input read in during self.__init__()
-        TODO: test this with an empty CSV file
-        @todo: CliConfig class, to avoid these non top-level import shenanigans
-        """
-
-        # Read into memory
+    def _aggregate_rows(self) -> tuple:
+        """Aggregate rows into a tuple"""
         print("Processing recipe file: %s" % self.file_path)
         with open(self.file_path, "r", encoding="utf-8") as _file:
             self.csv_reader = csv.DictReader(_file)
-            self.rows = tuple(self.csv_reader)
+            return tuple(list(self.csv_reader))
+
+    def process_data(self) -> None:
+        """
+        Parses out the raw CSV input read in during self.__init__()
+        TODO: test this with an empty CSV file, one with missing or corrupt values
+              (e.g. empty or non-numeric grams or food_id).
+        TODO: test with a CSV file that has duplicate recipe_id/uuid values.
+        TODO: how is the recipe home directory determined here?
+        """
+
+        # Read into memory
+        self.rows = self._aggregate_rows()
 
         # Validate data
         uuids = {x["recipe_id"] for x in self.rows}
         if len(uuids) != 1:
-            print("Found %s keys: %s" % (len(uuids), uuids))
+            print("ERROR: Found %s keys: %s" % (len(uuids), uuids))
             raise KeyError("FATAL: must have exactly 1 uuid per recipe CSV file!")
         self.uuid = list(uuids)[0]
 
@@ -53,5 +66,37 @@ class Recipe:
         if CLI_CONFIG.debug:
             print("Finished with recipe.")
 
-    def print_analysis(self) -> None:
+    def print_analysis(self, scale: float = 0, scale_mode: str = "kcal") -> None:
         """Run analysis on a single recipe"""
+
+        # Get nutrient overview (RDAs, units, etc.)
+        nutrients_rows = sql_nutrients_overview()
+        nutrients = {int(x[0]): tuple(x) for x in nutrients_rows.values()}
+
+        # Analyze foods in the recipe
+        food_ids = set(self.food_data.keys())
+        foods_analysis = {}
+        for food in sql_analyze_foods(food_ids):
+            food_id = int(food[0])
+            # nut_id, val (per 100g)
+            anl = (int(food[1]), float(food[2]))
+            if food_id not in foods_analysis:
+                foods_analysis[food_id] = [anl]
+            else:
+                foods_analysis[food_id].append(anl)
+
+        # Compute totals
+        nutrient_totals, total_weight = calculate_nutrient_totals(
+            self.food_data, foods_analysis
+        )
+
+        # Print results using day_format for consistency
+        buffer = BUFFER_WD - 4 if BUFFER_WD > 4 else BUFFER_WD
+        day_format(
+            nutrient_totals,
+            nutrients,
+            buffer=buffer,
+            scale=scale,
+            scale_mode=scale_mode,
+            total_weight=total_weight,
+        )

@@ -6,7 +6,6 @@ Created on Fri Sep 28 22:25:38 2018
 
 @author: shane
 """
-
 import sys
 
 from ntclient.__main__ import main
